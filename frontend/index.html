@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./styles/base.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <title>aurora - home</title>
+    </head>
+    <body>
+        <header>
+            <ul class="header-list">
+                <li class="header-element logo">aurora</li>
+                <li class="header-element"><a href="#">dokumentation</a></li>
+                <li class="header-element"><a href="#">github-repo</a></li>
+            </ul>
+        </header>
+
+        <main>
+            <h1 class="main-heading">
+                Vergleich zweier Backend Technologien anhand von
+                Echtzeit-Flugdaten
+            </h1>
+            <div class="project-intro">
+                <section class="heading-section-1">
+                    <ul>
+                        <li class="heading-marks">
+                            Serverloses Deployment vs. Klassischer Server
+                        </li>
+                        <li class="heading-marks">
+                            Deployment bei AWS und NodeJS-Server
+                        </li>
+                        <li class="heading-marks">
+                            Echtzeit-Updates von
+                            <a
+                                href="https://airlabs.co/"
+                                class="hightlight-word"
+                                >AIRLABS</a
+                            >
+                        </li>
+                    </ul>
+                </section>
+                <section class="heading-section-2">
+                    <div class="plane-symbol">
+                        <!-- <img src="./img/flg-zweistrahlig.svg" alt="Flugzeug" /> -->
+                        <span class="connection-point-flight"></span>
+                    </div>
+                    <div class="custom-flight-info">
+                        <span class="info-icao">LH810</span>
+                        <span class="info-aircraft">Airbus A320-200</span>
+                        <div class="aircraft-info">
+                            <span class="connection-point-flight-info"></span>
+                            <div class="aircraft-track">
+                                <div class="aircraft-dep">FRA</div>
+                                <div class="aircraft-arr">JFK</div>
+                            </div>
+                            <div class="flight-progress"></div>
+                            <div class="aircraft-telem">
+                                <div class="aircraft-vel">903.4 km/h</div>
+                                <div class="aircraft-hgt">7560.4 m</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <section class="solutions">
+                <h2 class="heading-solution">Lösungsansätze</h2>
+
+                <div class="solution-container">
+                    <article class="aws-solution">
+                        <div class="aws-heading-container">
+                            <h3 class = "aws-heading">AWS Deployment</h3>
+                            <span class = "aws-subheading">Serverloser Ansatz</span>
+                        </div>
+                        <ul class="aws-points">
+                            <li class="aws-point">Punkt A</li>
+                            <li class="aws-point">Punkt B</li>
+                            <li class="aws-point">Punkt C</li>
+                        </ul>
+                    </article>
+                    <article class="server-solution">
+                        <div class="server-heading-container">
+                            <h3 class = "server-heading">NodeJS-Server</h3>
+                            <span class = "server-subheading">Klassische Serverlösung</span>
+                        </div>
+                        <ul class="server-points">
+                            <li class="server-point">Punkt A</li>
+                            <li class="server-point">Punkt B</li>
+                            <li class="server-point">Punkt C</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

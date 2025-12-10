@@ -1,0 +1,19 @@
+:root {
+    --color-bg: #ffffff;
+    --color-bg-2: #e2f8ff;
+    --color-font: #303030;
+    --color-highlight: #75a0c5;
+    --color-compl: #c59a75;
+
+    --size-xs: 16px;
+    --size-s: 20px;
+    --size-m: 24px;
+    --size-l: 32px;
+    --size-xl: 36px;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Figtree";
+}
