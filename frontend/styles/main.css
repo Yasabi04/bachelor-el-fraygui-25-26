@@ -1,0 +1,314 @@
+.main-heading {
+    margin-top: var(--size-xl);
+    width: 50%;
+    padding-bottom: var(--size-xl);
+}
+
+.project-intro {
+    margin-top: var(--size-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .heading-section-1 {
+        width: 40%;
+        background-color: white;
+
+        ul {
+            list-style-type: none;
+            padding-left: calc(2 * var(--size-xl));
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+
+            .heading-marks {
+                font-style: italic;
+                font-size: var(--size-m);
+                margin-bottom: var(--size-xl);
+                position: relative;
+            }
+
+            .heading-marks::before {
+                position: absolute;
+                content: "";
+                left: -50px;
+                bottom: 6px;
+                width: 40px;
+                height: 4px;
+                background-color: var(--color-highlight);
+            }
+        }
+    }
+
+    .line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .heading-section-2 {
+        display: flex;
+        justify-content: left;
+        gap: calc(5 * var(--size-xl));
+        width: 60%;
+
+        .plane-symbol {
+            width: 40vh;
+            height: 40vh;
+            mask-image: url("/img/flg-zweistrahlig.svg");
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            background-color: var(--color-highlight);
+            transform: rotate(270deg);
+            position: relative;
+
+            .connection-point-flight {
+                position: absolute;
+                content: "";
+                top: 50%;
+                left: 50%;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: var(--color-highlight);
+            }
+        }
+
+        .custom-flight-info {
+            display: flex;
+            flex-direction: column;
+            padding: var(--size-l);
+            padding-top: var(--size-xl);
+            border: 0.25rem solid var(--color-highlight);
+            position: relative;
+
+            .connection-point-flight-info {
+                position: absolute;
+                content: "";
+                top: 0;
+                left: 0;
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                background-color: var(--color-highlight);
+            }
+
+            .info-icao {
+                font-size: var(--size-m);
+            }
+
+            .info-aircraft {
+                font-size: var(--size-s);
+                padding-bottom: var(--size-m);
+            }
+
+            .aircraft-info {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                .aircraft-track,
+                .aircraft-telem {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    gap: var(--size-s);
+                }
+
+                .aircraft-track {
+                    .aircraft-dep,
+                    .aircraft-arr {
+                        background-color: var(--color-highlight);
+                        font-weight: 600;
+                        color: white;
+                        padding: var(--size-l);
+                        width: 100%;
+                        font-size: var(--size-m);
+                        letter-spacing: 0.2rem;
+                    }
+                }
+
+                .flight-progress {
+                    margin-top: var(--size-xs);
+                    margin-bottom: var(--size-xs);
+                    width: 100%;
+                    height: 16px;
+                    background-color: var(--color-bg-2);
+                    position: relative;
+                }
+
+                .flight-progress::after {
+                    position: absolute;
+                    content: "";
+                    top: 0;
+                    left: 0;
+                    height: 16px;
+                    width: var(--after-width, 30%);
+                    background-color: var(--color-highlight);
+                }
+            }
+
+            .aircraft-telem {
+                .aircraft-vel,
+                .aircraft-hgt {
+                    width: 50%;
+                    word-break: break-all;
+                    background-color: var(--color-highlight);
+                    font-weight: 600;
+                    color: white;
+                    padding: var(--size-m);
+                    font-size: var(--size-s);
+                }
+            }
+        }
+    }
+}
+
+.solutions {
+    margin-top: calc(3 * var(--size-xl));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .heading-solution {
+        font-size: var(--size-l);
+        margin-bottom: calc(3 * var(--size-xl));
+    }
+
+    .solution-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: var(--size-xl);
+
+        .aws-solution {
+            width: 100%;
+            display: flex;
+            flex-direction: row-reverse;
+            gap: var(--size-xl);
+
+            .aws-heading-container {
+                width: 50%;
+                background-color: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                .aws-heading {
+                    font-size: var(--size-xl);
+                    color: var(--color-font);
+                    transition: 0.2s transform;
+                    cursor: pointer;
+                }
+
+                .aws-subheading {
+                    font-size: var(--size-s);
+                }
+            }
+
+            .aws-heading-container:hover {
+                .aws-heading {
+                    transform: scale(1.1);
+                    transition: 0.2s transform;
+                }
+            }
+
+            .aws-points {
+                width: 50%;
+                aspect-ratio: 3/2;
+                background-color: var(--color-bg-2);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                list-style-type: none;
+
+                .aws-point {
+                    font-style: italic;
+                    font-size: var(--size-l);
+                    position: relative;
+                }
+
+                .aws-point::before {
+                    position: absolute;
+                    content: "";
+                    left: -24px;
+                    bottom: 10px;
+                    width: 20px;
+                    height: 2px;
+                    background-color: var(--color-compl);
+                }
+            }
+        }
+
+        .server-solution {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: var(--size-xl);
+
+            .server-heading-container {
+                width: 50%;
+                background-color: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                .server-heading {
+                    font-size: var(--size-xl);
+                    transition: 0.2s transform;
+                    cursor: pointer;
+                }
+
+                .server-subheading {
+                    font-size: var(--size-s);
+                }
+            }
+
+            .server-heading-container:hover {
+                .server-heading {
+                    transform: scale(1.1);
+                    transition: 0.2s transform;
+                }
+            }
+
+            .server-points {
+                width: 50%;
+                aspect-ratio: 3/2;
+                background-color: var(--color-bg-2);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                list-style-type: none;
+
+                .server-point {
+                    font-style: italic;
+                    font-size: var(--size-l);
+                    margin-bottom: var(--size-s);
+                    position: relative;
+                }
+
+                .server-point::before {
+                    position: absolute;
+                    content: "";
+                    left: -24px;
+                    bottom: 10px;
+                    width: 20px;
+                    height: 2px;
+                    background-color: var(--color-compl);
+                }
+            }
+        }
+    }
+}
