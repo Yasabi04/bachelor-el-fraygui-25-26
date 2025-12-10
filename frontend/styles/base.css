@@ -29,7 +29,7 @@ header {
         display: flex;
         align-items: center;
         margin: 0 auto;
-        border-bottom: 0.2rem solid #75a0c5;
+        border-bottom: 0.15rem solid var(--color-highlight);
         gap: var(--size-m);
         margin-top: var(--size-xl);
         padding-bottom: var(--size-m);
@@ -39,6 +39,12 @@ header {
             font-size: var(--size-m);
             a {
                 text-decoration: none;
+                color: grey;
+            }
+        }
+
+        .header-element:hover:not(:first-child) {
+            a {
                 color: var(--color-font);
             }
         }
@@ -74,7 +80,20 @@ header {
         width: var(--size-xl);
         bottom: -19px;
         right: 0;
+        animation: right 2s;
         background-color: var(--color-highlight);
+    }
+}
+
+@keyframes right{
+    0% {
+        right: 100%;
+    }
+    90% {
+        right: 0%;
+    }
+    100% {
+        right: 0;
     }
 }
 

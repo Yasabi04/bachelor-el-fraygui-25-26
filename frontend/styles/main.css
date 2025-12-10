@@ -148,7 +148,7 @@
                     top: 0;
                     left: 0;
                     height: 16px;
-                    width: var(--after-width, 30%);
+                    width: var(--after-width, 0%);
                     background-color: var(--color-highlight);
                 }
             }
@@ -205,9 +205,11 @@
 
                 .aws-heading {
                     font-size: var(--size-xl);
+                    font-weight: 700;
                     color: var(--color-font);
                     transition: 0.2s transform;
                     cursor: pointer;
+                    text-decoration: none;
                 }
 
                 .aws-subheading {
@@ -266,8 +268,11 @@
 
                 .server-heading {
                     font-size: var(--size-xl);
+                    font-weight: 700;
+                    color: var(--color-font);
                     transition: 0.2s transform;
                     cursor: pointer;
+                    text-decoration: none;
                 }
 
                 .server-subheading {
@@ -294,6 +299,7 @@
 
                 .server-point {
                     font-style: italic;
+                    font-weight: 700;
                     font-size: var(--size-l);
                     margin-bottom: var(--size-s);
                     position: relative;
