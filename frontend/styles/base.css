@@ -67,7 +67,7 @@ header {
     .header-list::after {
         position: absolute;
         content: '';
-        mask-image: url('./img/flg-zweistrahlig.svg');
+        mask-image: url('../img/flg-zweistrahlig.svg');
         mask-size: contain;
         mask-repeat: no-repeat;
         height: var(--size-xl);

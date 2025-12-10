@@ -57,7 +57,7 @@
         .plane-symbol {
             width: 40vh;
             height: 40vh;
-            mask-image: url("./img/flg-zweistrahlig.svg");
+            mask-image: url("../img/flg-zweistrahlig.svg");
             mask-repeat: no-repeat;
             mask-size: contain;
             background-color: var(--color-highlight);
