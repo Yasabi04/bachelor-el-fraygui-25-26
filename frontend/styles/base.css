@@ -17,3 +17,68 @@
     margin: 0;
     font-family: "Figtree";
 }
+
+header {
+    height: 10vh;
+    width: 100%;
+
+    .header-list {
+        width: 90%;
+        position: relative;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+        border-bottom: 0.2rem solid #75a0c5;
+        gap: var(--size-m);
+        margin-top: var(--size-xl);
+        padding-bottom: var(--size-m);
+
+        .header-element {
+            color: var(--color-font);
+            font-size: var(--size-m);
+            a {
+                text-decoration: none;
+                color: var(--color-font);
+            }
+        }
+
+        .header-element:first-child {
+            margin-right: auto;
+            font-size: var(--size-l);
+            position: relative;
+        }
+
+        .header-element:first-child::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            right: calc(-1 * 20px);
+            width: 18px;
+            height: 4px;
+            background-color: #c59a75;
+        }
+
+        .logo {
+            font-weight: 800;
+        }
+    }
+
+    .header-list::after {
+        position: absolute;
+        content: '';
+        mask-image: url('/img/flg-zweistrahlig.svg');
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        height: var(--size-xl);
+        width: var(--size-xl);
+        bottom: -19px;
+        right: 0;
+        background-color: var(--color-highlight);
+    }
+}
+
+main {
+    margin: 0 auto;
+    width: 90%;
+}
