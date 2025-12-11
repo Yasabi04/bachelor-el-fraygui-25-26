@@ -55,14 +55,19 @@
         width: 60%;
 
         .plane-symbol {
-            width: 40vh;
-            height: 40vh;
-            mask-image: url("../img/flg-zweistrahlig.svg");
+            width: 100%;
+            height: auto;
+            /* mask-image: url("../img/flg-zweistrahlig.svg");
             mask-repeat: no-repeat;
             mask-size: contain;
             background-color: var(--color-highlight);
             transform: rotate(270deg);
-            position: relative;
+            position: relative; */
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
 
             .connection-point-flight {
                 position: absolute;
@@ -315,6 +320,41 @@
                     background-color: var(--color-compl);
                 }
             }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .main-heading {
+        width: 100%;
+        font-size: var(--size-m);
+    }
+
+    .project-intro {
+        flex-direction: column;
+
+        .heading-section-1 {
+            width: 100%;
+
+            ul {
+                padding-left: var(--size-l);
+                .heading-marks {
+                    font-size: var(--size-s);
+                }
+
+                .heading-marks::before {
+                    position: absolute;
+                    content: "";
+                    left: -15px;
+                    top: 10px;
+                    width: 8px;
+                    height: 4px;
+                }
+            }
+        }
+
+        .heading-section-2 {
+            width: 100%;
         }
     }
 }

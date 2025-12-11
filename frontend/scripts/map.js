@@ -20,6 +20,12 @@ coordsControl.onAdd = () => {
     return div;
 };
 
+const planeIcon = L.icon({
+    iconUrl: "./img/flg-zweistrahlig.svg",
+    iconSize: [32, 32],
+    iconAnchor: [16, 32]
+});
+
 document.addEventListener("DOMContentLoaded", async () => {
     // Sicherstellen, dass map-Container eine Höhe hat
     const mapEl = document.getElementById("map");
@@ -53,14 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Warte bis die Karte geladen ist
     map.whenReady(() => {
-        handleRouteProgress(
-            40.6413, // JFK New York (Departure lat)
-            -73.7781, // JFK New York (Departure lng)
-            60.8566, // Paris (Plane position lat)
-            -36.3522, // Paris (Plane position lng)
-            50.0379, // Frankfurt (Arrival lat)
-            8.5622 // Frankfurt (Arrival lng)
-        );
+        displayPlane();
     });
 });
 
@@ -83,40 +82,33 @@ function handleRouteProgress(
     arr_lat,
     arr_lng
 ) {
-    //? 1. Runde Linie zeichnen, zwischen allen drei Punkten
+    //? 1. Great Circle Route zwischen Start und Ziel
 
     let dep = [dep_lat, dep_lng];
-    let planePos = [planePos_lat, planePos_lng];
     let arr = [arr_lat, arr_lng];
 
-    const curvePoints = createCurve(dep, planePos, arr, 100);
+    const curvePoints = createCurve(dep, null, arr, 100);
 
     L.polyline(curvePoints, {
         color: "orange",
         weight: 5,
     }).addTo(map);
 
-    //* 2. Distanz zurückgeben
+    //* 2. Berechne wo das Flugzeug auf der Route sein sollte
 
-    // Distanz a = dep -> planePos
+    const flown = haversineDistanceKM(dep_lat, dep_lng, planePos_lat, planePos_lng);
+    const toFly = haversineDistanceKM(planePos_lat, planePos_lng, arr_lat, arr_lng);
+    const totalDistance = flown + toFly;
+    const progress = flown / totalDistance;
 
-    const flown = haversineDistanceKM(
-        dep_lat,
-        dep_lng,
-        planePos_lat,
-        planePos_lng
-    );
+    // Finde den Punkt auf der Great Circle Route basierend auf dem Fortschritt
+    const pointIndex = Math.round(progress * (curvePoints.length - 1));
+    const planePositionOnRoute = curvePoints[pointIndex];
 
-    // Distanz b = planePos -> arr
+    // Platziere das Flugzeug-Icon auf der Route
+    L.marker(planePositionOnRoute, { icon: planeIcon }).addTo(map);
 
-    const toFly = haversineDistanceKM(
-        planePos_lat,
-        planePos_lng,
-        arr_lat,
-        arr_lng
-    );
-
-    return flown / (flown + toFly);
+    return progress;
 }
 
 function haversineDistanceKM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
@@ -143,18 +135,39 @@ function haversineDistanceKM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
 }
 
 function createCurve(p1, p2, p3, steps) {
+    // Great Circle Route zwischen Start und Ziel
     const curve = [];
-
-    for (let t = 0; t <= 1; t += 1 / steps) {
-        const lat =
-            (1 - t) * (1 - t) * p1[0] + 2 * (1 - t) * t * p2[0] + t * t * p3[0];
-
-        const lng =
-            (1 - t) * (1 - t) * p1[1] + 2 * (1 - t) * t * p2[1] + t * t * p3[1];
-
-        curve.push([lat, lng]);
+    
+    // Konvertiere zu Radians
+    const lat1 = (p1[0] * Math.PI) / 180;
+    const lon1 = (p1[1] * Math.PI) / 180;
+    const lat2 = (p3[0] * Math.PI) / 180;
+    const lon2 = (p3[1] * Math.PI) / 180;
+    
+    const d = Math.acos(
+        Math.sin(lat1) * Math.sin(lat2) +
+        Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1)
+    );
+    
+    for (let i = 0; i <= steps; i++) {
+        const f = i / steps;
+        
+        const A = Math.sin((1 - f) * d) / Math.sin(d);
+        const B = Math.sin(f * d) / Math.sin(d);
+        
+        const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
+        const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
+        const z = A * Math.sin(lat1) + B * Math.sin(lat2);
+        
+        const lat = Math.atan2(z, Math.sqrt(x * x + y * y));
+        const lon = Math.atan2(y, x);
+        
+        curve.push([
+            (lat * 180) / Math.PI,
+            (lon * 180) / Math.PI
+        ]);
     }
-
+    
     return curve;
 }
 
@@ -168,4 +181,19 @@ function handlePosition(position) {
 
 function handleError(err) {
     console.warn("Geolocation error:", err);
+}
+
+function displayPlane() {
+    const a = L.marker([51.74744, -0.17578], { icon: planeIcon }).addTo(map);
+
+    a.addEventListener("click", (_) => {
+        handleRouteProgress(
+            40.6413, // JFK New York (Departure lat)
+            -73.7781, // JFK New York (Departure lng)
+            51.74744, // Paris (Plane position lat)
+            -0.17578, // Paris (Plane position lng)
+            50.0379, // Frankfurt (Arrival lat)
+            8.5622 // Frankfurt (Arrival lng)
+        );
+    });
 }
