@@ -98,7 +98,7 @@ header {
     }
 }
 
-main {
+main:not(footer) {
     margin: 0 auto;
     width: 90%;
 }

@@ -176,6 +176,7 @@
 
 .solutions {
     margin-top: calc(3 * var(--size-xl));
+    margin-bottom: var(--size-xl);
     display: flex;
     flex-direction: column;
     justify-content: center;

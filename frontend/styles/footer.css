@@ -1,0 +1,27 @@
+footer {
+    width: 100%;
+    height: auto;
+    background-color: var(--color-highlight);
+
+    .footer-links {
+        padding-top: var(--size-xl);
+        padding-left: 10%;
+        padding-bottom: var(--size-xl);
+        list-style-type: none;
+        gap: var(--size-xl);
+
+        .footer-link {
+            font-size: var(--size-s);
+            padding-bottom: var(--size-xl);
+            a {
+                text-decoration: none;
+                color: var(--color-bg);
+            }
+        }
+
+        .footer-link:last-child {
+            padding-bottom: 0;
+        }
+    }
+
+}
