@@ -328,6 +328,8 @@
     .main-heading {
         width: 100%;
         font-size: var(--size-m);
+        padding: 0;
+        margin-top: var(--size-s);
     }
 
     .project-intro {
@@ -337,7 +339,7 @@
             width: 100%;
 
             ul {
-                padding-left: var(--size-l);
+                padding-left: var(--size-xs);
                 .heading-marks {
                     font-size: var(--size-s);
                 }
@@ -355,6 +357,65 @@
 
         .heading-section-2 {
             width: 100%;
+        }
+    }
+
+    .solutions {
+        margin-top: var(--size-m);
+        .heading-solution {
+            padding-top: var(--size-xl);
+            margin-bottom: var(--size-xl);
+        }
+
+        .solution-container {
+            gap: var(--size-xs);
+
+            .server-solution {
+                .server-heading-container {
+                    .server-heading {
+                        font-size: var(--size-m);
+                    }
+
+                    .server-subheading {
+                        font-size: var(--size-xs);
+                    }
+                }
+
+                .server-points {
+                    .server-point {
+                        font-weight: 100;
+                        font-size: var(--size-s);
+                    }
+
+                    .server-point::before {
+                        width: 15px;
+                    }
+                }
+            }
+
+            .aws-solution {
+                .aws-heading-container {
+                    .aws-heading {
+                        font-size: var(--size-m);
+                    }
+
+                    .aws-subheading {
+                        font-size: var(--size-xs);
+                    }
+                }
+
+                .aws-points {
+                    .aws-point {
+                        font-weight: 100;
+                        font-size: var(--size-s);
+                        margin-bottom: var(--size-xs);
+                    }
+
+                    .aws-point::before {
+                        width: 15px;
+                    }
+                }
+            }
         }
     }
 }
