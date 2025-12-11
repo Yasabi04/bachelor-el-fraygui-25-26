@@ -56,7 +56,7 @@ header {
         }
 
         .header-element:first-child::after {
-            content: '';
+            content: "";
             position: absolute;
             bottom: 8px;
             right: calc(-1 * 20px);
@@ -72,8 +72,8 @@ header {
 
     .header-list::after {
         position: absolute;
-        content: '';
-        mask-image: url('../img/flg-zweistrahlig.svg');
+        content: "";
+        mask-image: url("../img/flg-zweistrahlig.svg");
         mask-size: contain;
         mask-repeat: no-repeat;
         height: var(--size-xl);
@@ -86,7 +86,7 @@ header {
     }
 }
 
-@keyframes right{
+@keyframes right {
     0% {
         right: 100%;
     }
@@ -101,4 +101,29 @@ header {
 main {
     margin: 0 auto;
     width: 90%;
+}
+
+@media (max-width: 768px) {
+    header {
+        .header-list {
+            padding-bottom: var(--size-s);
+            .header-element {
+                a {
+                    font-size: var(--size-xs);
+                    line-break: none;
+                }
+            }
+
+            .header-element:first-child {
+                font-size: var(--size-s);
+            }
+
+            .header-element:first-child::after {
+                right: -12px;
+                bottom: 5px;
+                width: 10px;
+                height: 3px;
+            }
+        }
+    }
 }
