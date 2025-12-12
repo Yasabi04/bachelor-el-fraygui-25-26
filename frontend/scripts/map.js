@@ -1,4 +1,5 @@
 let map = null;
+let activeRoutes = new Map(); // Speichert aktive Routen für Toggle
 
 const tileLayer = L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -57,7 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         coordsControl.getContainer().innerHTML = `Lat: ${lat}, Lng: ${lng}`;
     });
 
-    // Warte bis die Karte geladen ist
     map.whenReady(() => {
         displayPlane();
     });
@@ -80,8 +80,17 @@ function handleRouteProgress(
     planePos_lat,
     planePos_lng,
     arr_lat,
-    arr_lng
+    arr_lng,
+    routeId
 ) {
+    // Toggle: Wenn Route schon existiert, entfernen
+    if (activeRoutes.has(routeId)) {
+        const route = activeRoutes.get(routeId);
+        map.removeLayer(route);
+        activeRoutes.delete(routeId);
+        return;
+    }
+
     //? 1. Great Circle Route zwischen Start und Ziel
 
     let dep = [dep_lat, dep_lng];
@@ -90,12 +99,14 @@ function handleRouteProgress(
 
     const curvePoints = createCurve(dep, planePos, arr, 100);
 
-    L.polyline(curvePoints, {
-        color: "lightblue",
-        weight: 5,
+    const polyline = L.polyline(curvePoints, {
+        color: "orange",
+        weight: 2,
     }).addTo(map);
 
-    //* 2. Berechne wo das Flugzeug auf der Route sein sollte
+    activeRoutes.set(routeId, polyline);
+
+    //* 2. Berechnen wo das Flugzeug auf der Route ist
 
     const flown = haversineDistanceKM(
         dep_lat,
@@ -112,12 +123,6 @@ function handleRouteProgress(
     const totalDistance = flown + toFly;
     const progress = flown / totalDistance;
 
-    // Finde den Punkt auf der Great Circle Route basierend auf dem Fortschritt
-    // const pointIndex = Math.round(progress * (curvePoints.length - 1));
-    // const planePositionOnRoute = curvePoints[pointIndex];
-
-    // Platziere das Flugzeug-Icon auf der Route
-    // L.marker(planePositionOnRoute, { icon: planeIcon }).addTo(map);
 
     return progress;
 }
@@ -237,7 +242,8 @@ function displayPlane() {
             51.74744, // Paris (Plane position lat)
             -0.18678, // Paris (Plane position lng)
             50.0379, // Frankfurt (Arrival lat)
-            8.5622 // Frankfurt (Arrival lng)
+            8.5622, // Frankfurt (Arrival lng)
+            "route-a" // Route ID für Toggle
         );
     });
 
@@ -248,7 +254,8 @@ function displayPlane() {
             48.1103,
             16.5697,
             48.3538,
-            11.7861
+            11.7861,
+            "route-b" // Route ID ICAO-Code nutzen
         )
     });
 }
