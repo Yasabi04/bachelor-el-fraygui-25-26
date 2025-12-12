@@ -234,6 +234,7 @@ function handleError(err) {
 function displayPlane() {
     const a = L.marker([51.74744, -0.18678], { icon: planeIcon }).addTo(map);
     const b = L.marker([48.1103, 16.5697], { icon: planeIcon }).addTo(map);
+    const c = L.marker([51.0379, 2.5622], { icon: planeIcon }).addTo(map);
 
     a.addEventListener("click", (_) => {
         handleRouteProgress(
@@ -258,4 +259,15 @@ function displayPlane() {
             "route-b" // Route ID ICAO-Code nutzen
         )
     });
+
+    c.addEventListener("click",  _ => {
+        handleRouteProgress(
+            50.0379,
+            8.5622,
+            51.0379,
+            2.5622,
+            51.4700,
+            -0.4543
+        )
+    })
 }
