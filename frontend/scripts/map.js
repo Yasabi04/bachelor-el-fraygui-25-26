@@ -6,7 +6,7 @@ const tileLayer = L.tileLayer(
     {
         attribution:
             '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-        maxZoom: 15,
+        maxZoom: 19,
     }
 );
 
@@ -15,7 +15,7 @@ const coordsControl = L.control({ position: "bottomleft" });
 coordsControl.onAdd = () => {
     const div = L.DomUtil.create("div", "coords");
     div.style.padding = "0.4rem";
-    div.style.background = "rgba(255,255,255,0.9)";
+    div.style.background = "rgba(183, 213, 248, 0.74)";
     div.style.fontFamily = "monospace";
     div.innerHTML = "Lat: -, Lng: -";
     return div;
@@ -28,7 +28,6 @@ const planeIcon = L.icon({
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-    // Sicherstellen, dass map-Container eine Höhe hat
     const mapEl = document.getElementById("map");
     if (!mapEl) {
         return;
@@ -85,8 +84,10 @@ function handleRouteProgress(
 ) {
     // Toggle: Wenn Route schon existiert, entfernen
     if (activeRoutes.has(routeId)) {
-        const route = activeRoutes.get(routeId);
-        map.removeLayer(route);
+        const routeData = activeRoutes.get(routeId);
+        map.removeLayer(routeData.polyline);
+        map.removeLayer(routeData.depMarker);
+        map.removeLayer(routeData.arrMarker);
         activeRoutes.delete(routeId);
         return;
     }
@@ -97,14 +98,12 @@ function handleRouteProgress(
     let arr = [arr_lat, arr_lng];
     let planePos = [planePos_lat, planePos_lng];
 
-    const curvePoints = createCurve(dep, planePos, arr, 100);
+    const curvePoints = createCurve(dep, planePos, arr, 200);
 
     const polyline = L.polyline(curvePoints, {
         color: "orange",
         weight: 2,
     }).addTo(map);
-
-    activeRoutes.set(routeId, polyline);
 
     //* 2. Berechnen wo das Flugzeug auf der Route ist
 
@@ -123,6 +122,10 @@ function handleRouteProgress(
     const totalDistance = flown + toFly;
     const progress = flown / totalDistance;
 
+    const { depMarker, arrMarker } = setAirports(dep_lat, dep_lng, arr_lat, arr_lng);
+
+    activeRoutes.set(routeId, { polyline, depMarker, arrMarker });
+    map.flyTo([planePos_lat, planePos_lng])
 
     return progress;
 }
@@ -270,4 +273,14 @@ function displayPlane() {
             -0.4543
         )
     })
+}
+
+function setAirports(dep_lat, dep_lng, arr_lat, arr_lng) {
+    const depMarker = L.marker([dep_lat, dep_lng])
+                        .addTo(map)
+                        .bindPopup('Start')
+    const arrMarker = L.marker([arr_lat, arr_lng])
+                        .addTo(map)
+                        .bindPopup('Ziel')
+    return { depMarker, arrMarker };
 }
