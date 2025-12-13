@@ -1,0 +1,22 @@
+.customMarker .leaflet-popup-content-wrapper {
+    background-color: white;
+    border: 5px solid var(--color-compl);
+    color: black;   
+}
+
+.customMarker .leaflet-popup-tip {
+    background-color: var(--color-compl);
+}
+
+.customMarker .leaflet-popup-content {
+    margin: 4px var(--size-s) 8px var(--size-s);
+    font-size: var(--size-xs);
+    font-weight: 700;
+    font-family: "Figtree";
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.customMarker .leaflet-popup-close-button {
+    display: none;
+}

@@ -278,9 +278,10 @@ function displayPlane() {
 function setAirports(dep_lat, dep_lng, arr_lat, arr_lng) {
     const depMarker = L.marker([dep_lat, dep_lng])
                         .addTo(map)
-                        .bindPopup('Start')
+                        .bindPopup('Start', { className: 'customMarker' })
     const arrMarker = L.marker([arr_lat, arr_lng])
                         .addTo(map)
-                        .bindPopup('Ziel')
+                        .bindPopup('Ziel', { className: 'customMarker' })
+
     return { depMarker, arrMarker };
 }
