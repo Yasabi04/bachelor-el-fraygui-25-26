@@ -8,4 +8,4 @@ Als Anwendungsfall dient eine Applikation, die in regelmäßigen Intervallen akt
 ***
 
 Contributors:
-* [Yassin El Fraygui](www.github.com/Yasabi04)
+* [Yassin El Fraygui](github.com/Yasabi04/)
