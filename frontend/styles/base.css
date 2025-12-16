@@ -80,7 +80,7 @@ header {
         width: var(--size-xl);
         bottom: -19px;
         right: 0;
-        animation: right 2s;
+        animation: right 3s;
         transform: rotate(90deg);
         background-color: var(--color-highlight);
     }
@@ -126,4 +126,14 @@ main:not(footer) {
             }
         }
     }
+}
+
+h1 {
+    font-size: var(--size-xl);
+    color: var(--color-font);
+}
+
+h2 {
+    font-size: var(--size-l);
+    color: var(--color-font);
 }
