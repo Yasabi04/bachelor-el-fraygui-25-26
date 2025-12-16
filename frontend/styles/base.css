@@ -137,3 +137,7 @@ h2 {
     font-size: var(--size-l);
     color: var(--color-font);
 }
+
+h3 {
+    font-size: var(--size-m)
+}

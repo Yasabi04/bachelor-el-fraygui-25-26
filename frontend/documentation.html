@@ -6,20 +6,23 @@
         <link rel="stylesheet" href="./styles/base.css" />
         <link rel="stylesheet" href="./styles/main.css" />
         <link rel="stylesheet" href="./styles/footer.css" />
+        <link rel="stylesheet" href="./styles/docu.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="icon" href="./img/aurora-favicon.png" type="image/png">
+        <link rel="icon" href="./img/aurora-favicon.png" type="image/png" />
         <title>aurora - home</title>
     </head>
     <body>
         <header>
             <ul class="header-list">
                 <li class="header-element logo">aurora</li>
-                <li class="header-element"><a href="documentation.html">dokumentation</a></li>
+                <li class="header-element">
+                    <a href="documentation.html">dokumentation</a>
+                </li>
                 <li class="header-element">
                     <a
                         href="https://github.com/Yasabi04/bachelor-el-fraygui-25-26"
@@ -30,20 +33,66 @@
         </header>
 
         <main>
-            <h1 class = "docu-heading">Wie Flugtracking funktioniert</h1>
-            <div class = "docu-heading-div">
+            <h1 class="docu-heading">Wie Flugtracking funktioniert</h1>
+            <div class="docu-heading-div">
                 <h2 class="docu-heading-no2">ADS-B</h2>
-                <span class = "docu-heading-expl">(Automatic Dependent Surveillance-Broadcast)</span>
+                <span class="docu-heading-expl"
+                    >(Automatic Dependent Surveillance-Broadcast)</span
+                >
             </div>
-            <div class = "docu-heading-div">
-                <h2 class="docu-heading-no2">MLAT & TDOA</h2>
-                <span class = "docu-heading-expl">(Multilateration & Time Difference of Arrival)</span>
-            </div>
-            <div class = "docu-heading-div">
-                <h2 class="docu-heading-no2">Satellit</h2>
-                <span class = "docu-heading-expl"></span>
-            </div>
+            <p class="docu-p-content">
+                ADS-B ist ein offizielles Luftfahrt-Überwachungssystem, das
+                von der EASA und der FAA vorgeschrieben und genutzt
+                wird. Die Flugsicherung soll auch unabhängig vom Radar dazu in
+                der Lage sein, Flugzeuge zu sehen, umso schneller agieren zu
+                können. Darüber hinaus ist es für Piloten durch die hohe
+                Reichweite ermöglicht, sich gegenseitig früher zu erkennen und
+                mögliche Gefahren frühzeitig zu eliminieren.
+            </p>
 
+            <h3 class="docu-subheading-no2">Funktionsweise</h3>
+
+            <p class="docu-p-content">
+                Jedes Flugzeug berechnet zu jedem gegebenen Zeitpunkt seine
+                Position. Diese wird meist über ein GPS-Gerät bestimmt. Nach der
+                Berechnung werden die Positionsdaten mithilfe eines Transponders
+                an Bord in eine standardisiertes Funkpaket übersetzt, welches
+                dann mehrmals pro Sekunde gesendet wird (→ Broadcast). Die
+                Frequenz beträgt 1090 MHz, die eine Reichweite von 200-400 km
+                ermöglicht (line of sight). Solange es also Empfänger/Geräte in
+                diesem Bereich gibt, die auf dieser Frequenz Daten abfangen
+                können, können Flugdaten problemlos gesammelt und ausgewertet
+                werden. Mögliche Daten in einem ADS-B-Signal sind unter anderem:
+            </p>
+
+            <div class="docu-heading-div">
+                <h2 class="docu-heading-no2">MLAT & TDOA</h2>
+                <span class="docu-heading-expl"
+                    >(Multilateration & Time Difference of Arrival)</span
+                >
+            </div>
+            <p class="docu-p-content">
+                Jedes Flugzeug sendet ein sog. Mode-S-Signal. Mehrere Empfänger
+                erhalten dieses Signal, aber zu minimal unterschiedlichen
+                Zeiten. Diese Zeitunterschiede (TDOA) werden genutzt, um die
+                Position des Flugzeugs zu ermitteln. Wenn Empfänger A das Signal
+                1 µs vor Empfänger B empfängt, kann aus diesem Zeitunterschied
+                eine Distanz berechnet werden. <br> Da sich Funk mit
+                Lichtgeschwindigkeit ausbreitet entspricht 1 µs umgerechnet etwa
+                300 m. Um die Position eines Flugzeugs mit hoher Sicherheit zu
+                bestimmen werden im Idealfall 6 - 10 Empfänger gebraucht. <br><br>
+                Während TDOA die Messgröße darstellt, bezeichnet MLAT das
+                Verfahren. MLAT sammelt TDOA-Daten und berechnet aus diesen dann
+                die Flugposition. Wichtig zu beachten ist daher, dass
+                Empfängergeräte extrem genau synchronisiert sein müssen. Wie
+                oben gezeigt kann bereits die kleinste Abweichung die MLAT
+                Nutzung unbrauchbar machen.
+            </p>
+            <div class="docu-heading-div">
+                <h2 class="docu-heading-no2">Satellit</h2>
+                <span class="docu-heading-expl"></span>
+            </div>
+            <p class="docu-p-content"></p>
         </main>
         <footer>
             <ul class="footer-links">

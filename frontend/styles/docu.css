@@ -1,0 +1,26 @@
+.docu-heading {
+    padding-top: var(--size-xl);
+    padding-bottom: var(--size-xl);
+}
+
+.docu-heading-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--size-xs);
+    height: calc(2 * var(--size-xl));
+
+    .docu-heading-expl {
+        color: rgb(187, 187, 187);
+        font-size: var(--size-s);
+        font-weight: 600;
+    }
+}
+
+.docu-p-content {
+    width: 60%;
+    line-height: var(--size-m);
+    color: var(--color-font);
+    padding-top: var(--size-xs);
+    padding-bottom: var(--size-xl)
+}
