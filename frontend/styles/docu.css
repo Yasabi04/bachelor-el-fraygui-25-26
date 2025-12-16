@@ -3,6 +3,23 @@
     padding-bottom: var(--size-xl);
 }
 
+.how-to-introduction {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: var(--size-xl);
+
+    p{
+        color: var(--color-font);
+        line-height: var(--size-m);
+        font-size: var(--size-xs);
+    }
+    img {
+        width: 50%;
+    }
+}
+
 .docu-heading-div {
     display: flex;
     flex-direction: row;

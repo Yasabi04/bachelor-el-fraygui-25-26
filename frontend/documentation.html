@@ -34,6 +34,23 @@
 
         <main>
             <h1 class="docu-heading">Wie Flugtracking funktioniert</h1>
+            <section class="how-to-introduction">
+                <p class="intro-text">
+                    Moderne Flugtracking-Systeme nutzen verschiedene
+                    Technologien, um Flugzeuge weltweit in Echtzeit zu
+                    verfolgen. Die Grundlage bilden Funksignale, die von
+                    Flugzeugen ausgesendet und von Empfängern am Boden oder im
+                    Weltraum aufgefangen werden. Durch die Auswertung dieser
+                    Signale lassen sich präzise Flugdaten wie Position,
+                    Geschwindigkeit und Höhe bestimmen. Im Folgenden werden die
+                    drei wichtigsten Verfahren vorgestellt, die diese
+                    faszinierende Technologie ermöglichen.
+                </p>
+                <img
+                    src="./img/how-to-flighttracking.png"
+                    alt="Kommunikation zweier Flugzeuge"
+                />
+            </section>
             <div class="docu-heading-div">
                 <h2 class="docu-heading-no2">ADS-B</h2>
                 <span class="docu-heading-expl"
@@ -41,13 +58,13 @@
                 >
             </div>
             <p class="docu-p-content">
-                ADS-B ist ein offizielles Luftfahrt-Überwachungssystem, das
-                von der EASA und der FAA vorgeschrieben und genutzt
-                wird. Die Flugsicherung soll auch unabhängig vom Radar dazu in
-                der Lage sein, Flugzeuge zu sehen, umso schneller agieren zu
-                können. Darüber hinaus ist es für Piloten durch die hohe
-                Reichweite ermöglicht, sich gegenseitig früher zu erkennen und
-                mögliche Gefahren frühzeitig zu eliminieren.
+                ADS-B ist ein offizielles Luftfahrt-Überwachungssystem, das von
+                der EASA und der FAA vorgeschrieben und genutzt wird. Die
+                Flugsicherung soll auch unabhängig vom Radar dazu in der Lage
+                sein, Flugzeuge zu sehen, umso schneller agieren zu können.
+                Darüber hinaus ist es für Piloten durch die hohe Reichweite
+                ermöglicht, sich gegenseitig früher zu erkennen und mögliche
+                Gefahren frühzeitig zu eliminieren.
             </p>
 
             <h3 class="docu-subheading-no2">Funktionsweise</h3>
@@ -77,10 +94,11 @@
                 Zeiten. Diese Zeitunterschiede (TDOA) werden genutzt, um die
                 Position des Flugzeugs zu ermitteln. Wenn Empfänger A das Signal
                 1 µs vor Empfänger B empfängt, kann aus diesem Zeitunterschied
-                eine Distanz berechnet werden. <br> Da sich Funk mit
-                Lichtgeschwindigkeit ausbreitet entspricht 1 µs umgerechnet etwa
-                300 m. Um die Position eines Flugzeugs mit hoher Sicherheit zu
-                bestimmen werden im Idealfall 6 - 10 Empfänger gebraucht. <br><br>
+                eine Distanz berechnet werden. <br />
+                Da sich Funk mit Lichtgeschwindigkeit ausbreitet entspricht 1 µs
+                umgerechnet etwa 300 m. Um die Position eines Flugzeugs mit
+                hoher Sicherheit zu bestimmen werden im Idealfall 6 - 10
+                Empfänger gebraucht. <br /><br />
                 Während TDOA die Messgröße darstellt, bezeichnet MLAT das
                 Verfahren. MLAT sammelt TDOA-Daten und berechnet aus diesen dann
                 die Flugposition. Wichtig zu beachten ist daher, dass
