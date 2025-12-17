@@ -1,5 +1,64 @@
 let map = null;
 let activeRoutes = new Map(); // Speichert aktive Routen für Toggle
+let activePlanes = new Map();
+
+activePlanes.set("LH810", {
+    aircraft_type: "AIRBUS A320 - 200",
+    lat: 51.43,
+    long: 3.21,
+    dep: "FRA",
+    arr: "JFK",
+});
+
+activePlanes.set("RYR5880", {
+    aircraft_type: "Boeing 737-8",
+    lat: 50.43,
+    long: 3.21,
+    dep: "CGN",
+    arr: "STN",
+});
+
+activePlanes.set("BA456", {
+    aircraft_type: "AIRBUS A380",
+    lat: 48.85,
+    long: 2.35,
+    dep: "LHR",
+    arr: "SIN",
+});
+
+activePlanes.set("AF1234", {
+    aircraft_type: "Boeing 777-300",
+    lat: 52.52,
+    long: 13.40,
+    dep: "CDG",
+    arr: "LAX",
+});
+
+activePlanes.set("EK789", {
+    aircraft_type: "AIRBUS A350-900",
+    lat: 45.76,
+    long: 4.84,
+    dep: "DXB",
+    arr: "MUC",
+});
+
+activePlanes.set("UA9021", {
+    aircraft_type: "Boeing 787-9 Dreamliner",
+    lat: 53.55,
+    long: 9.99,
+    dep: "EWR",
+    arr: "FRA",
+});
+
+activePlanes.set("QR456", {
+    aircraft_type: "AIRBUS A321neo",
+    lat: 50.03,
+    long: 8.57,
+    dep: "DOH",
+    arr: "BCN",
+});
+
+console.log(activePlanes);
 
 const tileLayer = L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -21,11 +80,17 @@ coordsControl.onAdd = () => {
     return div;
 };
 
-const planeIcon = L.icon({
+const planeIcon2 = L.icon({
     iconUrl: "./img/flg-zweistrahlig.svg",
     iconSize: [32, 32],
     iconAnchor: [16, 16],
 });
+
+const planeIcon4 = L.icon({
+    iconUrl: "./img/flg-vierstrahlig.svg",
+    iconSize: [34, 34],
+    iconAnchor: [17, 17]
+})
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mapEl = document.getElementById("map");
@@ -82,15 +147,13 @@ function handleRouteProgress(
     arr_lng,
     routeId
 ) {
-    // Toggle: Wenn Route schon existiert, entfernen
-    if (activeRoutes.has(routeId)) {
-        const routeData = activeRoutes.get(routeId);
+    // Entferne alle vorherigen Routen
+    activeRoutes.forEach((routeData) => {
         map.removeLayer(routeData.polyline);
         map.removeLayer(routeData.depMarker);
         map.removeLayer(routeData.arrMarker);
-        activeRoutes.delete(routeId);
-        return;
-    }
+    });
+    activeRoutes.clear();
 
     //? 1. Great Circle Route zwischen Start und Ziel
 
@@ -122,10 +185,18 @@ function handleRouteProgress(
     const totalDistance = flown + toFly;
     const progress = flown / totalDistance;
 
-    const { depMarker, arrMarker } = setAirports(dep_lat, dep_lng, arr_lat, arr_lng);
+    const { depMarker, arrMarker } = setAirports(
+        dep_lat,
+        dep_lng,
+        arr_lat,
+        arr_lng
+    );
 
     activeRoutes.set(routeId, { polyline, depMarker, arrMarker });
-    map.flyTo([planePos_lat, planePos_lng])
+    map.flyTo([planePos_lat, planePos_lng]);
+
+    // Hier die Funktion aufrufen
+    updateFlightInfo("LH810", "AIRBUS A320-200", "JFK", "FRA", progress * 100);
 
     return progress;
 }
@@ -235,53 +306,52 @@ function handleError(err) {
 }
 
 function displayPlane() {
-    const a = L.marker([51.74744, -0.18678], { icon: planeIcon }).addTo(map);
-    const b = L.marker([48.1103, 16.5697], { icon: planeIcon }).addTo(map);
-    const c = L.marker([51.0379, 2.5622], { icon: planeIcon }).addTo(map);
+    activePlanes.forEach((p, key) => {
+        let plane;
+        const aircraftType = p.aircraft_type;
+        
+        if(aircraftType.includes('380') || aircraftType.includes('747') || aircraftType.includes('340')){
+            plane = L.marker([p.lat, p.long], { icon: planeIcon4 }).addTo(map);
+        } else {
+            plane = L.marker([p.lat, p.long], { icon: planeIcon2 }).addTo(map)
+        }
+        console.log(key)
 
-    a.addEventListener("click", (_) => {
-        handleRouteProgress(
-            40.6413, // JFK New York (Departure lat)
-            -73.7781, // JFK New York (Departure lng)
-            51.74744, // Paris (Plane position lat)
-            -0.18678, // Paris (Plane position lng)
-            50.0379, // Frankfurt (Arrival lat)
-            8.5622, // Frankfurt (Arrival lng)
-            "route-a" // Route ID für Toggle
-        );
+        plane.addEventListener("click", (_) => {
+            handleRouteProgress(
+                40.6413, // JFK New York (Departure lat)
+                -73.7781, // JFK New York (Departure lng)
+                p.lat, // Paris (Plane position lat)
+                p.long, // Paris (Plane position lng)
+                50.0379, // Frankfurt (Arrival lat)
+                8.5622, // Frankfurt (Arrival lng)
+                key // Route ID für Toggle
+            );
+        });
     });
-
-    b.addEventListener("click", (_) => {
-        handleRouteProgress(
-            35.5494,
-            139.7798,
-            48.1103,
-            16.5697,
-            48.3538,
-            11.7861,
-            "route-b" // Route ID ICAO-Code nutzen
-        )
-    });
-
-    c.addEventListener("click",  _ => {
-        handleRouteProgress(
-            50.0379,
-            8.5622,
-            51.0379,
-            2.5622,
-            51.4700,
-            -0.4543
-        )
-    })
 }
 
 function setAirports(dep_lat, dep_lng, arr_lat, arr_lng) {
     const depMarker = L.marker([dep_lat, dep_lng])
-                        .addTo(map)
-                        .bindPopup('Start', { className: 'customMarker' })
+        .addTo(map)
+        .bindPopup("Start", { className: "customMarker" });
     const arrMarker = L.marker([arr_lat, arr_lng])
-                        .addTo(map)
-                        .bindPopup('Ziel', { className: 'customMarker' })
+        .addTo(map)
+        .bindPopup("Ziel", { className: "customMarker" });
 
     return { depMarker, arrMarker };
+}
+
+function updateFlightInfo(ap_icao, ap_type, dep, arr, progress) {
+    const icao = document.querySelector(".flight-icao");
+    const aircraft = document.querySelector(".flight-aircraft");
+    const flight_dep = document.querySelector(".flight-dep-iata");
+    const flight_arr = document.querySelector(".flight-arr-iata");
+    const flight_progress = document.querySelector(".progress-max");
+
+    icao.innerHTML = ap_icao;
+    aircraft.innerHTML = ap_type;
+    flight_dep.innerHTML = dep;
+    flight_arr.innerHTML = arr;
+    flight_progress.style.setProperty("--after-width", `${progress}%`);
 }
