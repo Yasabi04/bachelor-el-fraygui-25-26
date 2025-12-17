@@ -236,6 +236,836 @@
             "name": "Mexico City International",
             "lat": 19.4361,
             "lng": -99.0719
+        },
+
+        {
+            "icao": "EDDK",
+            "iata": "CGN",
+            "name": "Cologne Bonn Airport",
+            "lat": 50.8659,
+            "lng": 7.1427
+        },
+        {
+            "icao": "EDDL",
+            "iata": "DUS",
+            "name": "Düsseldorf Airport",
+            "lat": 51.2895,
+            "lng": 6.7668
+        },
+        {
+            "icao": "EDDB",
+            "iata": "BER",
+            "name": "Berlin Brandenburg Airport",
+            "lat": 52.3667,
+            "lng": 13.5033
+        },
+        {
+            "icao": "EDDH",
+            "iata": "HAM",
+            "name": "Hamburg Airport",
+            "lat": 53.6304,
+            "lng": 9.9882
+        },
+        {
+            "icao": "EDDS",
+            "iata": "STR",
+            "name": "Stuttgart Airport",
+            "lat": 48.6899,
+            "lng": 9.2220
+        },
+        {
+            "icao": "EDDW",
+            "iata": "BRE",
+            "name": "Bremen Airport",
+            "lat": 53.0475,
+            "lng": 8.7867
+        },
+        {
+            "icao": "EDDN",
+            "iata": "NUE",
+            "name": "Nuremberg Airport",
+            "lat": 49.4987,
+            "lng": 11.0669
+        },
+        {
+            "icao": "EDDV",
+            "iata": "HAJ",
+            "name": "Hannover Airport",
+            "lat": 52.4611,
+            "lng": 9.6850
+        },
+
+        {
+            "icao": "EGSS",
+            "iata": "STN",
+            "name": "London Stansted",
+            "lat": 51.8860,
+            "lng": 0.2389
+        },
+        {
+            "icao": "EGKK",
+            "iata": "LGW",
+            "name": "London Gatwick",
+            "lat": 51.1537,
+            "lng": -0.1821
+        },
+        {
+            "icao": "EGCC",
+            "iata": "MAN",
+            "name": "Manchester Airport",
+            "lat": 53.3537,
+            "lng": -2.2750
+        },
+        {
+            "icao": "EGPH",
+            "iata": "EDI",
+            "name": "Edinburgh Airport",
+            "lat": 55.9500,
+            "lng": -3.3725
+        },
+        {
+            "icao": "EIDW",
+            "iata": "DUB",
+            "name": "Dublin Airport",
+            "lat": 53.4264,
+            "lng": -6.2499
+        },
+
+        {
+            "icao": "LEBL",
+            "iata": "BCN",
+            "name": "Barcelona El Prat",
+            "lat": 41.2974,
+            "lng": 2.0833
+        },
+        {
+            "icao": "LEPA",
+            "iata": "PMI",
+            "name": "Palma de Mallorca Airport",
+            "lat": 39.5517,
+            "lng": 2.7388
+        },
+        {
+            "icao": "LEMG",
+            "iata": "AGP",
+            "name": "Málaga Airport",
+            "lat": 36.6749,
+            "lng": -4.4991
+        },
+        {
+            "icao": "LPPT",
+            "iata": "LIS",
+            "name": "Lisbon Portela Airport",
+            "lat": 38.7756,
+            "lng": -9.1354
+        },
+
+        {
+            "icao": "LFPO",
+            "iata": "ORY",
+            "name": "Paris Orly",
+            "lat": 48.7233,
+            "lng": 2.3794
+        },
+        {
+            "icao": "LFML",
+            "iata": "MRS",
+            "name": "Marseille Provence Airport",
+            "lat": 43.4393,
+            "lng": 5.2214
+        },
+        {
+            "icao": "LFLL",
+            "iata": "LYS",
+            "name": "Lyon Saint-Exupéry Airport",
+            "lat": 45.7256,
+            "lng": 5.0811
+        },
+        {
+            "icao": "LFPB",
+            "iata": "LBG",
+            "name": "Paris Le Bourget",
+            "lat": 48.9694,
+            "lng": 2.4414
+        },
+
+        {
+            "icao": "LIMC",
+            "iata": "MXP",
+            "name": "Milan Malpensa",
+            "lat": 45.6306,
+            "lng": 8.7281
+        },
+        {
+            "icao": "LIML",
+            "iata": "LIN",
+            "name": "Milan Linate",
+            "lat": 45.4450,
+            "lng": 9.2767
+        },
+        {
+            "icao": "LIPZ",
+            "iata": "VCE",
+            "name": "Venice Marco Polo",
+            "lat": 45.5053,
+            "lng": 12.3519
+        },
+        {
+            "icao": "LIRA",
+            "iata": "CIA",
+            "name": "Rome Ciampino",
+            "lat": 41.7994,
+            "lng": 12.5949
+        },
+
+        {
+            "icao": "LSGG",
+            "iata": "GVA",
+            "name": "Geneva Airport",
+            "lat": 46.2381,
+            "lng": 6.1090
+        },
+        {
+            "icao": "LSZB",
+            "iata": "BRN",
+            "name": "Bern Airport",
+            "lat": 46.9141,
+            "lng": 7.4975
+        },
+
+        {
+            "icao": "LEBB",
+            "iata": "BIO",
+            "name": "Bilbao Airport",
+            "lat": 43.3011,
+            "lng": -2.9106
+        },
+        {
+            "icao": "LEZL",
+            "iata": "SVQ",
+            "name": "Seville Airport",
+            "lat": 37.4180,
+            "lng": -5.8931
+        },
+        {
+            "icao": "LEXJ",
+            "iata": "XRY",
+            "name": "Jerez Airport",
+            "lat": 36.7446,
+            "lng": -6.0601
+        },
+
+        {
+            "icao": "ESSA",
+            "iata": "ARN",
+            "name": "Stockholm Arlanda",
+            "lat": 59.6519,
+            "lng": 17.9186
+        },
+        {
+            "icao": "ENGM",
+            "iata": "OSL",
+            "name": "Oslo Gardermoen",
+            "lat": 60.1939,
+            "lng": 11.1004
+        },
+        {
+            "icao": "EFHK",
+            "iata": "HEL",
+            "name": "Helsinki Vantaa",
+            "lat": 60.3172,
+            "lng": 24.9633
+        },
+
+        {
+            "icao": "EPWA",
+            "iata": "WAW",
+            "name": "Warsaw Chopin Airport",
+            "lat": 52.1657,
+            "lng": 20.9671
+        },
+        {
+            "icao": "EPKK",
+            "iata": "KRK",
+            "name": "Kraków Airport",
+            "lat": 50.0777,
+            "lng": 19.7848
+        },
+        {
+            "icao": "LKPR",
+            "iata": "PRG",
+            "name": "Prague Václav Havel Airport",
+            "lat": 50.1008,
+            "lng": 14.2632
+        },
+        {
+            "icao": "LHBP",
+            "iata": "BUD",
+            "name": "Budapest Ferenc Liszt Airport",
+            "lat": 47.4298,
+            "lng": 19.2611
+        },
+
+        {
+            "icao": "UUEE",
+            "iata": "SVO",
+            "name": "Moscow Sheremetyevo",
+            "lat": 55.9726,
+            "lng": 37.4147
+        },
+        {
+            "icao": "UUDD",
+            "iata": "DME",
+            "name": "Moscow Domodedovo",
+            "lat": 55.4088,
+            "lng": 37.9063
+        },
+        {
+            "icao": "ULLI",
+            "iata": "LED",
+            "name": "St. Petersburg Pulkovo",
+            "lat": 59.8003,
+            "lng": 30.2625
+        },
+
+        {
+            "icao": "LTFM",
+            "iata": "IST",
+            "name": "Istanbul Airport",
+            "lat": 41.2753,
+            "lng": 28.7519
+        },
+        {
+            "icao": "LTBA",
+            "iata": "ISL",
+            "name": "Istanbul Atatürk Airport",
+            "lat": 40.9769,
+            "lng": 28.8146
+        },
+        {
+            "icao": "LTAI",
+            "iata": "AYT",
+            "name": "Antalya Airport",
+            "lat": 36.8987,
+            "lng": 30.8005
+        },
+
+        {
+            "icao": "LGAV",
+            "iata": "ATH",
+            "name": "Athens International Airport",
+            "lat": 37.9364,
+            "lng": 23.9445
+        },
+        {
+            "icao": "LCLK",
+            "iata": "LCA",
+            "name": "Larnaca Airport",
+            "lat": 34.8751,
+            "lng": 33.6249
+        },
+
+        {
+            "icao": "KEWR",
+            "iata": "EWR",
+            "name": "Newark Liberty International",
+            "lat": 40.6925,
+            "lng": -74.1687
+        },
+        {
+            "icao": "KBOS",
+            "iata": "BOS",
+            "name": "Boston Logan International",
+            "lat": 42.3656,
+            "lng": -71.0096
+        },
+        {
+            "icao": "KIAD",
+            "iata": "IAD",
+            "name": "Washington Dulles International",
+            "lat": 38.9531,
+            "lng": -77.4565
+        },
+        {
+            "icao": "KDCA",
+            "iata": "DCA",
+            "name": "Washington Reagan National",
+            "lat": 38.8521,
+            "lng": -77.0377
+        },
+        {
+            "icao": "KLAS",
+            "iata": "LAS",
+            "name": "Las Vegas McCarran International",
+            "lat": 36.0840,
+            "lng": -115.1537
+        },
+        {
+            "icao": "KPHX",
+            "iata": "PHX",
+            "name": "Phoenix Sky Harbor International",
+            "lat": 33.4342,
+            "lng": -112.0080
+        },
+        {
+            "icao": "KDEN",
+            "iata": "DEN",
+            "name": "Denver International Airport",
+            "lat": 39.8561,
+            "lng": -104.6737
+        },
+        {
+            "icao": "KMSP",
+            "iata": "MSP",
+            "name": "Minneapolis-St Paul International",
+            "lat": 44.8848,
+            "lng": -93.2223
+        },
+        {
+            "icao": "KDTW",
+            "iata": "DTW",
+            "name": "Detroit Metropolitan Airport",
+            "lat": 42.2124,
+            "lng": -83.3534
+        },
+        {
+            "icao": "KIAH",
+            "iata": "IAH",
+            "name": "Houston George Bush Intercontinental",
+            "lat": 29.9902,
+            "lng": -95.3368
+        },
+        {
+            "icao": "KHOU",
+            "iata": "HOU",
+            "name": "Houston Hobby Airport",
+            "lat": 29.6454,
+            "lng": -95.2789
+        },
+        {
+            "icao": "KPDX",
+            "iata": "PDX",
+            "name": "Portland International Airport",
+            "lat": 45.5887,
+            "lng": -122.5975
+        },
+        {
+            "icao": "CYVR",
+            "iata": "YVR",
+            "name": "Vancouver International Airport",
+            "lat": 49.1939,
+            "lng": -123.1844
+        },
+        {
+            "icao": "CYYZ",
+            "iata": "YYZ",
+            "name": "Toronto Pearson International",
+            "lat": 43.6777,
+            "lng": -79.6248
+        },
+        {
+            "icao": "CYUL",
+            "iata": "YUL",
+            "name": "Montreal Pierre Elliott Trudeau",
+            "lat": 45.4657,
+            "lng": -73.7455
+        },
+
+        {
+            "icao": "MHTG",
+            "iata": "TGU",
+            "name": "Tegucigalpa Toncontín International",
+            "lat": 14.0609,
+            "lng": -87.2172
+        },
+        {
+            "icao": "MROC",
+            "iata": "SJO",
+            "name": "San José Juan Santamaría International",
+            "lat": 9.9939,
+            "lng": -84.2088
+        },
+        {
+            "icao": "MPTO",
+            "iata": "PTY",
+            "name": "Panama Tocumen International",
+            "lat": 9.0714,
+            "lng": -79.3834
+        },
+
+        {
+            "icao": "MUHA",
+            "iata": "HAV",
+            "name": "Havana José Martí International",
+            "lat": 22.9892,
+            "lng": -82.4091
+        },
+        {
+            "icao": "MKJP",
+            "iata": "KIN",
+            "name": "Kingston Norman Manley International",
+            "lat": 17.9357,
+            "lng": -76.7875
+        },
+        {
+            "icao": "MDSD",
+            "iata": "SDQ",
+            "name": "Santo Domingo Las Américas",
+            "lat": 18.4297,
+            "lng": -69.6689
+        },
+
+        {
+            "icao": "SCEL",
+            "iata": "SCL",
+            "name": "Santiago Arturo Merino Benítez",
+            "lat": -33.3930,
+            "lng": -70.7858
+        },
+        {
+            "icao": "SABE",
+            "iata": "EZE",
+            "name": "Buenos Aires Ezeiza International",
+            "lat": -34.8222,
+            "lng": -58.5358
+        },
+        {
+            "icao": "SAEZ",
+            "iata": "AEP",
+            "name": "Buenos Aires Aeroparque Jorge Newbery",
+            "lat": -34.5592,
+            "lng": -58.4156
+        },
+        {
+            "icao": "SLLP",
+            "iata": "LPB",
+            "name": "La Paz El Alto International",
+            "lat": -16.5133,
+            "lng": -68.1923
+        },
+        {
+            "icao": "SPJC",
+            "iata": "LIM",
+            "name": "Lima Jorge Chávez International",
+            "lat": -12.0219,
+            "lng": -77.1143
+        },
+        {
+            "icao": "SKBO",
+            "iata": "BOG",
+            "name": "Bogotá El Dorado International",
+            "lat": 4.7016,
+            "lng": -74.1469
+        },
+        {
+            "icao": "SKCG",
+            "iata": "CTG",
+            "name": "Cartagena Rafael Núñez International",
+            "lat": 10.4424,
+            "lng": -75.5130
+        },
+
+        {
+            "icao": "VOMM",
+            "iata": "MAA",
+            "name": "Chennai International Airport",
+            "lat": 12.9941,
+            "lng": 80.1709
+        },
+        {
+            "icao": "VIDP",
+            "iata": "DEL",
+            "name": "Delhi Indira Gandhi International",
+            "lat": 28.5665,
+            "lng": 77.1031
+        },
+        {
+            "icao": "VABB",
+            "iata": "BOM",
+            "name": "Mumbai Chhatrapati Shivaji International",
+            "lat": 19.0896,
+            "lng": 72.8656
+        },
+        {
+            "icao": "VOBL",
+            "iata": "BLR",
+            "name": "Bengaluru Kempegowda International",
+            "lat": 13.1979,
+            "lng": 77.7063
+        },
+
+        {
+            "icao": "VHHX",
+            "iata": "HKG",
+            "name": "Hong Kong International (Chek Lap Kok)",
+            "lat": 22.3080,
+            "lng": 113.9185
+        },
+        {
+            "icao": "RCTP",
+            "iata": "TPE",
+            "name": "Taipei Taoyuan International",
+            "lat": 25.0797,
+            "lng": 121.2342
+        },
+        {
+            "icao": "WMKK",
+            "iata": "KUL",
+            "name": "Kuala Lumpur International",
+            "lat": 2.7456,
+            "lng": 101.7099
+        },
+        {
+            "icao": "VTBS",
+            "iata": "BKK",
+            "name": "Bangkok Suvarnabhumi",
+            "lat": 13.6810,
+            "lng": 100.7472
+        },
+        {
+            "icao": "VVNB",
+            "iata": "HAN",
+            "name": "Hanoi Noi Bai International",
+            "lat": 21.2212,
+            "lng": 105.8070
+        },
+        {
+            "icao": "VVTS",
+            "iata": "SGN",
+            "name": "Ho Chi Minh City Tan Son Nhat",
+            "lat": 10.8188,
+            "lng": 106.6519
+        },
+        {
+            "icao": "WIII",
+            "iata": "CGK",
+            "name": "Jakarta Soekarno-Hatta International",
+            "lat": -6.1275,
+            "lng": 106.6537
+        },
+        {
+            "icao": "RPLL",
+            "iata": "MNL",
+            "name": "Manila Ninoy Aquino International",
+            "lat": 14.5086,
+            "lng": 121.0194
+        },
+
+        {
+            "icao": "RKSS",
+            "iata": "ICN",
+            "name": "Seoul Incheon International",
+            "lat": 37.4602,
+            "lng": 126.4407
+        },
+        {
+            "icao": "RKPC",
+            "iata": "CJU",
+            "name": "Jeju International Airport",
+            "lat": 33.5113,
+            "lng": 126.4930
+        },
+
+        {
+            "icao": "ZUUU",
+            "iata": "CTU",
+            "name": "Chengdu Shuangliu International",
+            "lat": 30.5785,
+            "lng": 103.9470
+        },
+        {
+            "icao": "ZGSZ",
+            "iata": "SZX",
+            "name": "Shenzhen Bao'an International",
+            "lat": 22.6393,
+            "lng": 113.8108
+        },
+        {
+            "icao": "ZGGG",
+            "iata": "CAN",
+            "name": "Guangzhou Baiyun International",
+            "lat": 23.3924,
+            "lng": 113.2988
+        },
+        {
+            "icao": "ZUCK",
+            "iata": "CKG",
+            "name": "Chongqing Jiangbei International",
+            "lat": 29.7192,
+            "lng": 106.6417
+        },
+        {
+            "icao": "ZWWW",
+            "iata": "URC",
+            "name": "Ürümqi Diwopu International",
+            "lat": 43.9071,
+            "lng": 87.4741
+        },
+
+        {
+            "icao": "RJBB",
+            "iata": "KIX",
+            "name": "Osaka Kansai International",
+            "lat": 34.4347,
+            "lng": 135.2440
+        },
+        {
+            "icao": "RJGG",
+            "iata": "NGO",
+            "name": "Nagoya Chubu Centrair International",
+            "lat": 34.8584,
+            "lng": 136.8054
+        },
+        {
+            "icao": "RJFF",
+            "iata": "FUK",
+            "name": "Fukuoka Airport",
+            "lat": 33.5859,
+            "lng": 130.4510
+        },
+        {
+            "icao": "ROAH",
+            "iata": "OKA",
+            "name": "Naha Airport",
+            "lat": 26.1958,
+            "lng": 127.6458
+        },
+
+        {
+            "icao": "OJAI",
+            "iata": "AUH",
+            "name": "Abu Dhabi International",
+            "lat": 24.4330,
+            "lng": 54.6511
+        },
+        {
+            "icao": "OMAA",
+            "iata": "AUH",
+            "name": "Abu Dhabi International",
+            "lat": 24.4330,
+            "lng": 54.6511
+        },
+        {
+            "icao": "OKBK",
+            "iata": "KWI",
+            "name": "Kuwait International Airport",
+            "lat": 29.2267,
+            "lng": 47.9689
+        },
+        {
+            "icao": "OBBI",
+            "iata": "BAH",
+            "name": "Bahrain International Airport",
+            "lat": 26.2708,
+            "lng": 50.6336
+        },
+        {
+            "icao": "OOMS",
+            "iata": "MCT",
+            "name": "Muscat International Airport",
+            "lat": 23.5933,
+            "lng": 58.2844
+        },
+
+        {
+            "icao": "LLBG",
+            "iata": "TLV",
+            "name": "Tel Aviv Ben Gurion Airport",
+            "lat": 32.0114,
+            "lng": 34.8867
+        },
+        {
+            "icao": "OEJN",
+            "iata": "JED",
+            "name": "Jeddah King Abdulaziz International",
+            "lat": 21.6796,
+            "lng": 39.1565
+        },
+
+        {
+            "icao": "HECA",
+            "iata": "CAI",
+            "name": "Cairo International Airport",
+            "lat": 30.1219,
+            "lng": 31.4056
+        },
+        {
+            "icao": "HAAB",
+            "iata": "ADD",
+            "name": "Addis Ababa Bole International",
+            "lat": 8.9779,
+            "lng": 38.7992
+        },
+        {
+            "icao": "HKJK",
+            "iata": "NBO",
+            "name": "Nairobi Jomo Kenyatta International",
+            "lat": -1.3192,
+            "lng": 36.9278
+        },
+        {
+            "icao": "FACT",
+            "iata": "CPT",
+            "name": "Cape Town International",
+            "lat": -33.9715,
+            "lng": 18.6021
+        },
+        {
+            "icao": "FALA",
+            "iata": "LUN",
+            "name": "Lusaka Kenneth Kaunda International",
+            "lat": -15.3308,
+            "lng": 28.4526
+        },
+        {
+            "icao": "FKKD",
+            "iata": "FIH",
+            "name": "Kinshasa N'Djili Airport",
+            "lat": -4.3858,
+            "lng": 15.4446
+        },
+
+        {
+            "icao": "NZAA",
+            "iata": "AKL",
+            "name": "Auckland Airport",
+            "lat": -37.0082,
+            "lng": 174.7850
+        },
+        {
+            "icao": "NZCH",
+            "iata": "CHC",
+            "name": "Christchurch International",
+            "lat": -43.4894,
+            "lng": 172.5320
+        },
+        {
+            "icao": "NZWN",
+            "iata": "WLG",
+            "name": "Wellington International Airport",
+            "lat": -41.3272,
+            "lng": 174.8050
+        },
+        {
+            "icao": "YBBN",
+            "iata": "BNE",
+            "name": "Brisbane Airport",
+            "lat": -27.3842,
+            "lng": 153.1175
+        },
+        {
+            "icao": "YPPH",
+            "iata": "PER",
+            "name": "Perth Airport",
+            "lat": -31.9403,
+            "lng": 115.9672
+        },
+        {
+            "icao": "YPAD",
+            "iata": "ADL",
+            "name": "Adelaide Airport",
+            "lat": -34.9450,
+            "lng": 138.5311
         }
     ]
 }
