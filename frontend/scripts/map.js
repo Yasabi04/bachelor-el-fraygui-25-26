@@ -386,11 +386,33 @@ async function updateFlightInfo(ap_icao, ap_type, dep, arr, progress) {
     const flight_arr_name = document.querySelector(".flight-arr-name");
     const flight_progress = document.querySelector(".progress-max");
 
+    // Mobile elements
+    const mobile_icao = document.querySelector(".mobile-flight-icao");
+    const mobile_aircraft = document.querySelector(".mobile-flight-aircraft");
+    const mobile_dep = document.querySelector(".mobile-flight-dep-iata");
+    const mobile_dep_name = document.querySelector(".mobile-flight-dep-name");
+    const mobile_arr = document.querySelector(".mobile-flight-arr-iata");
+    const mobile_arr_name = document.querySelector(".mobile-flight-arr-name");
+    const mobile_progress = document.querySelector(".mobile-flight-menu .progress-max");
+
+    const depName = await getAirport(dep);
+    const arrName = await getAirport(arr);
+
+    // Desktop
     icao.innerHTML = ap_icao;
     aircraft.innerHTML = ap_type;
     flight_dep.innerHTML = dep;
-    flight_dep_name.innerHTML = await getAirport(dep);
+    flight_dep_name.innerHTML = depName;
     flight_arr.innerHTML = arr;
-    flight_arr_name.innerHTML = await getAirport(arr);
+    flight_arr_name.innerHTML = arrName;
     flight_progress.style.setProperty("--after-width", `${progress}%`);
+
+    // Mobile
+    mobile_icao.innerHTML = ap_icao;
+    mobile_aircraft.innerHTML = ap_type;
+    mobile_dep.innerHTML = dep;
+    mobile_dep_name.innerHTML = depName;
+    mobile_arr.innerHTML = arr;
+    mobile_arr_name.innerHTML = arrName;
+    mobile_progress.style.setProperty("--after-width", `${progress}%`);
 }
