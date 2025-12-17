@@ -15,7 +15,7 @@
         />
         <link rel="stylesheet" href="./styles/base.css" />
         <link rel="stylesheet" href="./styles/main.css" />
-        <link rel="stylesheet" href="./styles/map.css">
+        <link rel="stylesheet" href="./styles/map.css" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script src="https://unpkg.com/@joergdietrich/leaflet.terminator"></script>
         <title>auroro - map</title>
@@ -23,10 +23,10 @@
     </head>
     <body>
         <div id="map"></div>
-        <aside class = "flight-menu-container">
-            <section class = "flight-menu">
+        <aside class="flight-menu-container">
+            <section class="flight-menu">
                 <h1 class="flight-icao">LH810</h1>
-                <span class = "flight-aircraft">AIRBUS A320 - 200</span>
+                <span class="flight-aircraft">AIRBUS A320 - 200</span>
                 <div class="flight-route">
                     <div class="flight-start">
                         <p class="flight-dep-iata">FRA</p>
@@ -34,11 +34,35 @@
                     </div>
                     <div class="flight-end">
                         <p class="flight-arr-iata">JFK</p>
-                        <p class="flight-arr-name">New York International Airport</p>
+                        <p class="flight-arr-name">
+                            New York International Airport
+                        </p>
                     </div>
                 </div>
                 <div class="progress-max"></div>
             </section>
+        </aside>
+        <aside class="mobile-flight-menu">
+            <div class="mobile-flight-name-wrapper">
+                <span class="mobile-flight-icao">LH810</span>
+                <span class="mobile-flight-aircraft">AIRBUS A320 - 200</span>
+            </div>
+
+            <div class="mobile-flight-route">
+                <div class="mobile-flight-start">
+                    <p class="mobile-flight-dep-iata">FRA</p>
+                    <p class="mobile-flight-dep-name">
+                        Frankfurt Intern. Airport
+                    </p>
+                </div>
+                <div class="mobile-flight-end">
+                    <p class="mobile-flight-arr-iata">STN</p>
+                    <p class="mobile-flight-arr-name">
+                        London Stansted Airport
+                    </p>
+                </div>
+            </div>
+            <div class="progress-max"></div>
         </aside>
     </body>
     <script src="./scripts/map.js"></script>
