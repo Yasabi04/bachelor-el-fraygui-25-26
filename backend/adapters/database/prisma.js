@@ -49,6 +49,7 @@ class PrismDBAdapter {
     async getAllConnections() {
         try {
             const allConnections = await prisma.connections.findMany();
+            console.log('Gefundenen Connections: ', allConnections)
             return {
                 success: true,
                 allConnections: allConnections,
