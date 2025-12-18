@@ -16,12 +16,12 @@ function checkUser() {
     }
 }
 
-ws.onopen((_) => {
+ws.onopen = () => {
     console.log("Verbunden!");
     ws.send("Client bereit");
-});
+};
 
-ws.onmessage(async (event) => {
+ws.onmessage = (async (event) => {
     let rawData = event.data;
 
     if (rawData instanceof Blob) {
@@ -41,7 +41,6 @@ ws.onmessage(async (event) => {
             const icao = flightArray[0];
 
             if (window.activePlanes.has(icao)) {
-                // Existierendes Flugzeug: nur dynamische Werte aktualisieren
                 const existing = window.activePlanes.get(icao);
                 window.activePlanes.set(icao, {
                     ...existing,
@@ -52,7 +51,6 @@ ws.onmessage(async (event) => {
                     spd: flightArray.speed
                 });
             } else {
-                // Neues Flugzeug: alle Daten setzen
                 window.activePlanes.set(icao, {
                     aircraft_type: flightArray.aircraft_icao,
                     lat: flightArray.lat,
