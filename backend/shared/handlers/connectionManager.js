@@ -13,6 +13,7 @@ class ConnectionManager {
         const connections = await this.db.getAllConnections();
         console.log('Verbunden: ', connections.allConnections.length)
 
+        //* eigentlich connections.allConnections.length !!!
         if (connections.allConnections >= 1) {
             console.log("Erste Verbindung! Setze POLLING_STATUS auf true");
             await this.db.setPollingStatus(true);

@@ -9,14 +9,17 @@ const { Pool } = require('pg');
 let prisma;
 
 try {
+
+    const DB_PW = process.env.DB_PW
+    const DB_NAME = process.env.DB_NAME
     console.log('DB_URL:', process.env.DATABASE_URL ? 'gesetzt' : 'NICHT gesetzt');
     
     const pool = new Pool({
         user: 'postgres',
-        password: 'y18assin03!',
+        password: DB_PW,
         host: 'localhost',
         port: 5432,
-        database: 'aurora_bachelor'
+        database: DB_NAME
     });
     
     const adapter = new PrismaPg(pool);
