@@ -108,7 +108,7 @@
         z-index: 10000;
         background-color: var(--color-bg);
         margin: 0;
-        max-width: 100%;
+        max-width: 100%; 
         width: 100%;
         padding: var(--size-m);
         box-sizing: border-box;

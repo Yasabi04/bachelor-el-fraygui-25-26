@@ -1,72 +1,84 @@
 let map = null;
 let activeRoutes = new Map(); // Speichert aktive Routen für Toggle
-let activePlanes = new Map();
+let planeMarkers = new Map(); // Speichert die Marker für jedes Flugzeug
 
-activePlanes.set("LH810", {
-    aircraft_type: "AIRBUS A320 - 200",
-    lat: 51.43,
-    long: 3.21,
-    dep: "FRA",
-    arr: "JFK",
+// Verwende die globale activePlanes Map aus main.js
+// Fallback für Entwicklung/Test, falls main.js noch nicht geladen ist
+if (!window.activePlanes) {
+    window.activePlanes = new Map();
+    
+    window.activePlanes.set("LH810", {
+        aircraft_type: "AIRBUS A320 - 200",
+        lat: 51.43,
+        long: 3.21,
+        dep: "FRA",
+        arr: "JFK",
+    });
+
+    window.activePlanes.set("CA7289", {
+        aircraft_type: "Boeing 777-200",
+        lat: 52.15,
+        long: -35.2,
+        dep: "YVR",
+        arr: "FCO",
+    });
+
+    window.activePlanes.set("RYR5880", {
+        aircraft_type: "Boeing 737-8",
+        lat: 50.43,
+        long: 3.21,
+        dep: "CGN",
+        arr: "STN",
+    });
+
+    window.activePlanes.set("BA456", {
+        aircraft_type: "AIRBUS A380",
+        lat: 48.85,
+        long: 2.35,
+        dep: "LHR",
+        arr: "SIN",
+    });
+
+    window.activePlanes.set("AF1234", {
+        aircraft_type: "Boeing 777-300",
+        lat: 52.52,
+        long: 13.4,
+        dep: "CDG",
+        arr: "LAX",
+    });
+
+    window.activePlanes.set("EK789", {
+        aircraft_type: "AIRBUS A330-900",
+        lat: 45.76,
+        long: 4.84,
+        dep: "DXB",
+        arr: "MUC",
+    });
+
+    window.activePlanes.set("UA9021", {
+        aircraft_type: "Boeing 787-9 Dreamliner",
+        lat: 53.55,
+        long: 9.99,
+        dep: "EWR",
+        arr: "FRA",
+    });
+
+    window.activePlanes.set("QR456", {
+        aircraft_type: "AIRBUS A321neo",
+        lat: 50.03,
+        long: 8.57,
+        dep: "DOH",
+        arr: "BCN",
+    });
+}
+
+console.log(window.activePlanes);
+
+// Event Listener für automatische Updates von main.js
+window.addEventListener('activePlanesUpdated', (event) => {
+    console.log('Flugzeuge aktualisiert, aktualisiere Karte...');
+    updatePlaneMarkers();
 });
-
-activePlanes.set("CA7289", {
-    aircraft_type: "Boeing 777-200",
-    lat: 52.15,
-    long: -35.2,
-    dep: "YVR",
-    arr: "FCO",
-});
-
-activePlanes.set("RYR5880", {
-    aircraft_type: "Boeing 737-8",
-    lat: 50.43,
-    long: 3.21,
-    dep: "CGN",
-    arr: "STN",
-});
-
-activePlanes.set("BA456", {
-    aircraft_type: "AIRBUS A380",
-    lat: 48.85,
-    long: 2.35,
-    dep: "LHR",
-    arr: "SIN",
-});
-
-activePlanes.set("AF1234", {
-    aircraft_type: "Boeing 777-300",
-    lat: 52.52,
-    long: 13.4,
-    dep: "CDG",
-    arr: "LAX",
-});
-
-activePlanes.set("EK789", {
-    aircraft_type: "AIRBUS A350-900",
-    lat: 45.76,
-    long: 4.84,
-    dep: "DXB",
-    arr: "MUC",
-});
-
-activePlanes.set("UA9021", {
-    aircraft_type: "Boeing 787-9 Dreamliner",
-    lat: 53.55,
-    long: 9.99,
-    dep: "EWR",
-    arr: "FRA",
-});
-
-activePlanes.set("QR456", {
-    aircraft_type: "AIRBUS A321neo",
-    lat: 50.03,
-    long: 8.57,
-    dep: "DOH",
-    arr: "BCN",
-});
-
-console.log(activePlanes);
 
 const tileLayer = L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -313,7 +325,7 @@ function handleError(err) {
 }
 
 function displayPlane() {
-    activePlanes.forEach((p, key) => {
+    window.activePlanes.forEach((p, key) => {
         let plane;
         const aircraftType = p.aircraft_type;
 
@@ -346,6 +358,67 @@ function displayPlane() {
                 progress * 100
             );
         });
+        
+        // Speichere Marker für spätere Updates
+        planeMarkers.set(key, plane);
+    });
+}
+
+// Neue Funktion zum Aktualisieren der Flugzeug-Marker
+function updatePlaneMarkers() {
+    if (!map) return;
+    
+    // Aktualisiere existierende Marker oder erstelle neue
+    window.activePlanes.forEach((p, key) => {
+        if (planeMarkers.has(key)) {
+            // Aktualisiere Position des existierenden Markers
+            const marker = planeMarkers.get(key);
+            marker.setLatLng([p.lat, p.long]);
+        } else {
+            // Erstelle neuen Marker für neues Flugzeug
+            const aircraftType = p.aircraft_type;
+            let plane;
+            
+            if (
+                aircraftType.includes("380") ||
+                aircraftType.includes("747") ||
+                aircraftType.includes("340")
+            ) {
+                plane = L.marker([p.lat, p.long], { icon: planeIcon4 }).addTo(map);
+            } else {
+                plane = L.marker([p.lat, p.long], { icon: planeIcon2 }).addTo(map);
+            }
+            
+            plane.addEventListener("click", (_) => {
+                const progress = handleRouteProgress(
+                    40.6413,
+                    -73.7781,
+                    p.lat,
+                    p.long,
+                    50.0379,
+                    8.5622,
+                    key
+                );
+                
+                updateFlightInfo(
+                    key,
+                    p.aircraft_type,
+                    p.dep,
+                    p.arr,
+                    progress * 100
+                );
+            });
+            
+            planeMarkers.set(key, plane);
+        }
+    });
+    
+    // Entferne Marker für Flugzeuge, die nicht mehr in activePlanes sind
+    planeMarkers.forEach((marker, key) => {
+        if (!window.activePlanes.has(key)) {
+            map.removeLayer(marker);
+            planeMarkers.delete(key);
+        }
     });
 }
 
