@@ -6,7 +6,7 @@ let planeMarkers = new Map(); // Speichert die Marker für jedes Flugzeug
 // Fallback für Entwicklung/Test, falls main.js noch nicht geladen ist
 if (!window.activePlanes) {
     window.activePlanes = new Map();
-    
+
     window.activePlanes.set("LH810", {
         aircraft_type: "AIRBUS A320 - 200",
         lat: 51.43,
@@ -72,11 +72,27 @@ if (!window.activePlanes) {
     });
 }
 
+window.activePlanes.set("LH810", {
+    aircraft_type: "AIRBUS A320 - 200",
+    lat: 51.43,
+    long: 3.21,
+    dep: "FRA",
+    arr: "JFK",
+});
+
+window.activePlanes.set("CA7289", {
+    aircraft_type: "Boeing 777-200",
+    lat: 52.15,
+    long: -35.2,
+    dep: "YVR",
+    arr: "FCO",
+});
+
 console.log(window.activePlanes);
 
 // Event Listener für automatische Updates von main.js
-window.addEventListener('activePlanesUpdated', (event) => {
-    console.log('Flugzeuge aktualisiert, aktualisiere Karte...');
+window.addEventListener("activePlanesUpdated", (event) => {
+    console.log("Flugzeuge aktualisiert, aktualisiere Karte...");
     updatePlaneMarkers();
 });
 
@@ -213,7 +229,7 @@ function handleRouteProgress(
     );
 
     activeRoutes.set(routeId, { polyline, depMarker, arrMarker });
-    map.flyTo([planePos_lat, planePos_lng]);
+    map.flyTo([planePos_lat, planePos_lng], 8);
 
     // Hier die Funktion aufrufen
 
@@ -358,7 +374,7 @@ function displayPlane() {
                 progress * 100
             );
         });
-        
+
         // Speichere Marker für spätere Updates
         planeMarkers.set(key, plane);
     });
@@ -367,7 +383,7 @@ function displayPlane() {
 // Neue Funktion zum Aktualisieren der Flugzeug-Marker
 function updatePlaneMarkers() {
     if (!map) return;
-    
+
     // Aktualisiere existierende Marker oder erstelle neue
     window.activePlanes.forEach((p, key) => {
         if (planeMarkers.has(key)) {
@@ -378,17 +394,21 @@ function updatePlaneMarkers() {
             // Erstelle neuen Marker für neues Flugzeug
             const aircraftType = p.aircraft_type;
             let plane;
-            
+
             if (
                 aircraftType.includes("380") ||
                 aircraftType.includes("747") ||
                 aircraftType.includes("340")
             ) {
-                plane = L.marker([p.lat, p.long], { icon: planeIcon4 }).addTo(map);
+                plane = L.marker([p.lat, p.long], { icon: planeIcon4 }).addTo(
+                    map
+                );
             } else {
-                plane = L.marker([p.lat, p.long], { icon: planeIcon2 }).addTo(map);
+                plane = L.marker([p.lat, p.long], { icon: planeIcon2 }).addTo(
+                    map
+                );
             }
-            
+
             plane.addEventListener("click", (_) => {
                 const progress = handleRouteProgress(
                     40.6413,
@@ -399,7 +419,7 @@ function updatePlaneMarkers() {
                     8.5622,
                     key
                 );
-                
+
                 updateFlightInfo(
                     key,
                     p.aircraft_type,
@@ -408,11 +428,11 @@ function updatePlaneMarkers() {
                     progress * 100
                 );
             });
-            
+
             planeMarkers.set(key, plane);
         }
     });
-    
+
     // Entferne Marker für Flugzeuge, die nicht mehr in activePlanes sind
     planeMarkers.forEach((marker, key) => {
         if (!window.activePlanes.has(key)) {
@@ -466,7 +486,9 @@ async function updateFlightInfo(ap_icao, ap_type, dep, arr, progress) {
     const mobile_dep_name = document.querySelector(".mobile-flight-dep-name");
     const mobile_arr = document.querySelector(".mobile-flight-arr-iata");
     const mobile_arr_name = document.querySelector(".mobile-flight-arr-name");
-    const mobile_progress = document.querySelector(".mobile-flight-menu .progress-max");
+    const mobile_progress = document.querySelector(
+        ".mobile-flight-menu .progress-max"
+    );
 
     const depName = await getAirport(dep);
     const arrName = await getAirport(arr);
