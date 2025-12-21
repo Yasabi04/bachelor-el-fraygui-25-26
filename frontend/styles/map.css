@@ -179,7 +179,7 @@
         position: fixed;
         bottom: 0;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translate(-50%, 100%);
         z-index: 10000;
         background-color: var(--color-bg);
         margin: 0;
