@@ -94,7 +94,7 @@
 }
 
 .mobile-flight-menu {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
@@ -108,6 +108,7 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    transition: 0.2s;
 
     .mobile-flight-name-wrapper {
         padding-bottom: var(--size-xs);
@@ -175,8 +176,10 @@
     }
 
     .mobile-flight-menu {
-        position: absolute;
+        position: fixed;
         bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
         z-index: 10000;
         background-color: var(--color-bg);
         margin: 0;

@@ -158,21 +158,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         coordsControl.getContainer().innerHTML = `Lat: ${lat}, Lng: ${lng}`;
     });
 
+    map.on("click", (e) => {
+        const flightInfo = document.querySelector(".mobile-flight-menu");
+
+        flightInfo.style = "transform: translate(-50%, 100%)";
+
+        activeRoutes.forEach((routeData) => {
+            map.removeLayer(routeData.polyline);
+            map.removeLayer(routeData.depMarker);
+            map.removeLayer(routeData.arrMarker);
+        });
+        activeRoutes.clear();
+    });
+
     map.whenReady(() => {
         displayPlane();
     });
 });
-
-// if ("geolocation" in navigator) {
-//     navigator.geolocation.getCurrentPosition(handlePosition, handleError, {
-//         enableHighAccuracy: true,
-//         timeout: 10000,
-//         maximumAge: 0,
-//     });
-// } else {
-//     const lH = document.querySelector(".location-header");
-//     lH.innerHTML = "Geolocation wird von diesem Browser nicht unterstützt.";
-// }
 
 function handleRouteProgress(
     dep_lat,
@@ -336,10 +338,6 @@ function handlePosition(position) {
     }
 }
 
-function handleError(err) {
-    console.warn("Geolocation error:", err);
-}
-
 function displayPlane() {
     window.activePlanes.forEach((p, key) => {
         let plane;
@@ -380,7 +378,6 @@ function displayPlane() {
     });
 }
 
-// Neue Funktion zum Aktualisieren der Flugzeug-Marker
 function updatePlaneMarkers() {
     if (!map) return;
 
@@ -490,24 +487,30 @@ async function updateFlightInfo(ap_icao, ap_type, dep, arr, progress) {
         ".mobile-flight-menu .progress-max"
     );
 
+    const flightInfo = document.querySelector(".mobile-flight-menu");
+
+    flightInfo.style = "transform: translate(-50%, 0%)";
+
     const depName = await getAirport(dep);
     const arrName = await getAirport(arr);
 
-    // Desktop
-    icao.innerHTML = ap_icao;
-    aircraft.innerHTML = ap_type;
-    flight_dep.innerHTML = dep;
-    flight_dep_name.innerHTML = depName;
-    flight_arr.innerHTML = arr;
-    flight_arr_name.innerHTML = arrName;
-    flight_progress.style.setProperty("--after-width", `${progress}%`);
+    // Desktop (nur wenn Elemente existieren)
+    if (icao) icao.innerHTML = ap_icao;
+    if (aircraft) aircraft.innerHTML = ap_type;
+    if (flight_dep) flight_dep.innerHTML = dep;
+    if (flight_dep_name) flight_dep_name.innerHTML = depName;
+    if (flight_arr) flight_arr.innerHTML = arr;
+    if (flight_arr_name) flight_arr_name.innerHTML = arrName;
+    if (flight_progress)
+        flight_progress.style.setProperty("--after-width", `${progress}%`);
 
     // Mobile
-    mobile_icao.innerHTML = ap_icao;
-    mobile_aircraft.innerHTML = ap_type;
-    mobile_dep.innerHTML = dep;
-    mobile_dep_name.innerHTML = depName;
-    mobile_arr.innerHTML = arr;
-    mobile_arr_name.innerHTML = arrName;
-    mobile_progress.style.setProperty("--after-width", `${progress}%`);
+    if (mobile_icao) mobile_icao.innerHTML = ap_icao;
+    if (mobile_aircraft) mobile_aircraft.innerHTML = ap_type;
+    if (mobile_dep) mobile_dep.innerHTML = dep;
+    if (mobile_dep_name) mobile_dep_name.innerHTML = depName;
+    if (mobile_arr) mobile_arr.innerHTML = arr;
+    if (mobile_arr_name) mobile_arr_name.innerHTML = arrName;
+    if (mobile_progress)
+        mobile_progress.style.setProperty("--after-width", `${progress}%`);
 }
