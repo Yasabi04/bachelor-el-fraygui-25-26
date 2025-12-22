@@ -14,11 +14,18 @@ class ConnectionManager {
         console.log('Verbunden: ', connections.allConnections.length)
 
         //* eigentlich connections.allConnections.length !!!
-        if (connections.allConnections >= 1) {
-            console.log("Erste Verbindung! Setze POLLING_STATUS auf true");
+        if (connections.allConnections.length >= 1) {
+            console.log("Mindestens eine Verbindung! Setze POLLING_STATUS auf true");
             await this.db.setPollingStatus(true);
-            this.pollingHandler.executeFetch()
-                .catch(e => console.error('Polling Error', e))
+            
+            // Prüfe ob Polling bereits läuft, bevor es gestartet wird
+            if (!this.pollingHandler.isPolling) {
+                console.log("Starte Polling-Cycle...");
+                this.pollingHandler.executeFetch()
+                    .catch(e => console.error('Polling Error', e))
+            } else {
+                console.log("Polling läuft bereits.");
+            }
         }
 
         return {

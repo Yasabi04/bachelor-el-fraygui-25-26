@@ -1,4 +1,5 @@
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+require('dotenv').config();
 
 class PollingHandler {
     constructor(dbAdapter, wsAdapter) {
@@ -35,15 +36,19 @@ class PollingHandler {
                     console.log("Start fetch...");
 
                     // 3. Daten abrufen
-                    const req = await fetch(
-                        "http://www.randomnumberapi.com/api/v1.0/random?min=100&max=1000"
-                    );
                     // const req = await fetch(
-                    //   `https://airlabs.co/api/v9/flights?status=en_route&bbox=34,-25,72,45&_fields=flight_iata,lat,lng,dir,speed,dep_iata,arr_iata,status&api_key=2459e20a-1f63-466d-8f50-88c99b82b44f`
-                    // )
+                    //     "http://www.randomnumberapi.com/api/v1.0/random?min=100&max=1000"
+                    // );
+                    const apiKey = process.env.AIRLABS_KEY;
+                    const req = await fetch(
+                      `https://airlabs.co/api/v9/flights?status=en_route&bbox=34,-25,72,45&_fields=flight_iata,lat,lng,dir,speed,dep_iata,arr_iata,aircraft_icao,status&api_key=${apiKey}`
+                    )
                     const response = await req.json();
-                    const flights = response || [];
-                    console.log(flights)
+                    const flights = response.response || [];
+                    // console.log('-----------------------------')
+                    // console.log('API Response:', response)
+                    // console.log('Flights Array:', flights)
+                    // console.log('-----------------------------')
 
                     console.log(`Daten geladen: ${flights.length} Einträge.`);
 
@@ -61,7 +66,7 @@ class PollingHandler {
 
                     // 5. Warten
                     console.log("Warte 10 Sekunden...");
-                    await sleep(1000);
+                    await sleep(10000);
 
                 } catch (innerError) {
                     console.error("Fehler im Fetch-Vorgang:", innerError.message);
@@ -78,7 +83,8 @@ class PollingHandler {
 
     async broadcastToConnections(connections, flights) {
         try {
-            const payload = JSON.stringify(flights)
+            const payload = JSON.stringify({ states: flights })
+            console.log(`Broadcasting to ${connections.length} connections`)
             for (const conn of connections) {
                 if (conn.connectionId) {
                     this.ws.postToConnection(conn.connectionId, payload);

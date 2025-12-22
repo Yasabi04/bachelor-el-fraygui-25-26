@@ -1,6 +1,8 @@
 let map = null;
 let activeRoutes = new Map(); // Speichert aktive Routen für Toggle
 let planeMarkers = new Map(); // Speichert die Marker für jedes Flugzeug
+let isUpdating = false; // Verhindert gleichzeitige Updates
+let updateScheduled = false; // Für Throttling
 
 // Verwende die globale activePlanes Map aus main.js
 // Fallback für Entwicklung/Test, falls main.js noch nicht geladen ist
@@ -72,28 +74,33 @@ if (!window.activePlanes) {
     });
 }
 
-window.activePlanes.set("LH810", {
-    aircraft_type: "AIRBUS A320 - 200",
-    lat: 51.43,
-    long: 3.21,
-    dep: "FRA",
-    arr: "JFK",
-});
+//* Dummy Daten
+// window.activePlanes.set("LH810", {
+//     aircraft_type: "AIRBUS A320 - 200",
+//     lat: 51.43,
+//     long: 3.21,
+//     dep: "FRA",
+//     arr: "JFK",
+// });
 
-window.activePlanes.set("CA7289", {
-    aircraft_type: "Boeing 777-200",
-    lat: 52.15,
-    long: -35.2,
-    dep: "YVR",
-    arr: "FCO",
-});
+// window.activePlanes.set("CA7289", {
+//     aircraft_type: "Boeing 777-200",
+//     lat: 52.15,
+//     long: -35.2,
+//     dep: "YVR",
+//     arr: "FCO",
+// });
 
-console.log(window.activePlanes);
-
-// Event Listener für automatische Updates von main.js
+// Event Listener für automatische Updates von main.js mit Throttling
 window.addEventListener("activePlanesUpdated", (event) => {
-    console.log("Flugzeuge aktualisiert, aktualisiere Karte...");
-    updatePlaneMarkers();
+    // Throttle updates auf max 1x pro Sekunde
+    if (updateScheduled) return;
+    
+    updateScheduled = true;
+    setTimeout(() => {
+        updatePlaneMarkers();
+        updateScheduled = false;
+    }, 1000);
 });
 
 const tileLayer = L.tileLayer(
@@ -127,6 +134,16 @@ const planeIcon4 = L.icon({
     iconSize: [34, 34],
     iconAnchor: [17, 17],
 });
+
+// Hilfsfunktion zum Erstellen eines rotierten Icons
+function createRotatedIcon(baseIcon, rotation) {
+    return L.divIcon({
+        className: 'rotated-plane-icon',
+        html: `<img src="${baseIcon.options.iconUrl}" style="width: ${baseIcon.options.iconSize[0]}px; height: ${baseIcon.options.iconSize[1]}px; transform: rotate(${rotation}deg); transform-origin: center;">`,
+        iconSize: baseIcon.options.iconSize,
+        iconAnchor: baseIcon.options.iconAnchor
+    });
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mapEl = document.getElementById("map");
@@ -340,28 +357,45 @@ function handlePosition(position) {
 
 function displayPlane() {
     window.activePlanes.forEach((p, key) => {
-        let plane;
-        const aircraftType = p.aircraft_type;
+        // Überspringe, wenn der Marker bereits existiert
+        if (planeMarkers.has(key)) {
+            return;
+        }
 
+        const aircraftType = p.aircraft_type;
+        const rotation = p.deg || 0;
+
+        let icon;
         if (
             aircraftType.includes("380") ||
             aircraftType.includes("747") ||
             aircraftType.includes("340")
         ) {
-            plane = L.marker([p.lat, p.long], { icon: planeIcon4 }).addTo(map);
+            icon = createRotatedIcon(planeIcon4, rotation);
         } else {
-            plane = L.marker([p.lat, p.long], { icon: planeIcon2 }).addTo(map);
+            icon = createRotatedIcon(planeIcon2, rotation);
         }
+        
+        const plane = L.marker([p.lat, p.long], { icon: icon }).addTo(map);
 
-        plane.addEventListener("click", (_) => {
+        plane.addEventListener("click", async (_) => {
+            // Lade Flughafenkoordinaten aus airports-slim.json
+            const depAirport = await getAirport(p.dep);
+            const arrAirport = await getAirport(p.arr);
+
+            if (depAirport === "Kein Eintrag vorhanden" || arrAirport === "Kein Eintrag vorhanden") {
+                console.error(`Flughafen nicht gefunden: ${p.dep} oder ${p.arr}`);
+                return;
+            }
+
             const progress = handleRouteProgress(
-                40.6413, // JFK New York (Departure lat)
-                -73.7781, // JFK New York (Departure lng)
-                p.lat, // Paris (Plane position lat)
-                p.long, // Paris (Plane position lng)
-                50.0379, // Frankfurt (Arrival lat)
-                8.5622, // Frankfurt (Arrival lng)
-                key // Route ID für Toggle
+                depAirport.lat,
+                depAirport.lng,
+                p.lat,
+                p.long,
+                arrAirport.lat,
+                arrAirport.lng,
+                key
             );
 
             updateFlightInfo(
@@ -379,41 +413,58 @@ function displayPlane() {
 }
 
 function updatePlaneMarkers() {
-    if (!map) return;
+    if (!map || isUpdating) return;
+    
+    isUpdating = true;
+
+    // Hole die Kartenbounds für Sichtbarkeits-Check
+    const bounds = map.getBounds();
 
     // Aktualisiere existierende Marker oder erstelle neue
     window.activePlanes.forEach((p, key) => {
+        // Prüfe ob Flugzeug im sichtbaren Bereich ist
+        const isVisible = bounds.contains([p.lat, p.long]);
+        
+        const aircraftType = p.aircraft_type || '';
+        const rotation = p.deg || 0;
+        
+        // Bestimme das richtige Icon basierend auf Flugzeugtyp
+        let baseIcon = (aircraftType.includes("380") || 
+                        aircraftType.includes("747") || 
+                        aircraftType.includes("340")) ? planeIcon4 : planeIcon2;
+        
         if (planeMarkers.has(key)) {
             // Aktualisiere Position des existierenden Markers
             const marker = planeMarkers.get(key);
             marker.setLatLng([p.lat, p.long]);
-        } else {
-            // Erstelle neuen Marker für neues Flugzeug
-            const aircraftType = p.aircraft_type;
-            let plane;
-
-            if (
-                aircraftType.includes("380") ||
-                aircraftType.includes("747") ||
-                aircraftType.includes("340")
-            ) {
-                plane = L.marker([p.lat, p.long], { icon: planeIcon4 }).addTo(
-                    map
-                );
-            } else {
-                plane = L.marker([p.lat, p.long], { icon: planeIcon2 }).addTo(
-                    map
-                );
+            
+            // Nur Icon updaten wenn sichtbar (Performance)
+            if (isVisible) {
+                let icon = createRotatedIcon(baseIcon, rotation);
+                marker.setIcon(icon);
             }
+        } else if (isVisible) {
+            // Erstelle neuen Marker nur wenn sichtbar
+            let icon = createRotatedIcon(baseIcon, rotation);
+            let plane = L.marker([p.lat, p.long], { icon: icon }).addTo(map);
 
-            plane.addEventListener("click", (_) => {
+            plane.addEventListener("click", async (_) => {
+                // Lade Flughafenkoordinaten aus airports-slim.json
+                const depAirport = await getAirport(p.dep);
+                const arrAirport = await getAirport(p.arr);
+
+                if (depAirport === "Kein Eintrag vorhanden" || arrAirport === "Kein Eintrag vorhanden") {
+                    console.error(`Flughafen nicht gefunden: ${p.dep} oder ${p.arr}`);
+                    return;
+                }
+
                 const progress = handleRouteProgress(
-                    40.6413,
-                    -73.7781,
+                    depAirport.lat,
+                    depAirport.lng,
                     p.lat,
                     p.long,
-                    50.0379,
-                    8.5622,
+                    arrAirport.lat,
+                    arrAirport.lng,
                     key
                 );
 
@@ -437,6 +488,8 @@ function updatePlaneMarkers() {
             planeMarkers.delete(key);
         }
     });
+    
+    isUpdating = false;
 }
 
 function setAirports(dep_lat, dep_lng, arr_lat, arr_lng) {
@@ -458,7 +511,11 @@ async function getAirport(short) {
 
         if (airport) {
             console.log(airport.name);
-            return airport.name;
+            return {
+                name: airport.name,
+                lat: airport.lat,
+                lng: airport.lng
+            };
         }
         return "Kein Eintrag vorhanden";
     } catch (err) {
@@ -491,8 +548,11 @@ async function updateFlightInfo(ap_icao, ap_type, dep, arr, progress) {
 
     flightInfo.style = "transform: translate(-50%, 0%)";
 
-    const depName = await getAirport(dep);
-    const arrName = await getAirport(arr);
+    const depAirport = await getAirport(dep);
+    const arrAirport = await getAirport(arr);
+
+    const depName = depAirport !== "Kein Eintrag vorhanden" ? depAirport.name : dep;
+    const arrName = arrAirport !== "Kein Eintrag vorhanden" ? arrAirport.name : arr;
 
     // Desktop (nur wenn Elemente existieren)
     if (icao) icao.innerHTML = ap_icao;

@@ -51,6 +51,7 @@ server.on("connection", async (socket, req) => {
 
     socket.on("close", (_) => {
         console.log('Schließe Verbindung für: ', connectionId)
+        connectionManager.handleDisconnection(connectionId)
         wsAdapter.removeConnection(connectionId)
     });
 });

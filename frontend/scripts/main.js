@@ -36,9 +36,9 @@ ws.onmessage = (async (event) => {
         if (!Array.isArray(states)) return;
 
         states.forEach((flightArray) => {
-            console.log(flightArray);
+            // console.log(flightArray);
 
-            const icao = flightArray[0];
+            const icao = flightArray.flight_iata;
 
             if (window.activePlanes.has(icao)) {
                 const existing = window.activePlanes.get(icao);
@@ -62,12 +62,17 @@ ws.onmessage = (async (event) => {
                     spd: flightArray.speed,
                 });
             }
+
         });
+
+        console.log(window.activePlanes)
 
         // Custom Event auslösen, damit andere Dateien auf Updates reagieren können
         window.dispatchEvent(new CustomEvent('activePlanesUpdated', {
             detail: { activePlanes: window.activePlanes }
         }));
+
+        console.log('-----------------------------------------')
         
     } catch (e) {
         console.error("Fehler beim Verarbeiten der WebSocket-Daten:", e);
