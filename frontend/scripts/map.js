@@ -112,7 +112,12 @@ const tileLayer = L.tileLayer(
     }
 );
 
-const canvasRenderer = L.canvas({ padding: 0.5 });
+const canvasRenderer = L.canvas({ 
+    padding: 0.5,
+    tolerance: 5,
+    updateWhenIdle: false,
+    updateWhenZooming: false
+});
 const coordsControl = L.control({ position: "bottomleft" });
 coordsControl.onAdd = () => {
     const div = L.DomUtil.create("div", "coords");
@@ -221,6 +226,8 @@ function handleRouteProgress(
     const polyline = L.polyline(curvePoints, {
         color: "orange",
         weight: 2,
+        renderer: canvasRenderer,
+        smoothFactor: 1.5
     }).addTo(map);
 
     //* 2. Berechnen wo das Flugzeug auf der Route ist
