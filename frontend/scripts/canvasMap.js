@@ -188,8 +188,56 @@ function drawAircraft(ctx, x, y, heading, type) {
     ctx.restore();
 }
 
-function updateInfo(iata, airplane_type, dep, arr) {
-    
+async function getAirport(short) {
+    try {
+        const response = await fetch("./json/airports-slim.json");
+        const data = await response.json();
+        const airport = data.airports.find((a) => a.iata === short);
+
+        if (airport) {
+            console.log(airport.name);
+            return {
+                name: airport.name,
+                lat: airport.lat,
+                lng: airport.lng
+            };
+        }
+        return "Kein Eintrag vorhanden";
+    } catch (err) {
+        console.error(err);
+        return "Kein Eintrag zu diesem Kürzel";
+    }
+}
+
+async function updateInfo(iata, airplane_type, dep, arr) {
+    const mobile_icao = document.querySelector(".mobile-flight-icao");
+    const mobile_aircraft = document.querySelector(".mobile-flight-aircraft");
+    const mobile_dep = document.querySelector(".mobile-flight-dep-iata");
+    const mobile_dep_name = document.querySelector(".mobile-flight-dep-name");
+    const mobile_arr = document.querySelector(".mobile-flight-arr-iata");
+    const mobile_arr_name = document.querySelector(".mobile-flight-arr-name");
+    const mobile_progress = document.querySelector(
+        ".mobile-flight-menu .progress-max"
+    );
+
+    const flightInfo = document.querySelector(".mobile-flight-menu");
+
+    flightInfo.style = "transform: translate(-50%, 0%)";
+
+    const depAirport = await getAirport(dep);
+    const arrAirport = await getAirport(arr);
+
+    const depName = depAirport !== "Kein Eintrag vorhanden" ? depAirport.name : dep;
+    const arrName = arrAirport !== "Kein Eintrag vorhanden" ? arrAirport.name : arr;
+
+
+    // Mobile
+    if (mobile_icao) mobile_icao.innerHTML = iata;
+    if (mobile_aircraft) mobile_aircraft.innerHTML = airplane_type;
+    if (mobile_dep) mobile_dep.innerHTML = dep;
+    if (mobile_dep_name) mobile_dep_name.innerHTML = depName;
+    if (mobile_arr) mobile_arr.innerHTML = arr;
+    if (mobile_arr_name) mobile_arr_name.innerHTML = arrName;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -243,7 +291,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         const clicked = aircraftLayer.pick(p.x, p.y);
 
         if (clicked) {
-            console.log("Angeklicktes Flugzeug:", clicked);
+            console.log("Angeklicktes Flugzeug:", {
+                iata: clicked.iata,
+                type: clicked.type,
+                lat: clicked.lat,
+                lng: clicked.lng,
+                heading: clicked.heading,
+                dep: clicked.dep,
+                arr: clicked.arr
+            });
+            updateInfo(clicked.iata, clicked.type, clicked.dep, clicked.arr);
         }
     });
 
@@ -255,6 +312,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             lng: p.long,
             heading: p.deg || 0,
             type: p.aircraft_type,
+            dep: p.dep,
+            arr: p.arr
         })
     );
 
@@ -270,6 +329,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 lng: p.long,
                 heading: p.deg || 0,
                 type: p.aircraft_type,
+                dep: p.dep,
+                arr: p.arr
             })
         );
         if (aircraftLayer) {
