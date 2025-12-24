@@ -1,7 +1,7 @@
 const awsUrl = "";
 const serverUrl = `ws://localhost:7879?userId=${checkUser()}`;
-
-// Global exportierte activePlanes Map
+const testUrl = 'ws://localhost:5879'
+const wsIntervall = 10 * 1000 // Kickout für die Session
 window.activePlanes = new Map();
 
 const ws = new WebSocket(serverUrl);
@@ -15,6 +15,13 @@ function checkUser() {
         return localStorage.getItem("userId");
     }
 }
+
+const timeout = setTimeout(() => {
+    if(ws.readyState === WebSocket.OPEN){
+        ws.close(1000, "TimeOut")
+        alert("Timeout")
+    }
+}, wsIntervall)
 
 ws.onopen = () => {
     console.log("Verbunden!");
@@ -62,7 +69,6 @@ ws.onmessage = (async (event) => {
                     spd: flightArray.speed,
                 });
             }
-
         });
 
         console.log(window.activePlanes)
@@ -71,8 +77,6 @@ ws.onmessage = (async (event) => {
         window.dispatchEvent(new CustomEvent('activePlanesUpdated', {
             detail: { activePlanes: window.activePlanes }
         }));
-
-        console.log('-----------------------------------------')
         
     } catch (e) {
         console.error("Fehler beim Verarbeiten der WebSocket-Daten:", e);
