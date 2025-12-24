@@ -1,0 +1,284 @@
+{
+    "airplanes": [
+        {
+            "abbr": "A318",
+            "elab": "Airbus A318"
+        },
+        {
+            "abbr": "A319",
+            "elab": "Airbus A319"
+        },
+        {
+            "abbr": "A320",
+            "elab": "Airbus A320"
+        },
+        {
+            "abbr": "A321",
+            "elab": "Airbus A321"
+        },
+        {
+            "abbr": "A19N",
+            "elab": "Airbus A319neo"
+        },
+        {
+            "abbr": "A20N",
+            "elab": "Airbus A320neo"
+        },
+        {
+            "abbr": "A21N",
+            "elab": "Airbus A321neo"
+        },
+        {
+            "abbr": "A332",
+            "elab": "Airbus A330-200"
+        },
+        {
+            "abbr": "A333",
+            "elab": "Airbus A330-300"
+        },
+        {
+            "abbr": "A339",
+            "elab": "Airbus A330-900neo"
+        },
+        {
+            "abbr": "A342",
+            "elab": "Airbus A340-200"
+        },
+        {
+            "abbr": "A343",
+            "elab": "Airbus A340-300"
+        },
+        {
+            "abbr": "A345",
+            "elab": "Airbus A340-500"
+        },
+        {
+            "abbr": "A346",
+            "elab": "Airbus A340-600"
+        },
+        {
+            "abbr": "A359",
+            "elab": "Airbus A350-900"
+        },
+        {
+            "abbr": "A35K",
+            "elab": "Airbus A350-1000"
+        },
+        {
+            "abbr": "A388",
+            "elab": "Airbus A380-800"
+        },
+        {
+            "abbr": "A220",
+            "elab": "Airbus A220-100"
+        },
+        {
+            "abbr": "A221",
+            "elab": "Airbus A220-300"
+        },
+        {
+            "abbr": "B703",
+            "elab": "Boeing 707-300"
+        },
+        {
+            "abbr": "B712",
+            "elab": "Boeing 717-200"
+        },
+        {
+            "abbr": "B721",
+            "elab": "Boeing 727-100"
+        },
+        {
+            "abbr": "B722",
+            "elab": "Boeing 727-200"
+        },
+        {
+            "abbr": "B732",
+            "elab": "Boeing 737-200"
+        },
+        {
+            "abbr": "B733",
+            "elab": "Boeing 737-300"
+        },
+        {
+            "abbr": "B734",
+            "elab": "Boeing 737-400"
+        },
+        {
+            "abbr": "B735",
+            "elab": "Boeing 737-500"
+        },
+        {
+            "abbr": "B736",
+            "elab": "Boeing 737-600"
+        },
+        {
+            "abbr": "B737",
+            "elab": "Boeing 737-700"
+        },
+        {
+            "abbr": "B738",
+            "elab": "Boeing 737-800"
+        },
+        {
+            "abbr": "B739",
+            "elab": "Boeing 737-900"
+        },
+        {
+            "abbr": "B37M",
+            "elab": "Boeing 737 MAX 7"
+        },
+        {
+            "abbr": "B38M",
+            "elab": "Boeing 737 MAX 8"
+        },
+        {
+            "abbr": "B39M",
+            "elab": "Boeing 737 MAX 9"
+        },
+        {
+            "abbr": "B3XM",
+            "elab": "Boeing 737 MAX 10"
+        },
+        {
+            "abbr": "B741",
+            "elab": "Boeing 747-100"
+        },
+        {
+            "abbr": "B742",
+            "elab": "Boeing 747-200"
+        },
+        {
+            "abbr": "B743",
+            "elab": "Boeing 747-300"
+        },
+        {
+            "abbr": "B744",
+            "elab": "Boeing 747-400"
+        },
+        {
+            "abbr": "B748",
+            "elab": "Boeing 747-8"
+        },
+        {
+            "abbr": "B752",
+            "elab": "Boeing 757-200"
+        },
+        {
+            "abbr": "B753",
+            "elab": "Boeing 757-300"
+        },
+        {
+            "abbr": "B762",
+            "elab": "Boeing 767-200"
+        },
+        {
+            "abbr": "B763",
+            "elab": "Boeing 767-300"
+        },
+        {
+            "abbr": "B764",
+            "elab": "Boeing 767-400"
+        },
+        {
+            "abbr": "B772",
+            "elab": "Boeing 777-200"
+        },
+        {
+            "abbr": "B77L",
+            "elab": "Boeing 777-200LR"
+        },
+        {
+            "abbr": "B773",
+            "elab": "Boeing 777-300"
+        },
+        {
+            "abbr": "B77W",
+            "elab": "Boeing 777-300ER"
+        },
+        {
+            "abbr": "B778",
+            "elab": "Boeing 777-8"
+        },
+        {
+            "abbr": "B779",
+            "elab": "Boeing 777-9"
+        },
+        {
+            "abbr": "B788",
+            "elab": "Boeing 787-8 Dreamliner"
+        },
+        {
+            "abbr": "B789",
+            "elab": "Boeing 787-9 Dreamliner"
+        },
+        {
+            "abbr": "B78X",
+            "elab": "Boeing 787-10 Dreamliner"
+        },
+        {
+            "abbr": "E170",
+            "elab": "Embraer 170"
+        },
+        {
+            "abbr": "E175",
+            "elab": "Embraer 175"
+        },
+        {
+            "abbr": "E190",
+            "elab": "Embraer 190"
+        },
+        {
+            "abbr": "E195",
+            "elab": "Embraer 195"
+        },
+        {
+            "abbr": "E290",
+            "elab": "Embraer E190-E2"
+        },
+        {
+            "abbr": "E295",
+            "elab": "Embraer E195-E2"
+        },
+        {
+            "abbr": "CRJ1",
+            "elab": "Bombardier CRJ-100"
+        },
+        {
+            "abbr": "CRJ2",
+            "elab": "Bombardier CRJ-200"
+        },
+        {
+            "abbr": "CRJ7",
+            "elab": "Bombardier CRJ-700"
+        },
+        {
+            "abbr": "CRJ9",
+            "elab": "Bombardier CRJ-900"
+        },
+        {
+            "abbr": "CRJX",
+            "elab": "Bombardier CRJ-1000"
+        },
+        {
+            "abbr": "MD11",
+            "elab": "McDonnell Douglas MD-11"
+        },
+        {
+            "abbr": "MD82",
+            "elab": "McDonnell Douglas MD-82"
+        },
+        {
+            "abbr": "MD83",
+            "elab": "McDonnell Douglas MD-83"
+        },
+        {
+            "abbr": "MD88",
+            "elab": "McDonnell Douglas MD-88"
+        },
+        {
+            "abbr": "MD90",
+            "elab": "McDonnell Douglas MD-90"
+        }
+    ]
+}

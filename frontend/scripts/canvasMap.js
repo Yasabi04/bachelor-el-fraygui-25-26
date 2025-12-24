@@ -38,6 +38,8 @@ const tileLayer = L.tileLayer(
 L.CanvasLayer = L.Layer.extend({
     initialize(aircrafts) {
         this.aircrafts = aircrafts;
+        this.hoveredAircraft = null;
+        this.selectedAircraft = null;
     },
 
     onAdd(map) {
@@ -128,7 +130,9 @@ L.CanvasLayer = L.Layer.extend({
             }
 
             const p = this.map.latLngToContainerPoint([a.lat, a.lng]);
-            drawAircraft(ctx, p.x, p.y, a.heading || 0, a.type);
+            const isHovered = this.hoveredAircraft === a;
+            const isSelected = this.selectedAircraft === a;
+            drawAircraft(ctx, p.x, p.y, a.heading || 0, a.type, isHovered, isSelected);
             drawnCount++;
         }
     },
@@ -163,12 +167,29 @@ L.CanvasLayer = L.Layer.extend({
         }
         return null;
     },
+
+    setHovered(aircraft) {
+        if (this.hoveredAircraft !== aircraft) {
+            this.hoveredAircraft = aircraft;
+            this._redraw();
+        }
+    },
+
+    setSelected(aircraft) {
+        if (this.selectedAircraft !== aircraft) {
+            this.selectedAircraft = aircraft;
+            this._redraw();
+        }
+    },
 });
 
 const planeImg = new Image();
 planeImg.src = "./img/flg-zweistrahlig.svg";
 
-function drawAircraft(ctx, x, y, heading, type) {
+const planeImgHighlight = new Image();
+planeImgHighlight.src = "./img/flg-zweistrahlig-highlight.svg"; // Oder ein anderer Pfad
+
+function drawAircraft(ctx, x, y, heading, type, isHovered, isSelected) {
     ctx.save();
 
     // Optimale Rendering-Einstellungen für scharfe SVGs
@@ -183,7 +204,9 @@ function drawAircraft(ctx, x, y, heading, type) {
         (type.includes("380") || type.includes("747") || type.includes("340"));
     const size = is4Engine ? 34 : 32;
 
-    ctx.drawImage(planeImg, -size / 2, -size / 2, size, size);
+    // Wähle das richtige Image basierend auf State
+    const img = (isSelected || isHovered) ? planeImgHighlight : planeImg;
+    ctx.drawImage(img, -size / 2, -size / 2, size, size);
 
     ctx.restore();
 }
@@ -199,13 +222,27 @@ async function getAirport(short) {
             return {
                 name: airport.name,
                 lat: airport.lat,
-                lng: airport.lng
+                lng: airport.lng,
             };
         }
         return "Kein Eintrag vorhanden";
     } catch (err) {
         console.error(err);
         return "Kein Eintrag zu diesem Kürzel";
+    }
+}
+
+async function getElaboration(abbr) {
+    try {
+        const req = await fetch("./json/airplane-abbr.json");
+        const data = await req.json();
+
+        const word = data.airplanes.find((e) => e.abbr == abbr);
+
+        return word.elab;
+    } catch (error) {
+        console.log(error);
+        return "-----";
     }
 }
 
@@ -226,14 +263,16 @@ async function updateInfo(iata, airplane_type, dep, arr) {
 
     const depAirport = await getAirport(dep);
     const arrAirport = await getAirport(arr);
+    const longType = await getElaboration(airplane_type);
 
-    const depName = depAirport !== "Kein Eintrag vorhanden" ? depAirport.name : dep;
-    const arrName = arrAirport !== "Kein Eintrag vorhanden" ? arrAirport.name : arr;
-
+    const depName =
+        depAirport !== "Kein Eintrag vorhanden" ? depAirport.name : dep;
+    const arrName =
+        arrAirport !== "Kein Eintrag vorhanden" ? arrAirport.name : arr;
 
     // Mobile
     if (mobile_icao) mobile_icao.innerHTML = iata;
-    if (mobile_aircraft) mobile_aircraft.innerHTML = airplane_type;
+    if (mobile_aircraft) mobile_aircraft.innerHTML = longType;
     if (mobile_dep) mobile_dep.innerHTML = dep;
     if (mobile_dep_name) mobile_dep_name.innerHTML = depName;
     if (mobile_arr) mobile_arr.innerHTML = arr;
@@ -253,7 +292,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Erstelle Map
-    map = L.map("map").setView([51.7787, -0.2636], 6);
+    map = L.map("map").setView([51.7787, -0.2636], 4);
     tileLayer.addTo(map);
 
     if (L.terminator) {
@@ -283,6 +322,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const p = map.latLngToContainerPoint(e.latlng);
         const hovered = aircraftLayer.pick(p.x, p.y);
 
+        aircraftLayer.setHovered(hovered);
         map.getContainer().style.cursor = hovered ? "pointer" : "";
     });
 
@@ -298,9 +338,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 lng: clicked.lng,
                 heading: clicked.heading,
                 dep: clicked.dep,
-                arr: clicked.arr
+                arr: clicked.arr,
             });
+            aircraftLayer.setSelected(clicked);
             updateInfo(clicked.iata, clicked.type, clicked.dep, clicked.arr);
+            map.flyTo([clicked.lat, clicked.lng], 8)
+        } else {
+            // Deselektieren wenn auf leere Fläche geklickt wird
+            aircraftLayer.setSelected(null);
         }
     });
 
@@ -313,7 +358,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             heading: p.deg || 0,
             type: p.aircraft_type,
             dep: p.dep,
-            arr: p.arr
+            arr: p.arr,
         })
     );
 
@@ -330,7 +375,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 heading: p.deg || 0,
                 type: p.aircraft_type,
                 dep: p.dep,
-                arr: p.arr
+                arr: p.arr,
             })
         );
         if (aircraftLayer) {

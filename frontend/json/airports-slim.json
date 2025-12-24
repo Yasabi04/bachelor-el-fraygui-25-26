@@ -1066,6 +1066,20 @@
             "name": "Adelaide Airport",
             "lat": -34.9450,
             "lng": 138.5311
+        },
+        {
+            "icao": "EKYT",
+            "iata": "AAL",
+            "name": "Aalborg Airport",
+            "lat": 57.0928,
+            "lng": 9.8492
+        },
+        {
+            "icao": "LFSB",
+            "iata": "BSL",
+            "name": "Basel-Mulhouse-Freiburg Flughafen",
+            "lat": "47.59",
+            "lng": "7.5292"
         }
     ]
 }
