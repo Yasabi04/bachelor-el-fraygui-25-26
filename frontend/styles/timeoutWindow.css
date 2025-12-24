@@ -1,0 +1,65 @@
+.timeout-window {
+    z-index: 10000;
+    position: fixed;
+    bottom:  -100vh;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--color-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .timeout-container {
+        width: 50vw;
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        justify-content: center;
+        gap: var(--size-l);
+
+        .logo {
+            margin-right: auto;
+            font-size: var(--size-l);
+            font-weight: 800;
+            color: var(--color-font);
+            position: relative;
+        }
+
+        .logo::after {
+            content: "";
+            position: absolute;
+            bottom: 8px;
+            right: calc(-1 * 20px);
+            width: 18px;
+            height: 4px;
+            background-color: #c59a75;
+        }
+
+        .timeout-text {
+            font-size: var(--size-s);
+        }
+
+        .timeout-reload {
+            color: var(--color-bg);
+            margin: 0 auto;
+            width: 100%;
+            background-color: var(--color-highlight);
+            text-decoration: none;
+            font-size: var(--size-s);
+            font-weight: 700;
+            transition: 0.2s;
+            display: block;
+            text-align: center;
+            padding: 
+                calc(var(--size-xs) / 2)
+                0
+                calc(var(--size-xs) / 2)
+                var(--size-xs);
+        }
+
+        .timeout-reload:hover {
+            background-color: var(--color-compl);
+        }
+    }
+}

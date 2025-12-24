@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="./styles/base.css" />
         <link rel="stylesheet" href="./styles/main.css" />
         <link rel="stylesheet" href="./styles/map.css" />
+        <link rel="stylesheet" href="./styles/timeoutWindow.css" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script src="https://unpkg.com/@joergdietrich/leaflet.terminator"></script>
         <title>auroro - map</title>
@@ -51,18 +52,30 @@
             <div class="mobile-flight-route">
                 <div class="mobile-flight-start">
                     <p class="mobile-flight-dep-iata">CGN</p>
-                    <p class="mobile-flight-dep-name">
-                        (Köln/Bonn Flughafen)
-                    </p>
+                    <p class="mobile-flight-dep-name">(Köln/Bonn Flughafen)</p>
                 </div>
                 <div class="mobile-flight-end">
                     <p class="mobile-flight-arr-iata">FRA</p>
                     <p class="mobile-flight-arr-name">
-                        (Flughafen Frankfurt Internationa)
+                        (Flughafen Frankfurt International)
                     </p>
                 </div>
             </div>
             <div class="progress-max"></div>
+        </aside>
+
+        <aside class="timeout-window">
+            <section class="timeout-container">
+                <p class="logo">aurora</p>
+                <h1 class="timeout-heading">Deine Session ist abgelaufen</h1>
+                <p class="timeout-text">
+                    Um Daten zu sparen und eine gute Übertragungsrate zu
+                    erhalten, werden alle Nutzer nach zwei Minuten automatisch vom
+                    Server getrennt. Wenn Sie sich wieder verbinden wollen,
+                    laden Sie diese Seite neu oder klicken sie untern!
+                </p>
+                <a href="javascript:location.reload()" class="timeout-reload">Jetzt neu verbinden!</a>
+            </section>
         </aside>
     </body>
     <script src="./scripts/main.js"></script>

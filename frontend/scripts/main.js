@@ -4,7 +4,8 @@ const testUrl = 'ws://localhost:5879'
 const wsIntervall = 10 * 1000 // Kickout für die Session
 window.activePlanes = new Map();
 
-const ws = new WebSocket(serverUrl);
+const ws = new WebSocket(testUrl);
+const timeoutWindow = document.querySelector('.timeout-window')
 
 function checkUser() {
     if (!localStorage.getItem("userId")) {
@@ -19,7 +20,7 @@ function checkUser() {
 const timeout = setTimeout(() => {
     if(ws.readyState === WebSocket.OPEN){
         ws.close(1000, "TimeOut")
-        alert("Timeout")
+        timeoutWindow.style = `bottom: 0vh`;
     }
 }, wsIntervall)
 
