@@ -42,6 +42,7 @@ L.CanvasLayer = L.Layer.extend({
 
     onAdd(map) {
         this.map = map;
+        this.dpr = window.devicePixelRatio || 1;
 
         this.canvas = L.DomUtil.create("canvas", "leaflet-aircraft-layer");
         this.ctx = this.canvas.getContext("2d");
@@ -54,8 +55,11 @@ L.CanvasLayer = L.Layer.extend({
         this.canvas.style.zIndex = "400"; // Über overlayPane (400) aber unter popupPane (600)
 
         const size = map.getSize();
-        this.canvas.width = size.x;
-        this.canvas.height = size.y;
+        this.canvas.width = size.x * this.dpr;
+        this.canvas.height = size.y * this.dpr;
+        this.canvas.style.width = size.x + "px";
+        this.canvas.style.height = size.y + "px";
+        this.ctx.scale(this.dpr, this.dpr);
 
         // Füge Canvas direkt zum Map-Container hinzu, NICHT zum overlayPane
         map.getContainer().appendChild(this.canvas);
@@ -82,16 +86,24 @@ L.CanvasLayer = L.Layer.extend({
     },
 
     _onMove() {
-        // Während Bewegung: Nur neuzeichnen
         this._redraw();
     },
 
     _onViewReset() {
         // Bei Reset/Ende: Canvas-Größe anpassen und neuzeichnen
         const size = this.map.getSize();
-        if (this.canvas.width !== size.x || this.canvas.height !== size.y) {
-            this.canvas.width = size.x;
-            this.canvas.height = size.y;
+        const targetWidth = size.x * this.dpr;
+        const targetHeight = size.y * this.dpr;
+
+        if (
+            this.canvas.width !== targetWidth ||
+            this.canvas.height !== targetHeight
+        ) {
+            this.canvas.width = targetWidth;
+            this.canvas.height = targetHeight;
+            this.canvas.style.width = size.x + "px";
+            this.canvas.style.height = size.y + "px";
+            this.ctx.scale(this.dpr, this.dpr);
         }
         this._redraw();
     },
@@ -102,7 +114,7 @@ L.CanvasLayer = L.Layer.extend({
 
         const bounds = this.map.getBounds().pad(0.1);
         const zoom = this.map.getZoom();
-        
+
         const maxAircraft = this._getMaxAircraftForZoom(zoom);
         let drawnCount = 0;
 
@@ -111,7 +123,6 @@ L.CanvasLayer = L.Layer.extend({
                 continue;
             }
 
-            // Begrenze Anzahl basierend auf Zoom
             if (drawnCount >= maxAircraft) {
                 break;
             }
@@ -123,47 +134,64 @@ L.CanvasLayer = L.Layer.extend({
     },
 
     _getMaxAircraftForZoom(zoom) {
-        if (zoom <= 3) return 100;        // Weltkarte: nur 10 Flugzeuge
-        if (zoom <= 5) return 50;        // Kontinent: 50 Flugzeuge
-        if (zoom <= 7) return 200;       // Land: 200 Flugzeuge
-        if (zoom <= 9) return 500;       // Region: 500 Flugzeuge
-        return Infinity;                 // Nah rangezoomt: alle Flugzeuge
+        if (zoom <= 3) return 100; // Weltkarte: nur 10 Flugzeuge
+        if (zoom <= 5) return 50; // Kontinent: 50 Flugzeuge
+        if (zoom <= 7) return 200; // Land: 200 Flugzeuge
+        if (zoom <= 9) return 500; // Region: 500 Flugzeuge
+        return Infinity; // Nah rangezoomt: alle Flugzeuge
     },
 
     updateAircrafts(aircrafts) {
         this.aircrafts = aircrafts;
         this._redraw();
     },
+
+    pick(x, y) {
+        const bounds = this.map.getBounds();
+        const R = 14;
+
+        for (const a of this.aircrafts) {
+            if (!bounds.contains([a.lat, a.lng])) continue;
+
+            const p = this.map.latLngToContainerPoint([a.lat, a.lng]);
+            const dx = x - p.x;
+            const dy = y - p.y;
+
+            if (dx * dx + dy * dy < R * R) {
+                return a;
+            }
+        }
+        return null;
+    },
 });
 
-const planeImg = new Image()
-planeImg.src = './img/flg-zweistrahlig.svg'
+const planeImg = new Image();
+planeImg.src = "./img/flg-zweistrahlig.svg";
 
-// Funktion zum Zeichnen eines Flugzeugs
 function drawAircraft(ctx, x, y, heading, type) {
-
     ctx.save();
+
+    // Optimale Rendering-Einstellungen für scharfe SVGs
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
     ctx.translate(x, y);
     ctx.rotate((heading * Math.PI) / 180);
 
-    // Unterscheide zwischen 2-strahlig und 4-strahlig
     const is4Engine =
         type &&
         (type.includes("380") || type.includes("747") || type.includes("340"));
     const size = is4Engine ? 34 : 32;
 
-    ctx.drawImage(
-        planeImg,
-        -size/2,
-        -size/2,
-        size,
-        size
-    )
+    ctx.drawImage(planeImg, -size / 2, -size / 2, size, size);
 
     ctx.restore();
 }
 
-// Map Initialisierung
+function updateInfo(iata, airplane_type, dep, arr) {
+    
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     const mapEl = document.getElementById("map");
     if (!mapEl) {
@@ -180,7 +208,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     map = L.map("map").setView([51.7787, -0.2636], 6);
     tileLayer.addTo(map);
 
-    // Terminator hinzufügen
     if (L.terminator) {
         L.terminator({
             fillColor: "#000000ff",
@@ -204,23 +231,41 @@ document.addEventListener("DOMContentLoaded", async () => {
         const lat = e.latlng.lat.toFixed(5);
         const lng = e.latlng.lng.toFixed(5);
         coordsControl.getContainer().innerHTML = `Lat: ${lat}, Lng: ${lng}`;
+
+        const p = map.latLngToContainerPoint(e.latlng);
+        const hovered = aircraftLayer.pick(p.x, p.y);
+
+        map.getContainer().style.cursor = hovered ? "pointer" : "";
+    });
+
+    map.on("click", (e) => {
+        const p = map.latLngToContainerPoint(e.latlng);
+        const clicked = aircraftLayer.pick(p.x, p.y);
+
+        if (clicked) {
+            console.log("Angeklicktes Flugzeug:", clicked);
+        }
     });
 
     // Erstelle Aircraft Layer
-    const aircrafts = Array.from(window.activePlanes.values()).map((p) => ({
-        lat: p.lat,
-        lng: p.long,
-        heading: p.deg || 0,
-        type: p.aircraft_type,
-    }));
+    const aircrafts = Array.from(window.activePlanes.entries()).map(
+        ([key, p]) => ({
+            iata: key,
+            lat: p.lat,
+            lng: p.long,
+            heading: p.deg || 0,
+            type: p.aircraft_type,
+        })
+    );
 
     aircraftLayer = new L.CanvasLayer(aircrafts);
     aircraftLayer.addTo(map);
 
     // Update bei neuen Daten
     window.addEventListener("activePlanesUpdated", () => {
-        const updatedAircrafts = Array.from(window.activePlanes.values()).map(
-            (p) => ({
+        const updatedAircrafts = Array.from(window.activePlanes.entries()).map(
+            ([key, p]) => ({
+                iata: key,
                 lat: p.lat,
                 lng: p.long,
                 heading: p.deg || 0,
