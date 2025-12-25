@@ -1,7 +1,7 @@
 const awsUrl = `wss://eeupz64oh3.execute-api.eu-central-1.amazonaws.com/dev?userId=${checkUser()}`;
 const serverUrl = `ws://localhost:7879?userId=${checkUser()}`;
 const testUrl = 'ws://localhost:5879'
-const wsIntervall = 100 * 1000 // Kickout für die Session
+const wsIntervall = 10 * 1000 // Kickout für die Session
 window.activePlanes = new Map();
 
 const ws = new WebSocket(awsUrl);
