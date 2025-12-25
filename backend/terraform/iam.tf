@@ -41,3 +41,26 @@ resource "aws_iam_role_policy" "lambda_apigateway" {
     ]
   })
 }
+
+# DynamoDB-Berechtigung für Lambda
+resource "aws_iam_role_policy" "lambda_dynamodb" {
+  name = "lambda-dynamodb-policy"
+  role = aws_iam_role.lambda_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:PutItem",
+          "dynamodb:GetItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Query",
+          "dynamodb:Scan"
+        ]
+        Resource = "arn:aws:dynamodb:*:*:table/Connections"
+      }
+    ]
+  })
+}
