@@ -84,5 +84,5 @@ ws.onmessage = (async (event) => {
 });
 
 ws.onclose = () => {
-    alert("Verbindung geschlossen!");
+    console.log("Verbindung geschlossen!");
 }
