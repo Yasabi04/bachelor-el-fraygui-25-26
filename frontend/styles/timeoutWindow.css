@@ -1,7 +1,7 @@
 .timeout-window {
     z-index: 10000;
     position: fixed;
-    bottom:  -100vh;
+    bottom: -100vh;
     left: 0;
     height: 100vh;
     width: 100vw;
@@ -51,15 +51,35 @@
             transition: 0.2s;
             display: block;
             text-align: center;
-            padding: 
-                calc(var(--size-xs) / 2)
-                0
-                calc(var(--size-xs) / 2)
+            padding: calc(var(--size-xs) / 2) 0 calc(var(--size-xs) / 2)
                 var(--size-xs);
         }
 
         .timeout-reload:hover {
             background-color: var(--color-compl);
+        }
+    }
+}
+
+@media (max-width: 756px) {
+    .timeout-window {
+
+        .timeout-container {
+            width: 80vw;
+            gap: var(--size-m);
+
+            .timeout-heading {
+                font-size: var(--size-l);
+            }
+
+            .timeout-text {
+                font-size: var(--size-xs);
+            }
+
+            .timeout-reload {
+                padding: calc(var(--size-xs) / 2) 0 calc(var(--size-xs) / 2)
+                    0;
+            }
         }
     }
 }
