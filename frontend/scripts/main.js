@@ -1,10 +1,10 @@
-const awsUrl = "";
+const awsUrl = 'wss://eeupz64oh3.execute-api.eu-central-1.amazonaws.com/dev';
 const serverUrl = `ws://localhost:7879?userId=${checkUser()}`;
 const testUrl = 'ws://localhost:5879'
-const wsIntervall = 10 * 1000 // Kickout für die Session
+const wsIntervall = 100 * 1000 // Kickout für die Session
 window.activePlanes = new Map();
 
-const ws = new WebSocket(testUrl);
+const ws = new WebSocket(awsUrl);
 const timeoutWindow = document.querySelector('.timeout-window')
 
 function checkUser() {
@@ -26,7 +26,7 @@ const timeout = setTimeout(() => {
 
 ws.onopen = () => {
     console.log("Verbunden!");
-    ws.send("Client bereit");
+    // ws.send("Client bereit");
 };
 
 ws.onmessage = (async (event) => {
