@@ -1,13 +1,39 @@
-const ConnectionManager = require('../shared/handlers/connectionManager')
-const DynamoDBAdapter = require('../adapters/database/dynamodb')
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const {
+    DynamoDBDocumentClient,
+    ScanCommand,
+} = require("@aws-sdk/lib-dynamodb");
 
-const dbAdapter = new DynamoDBAdapter(
-  process.env.POLLING_STATUS,
-  process.env.CONNECTIONS_TABLE
-)
+export const handler = async (event) => {
+    const client = new DynamoDBClient({});
+    const dynamodb = DynamoDBDocumentClient.from(client);
 
-const connectionManager = new ConnectionManager(dbAdapter)
+    try {
+        const req = await client.send(
+            new ScanCommand({
+                TableName: "Connections",
+                Select: "COUNT",
+            })
+        );
 
-export const handler = async () => {
-  return await connectionManager.getActiveConnections()
+        const count = req.Count;
+
+        console.log(count);
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                message: "User deleted successfully",
+                activeConnections: count,
+            }),
+        };
+    } catch (error) {
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: "Active Connections:",
+                activeConnections: count,
+            }),
+        };
+    }
 };

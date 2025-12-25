@@ -26,7 +26,6 @@ const timeout = setTimeout(() => {
 
 ws.onopen = () => {
     console.log("Verbunden!");
-    // ws.send("Client bereit");
 };
 
 ws.onmessage = (async (event) => {
@@ -83,3 +82,7 @@ ws.onmessage = (async (event) => {
         console.error("Fehler beim Verarbeiten der WebSocket-Daten:", e);
     }
 });
+
+ws.onclose = () => {
+    alert("Verbindung geschlossen!");
+}
