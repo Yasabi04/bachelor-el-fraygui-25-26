@@ -3,6 +3,7 @@ resource "aws_lambda_function" "ws_connect" {
   runtime       = "nodejs20.x"
   handler       = "connect.handler"
   filename      = "${path.module}/../lambda/connect.zip"
+  source_code_hash = filebase64sha256("${path.module}/../lambda/connect.zip")
   role          = aws_iam_role.lambda_role.arn
 }
 
