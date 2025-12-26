@@ -26,23 +26,20 @@ exports.handler = async (event) => {
 
         console.log(`GlobalState: isActive=${isActive}, activeConnections=${activeConnections}`);
 
-        // Wenn nicht aktiv → Polling stoppen
+        // Wenn nicht aktiv -> Polling stoppen
         if (!isActive) {
             console.log("Keine aktiven Verbindungen → Polling gestoppt");
             return { statusCode: 200, body: "Polling stopped" };
         }
 
-        // 3️⃣ Flugdaten abrufen
         console.log("Fetching flights...");
         // TODO: Hier deine Flight-API-Logik einfügen
         // const flights = await fetchFromAPI();
         // await saveToDatabase(flights);
         // await broadcastToClients(flights);
 
-        // 4️⃣ 10 Sekunden warten
         await wait(10000);
 
-        // 5️⃣ Sich selbst erneut aufrufen (rekursiv)
         console.log("Starte nächsten Fetch-Zyklus...");
         await lambda.send(
             new InvokeCommand({
