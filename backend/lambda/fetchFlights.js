@@ -1,44 +1,65 @@
-const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda')
-const PollingHandler = require('../shared/handlers/pollingHandler')
-const DynamoDBAdapter = require('../adapters/database/dynamodb')
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const {
+    DynamoDBDocumentClient,
+    GetCommand,
+} = require("@aws-sdk/lib-dynamodb");
+const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
 
-const lambdaClient = new LambdaClient({})
+const client = new DynamoDBClient({});
+const dynamodb = DynamoDBDocumentClient.from(client);
+const lambda = new LambdaClient({});
 
-const dbAdapter = new DynamoDBAdapter(
-    process.env.CONNECTIONS,
-    process.env.POLLING_STATUS
-)
-
-const pollingHandler = new PollingHandler(dbAdapter)
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 exports.handler = async (event) => {
-    console.log('fetchFlights erneut aufgerufen')
+    try {
+        
+        const response = await dynamodb.send(
+            new GetCommand({
+                TableName: "GlobalState",
+                Key: { pk: "FETCH_STATE" },
+            })
+        );
 
-    const result = await pollingHandler.executeFetch(process.env.AIRLABS_API_KEY)
+        const isActive = response.Item?.isActive || false;
+        const activeConnections = response.Item?.activeConnections || 0;
 
-    if(result.stopped) {
+        console.log(`GlobalState: isActive=${isActive}, activeConnections=${activeConnections}`);
+
+        // Wenn nicht aktiv → Polling stoppen
+        if (!isActive) {
+            console.log("Keine aktiven Verbindungen → Polling gestoppt");
+            return { statusCode: 200, body: "Polling stopped" };
+        }
+
+        // 3️⃣ Flugdaten abrufen
+        console.log("Fetching flights...");
+        // TODO: Hier deine Flight-API-Logik einfügen
+        // const flights = await fetchFromAPI();
+        // await saveToDatabase(flights);
+        // await broadcastToClients(flights);
+
+        // 4️⃣ 10 Sekunden warten
+        await wait(10000);
+
+        // 5️⃣ Sich selbst erneut aufrufen (rekursiv)
+        console.log("Starte nächsten Fetch-Zyklus...");
+        await lambda.send(
+            new InvokeCommand({
+                FunctionName: process.env.AWS_LAMBDA_FUNCTION_NAME,
+                InvocationType: "Event", // Asynchron
+            })
+        );
+
         return {
             statusCode: 200,
-            body: JSON.stringify({
-                message: 'Polling gestoppt!',
-                reason: result.reason
-            })
-        }
+            body: JSON.stringify({ message: "Fetch cycle completed" }),
+        };
+    } catch (error) {
+        console.error("Error:", error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: error.message }),
+        };
     }
-
-    await lambdaClient.send(new InvokeCommand({
-        FunctionName: process.env.AWS_FETCH_FUNCTION_NAME,
-        InvocationType: 'Event',
-        Payload: JSON.stringify({
-            source: 'self-invoke',
-            previousStats: result.stats
-        })
-    }))
-
-    return {
-        statusCode: 200,
-        body: JSON.stringify({
-            message: 'Fetch beendet. Nächste Runde startet in 10 Sekunden'
-        })
-    }
-}
+};
