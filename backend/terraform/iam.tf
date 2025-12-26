@@ -1,6 +1,6 @@
 # IAM Role für Lambda Funktionen
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda-websocket-role"
+  name = var.lambda_role_name
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -57,9 +57,30 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
           "dynamodb:GetItem",
           "dynamodb:DeleteItem",
           "dynamodb:Query",
-          "dynamodb:Scan"
+          "dynamodb:Scan",
+          "dynamodb:UpdateItem"
         ]
-        Resource = "arn:aws:dynamodb:*:*:table/Connections"
+        Resource = [
+          "arn:aws:dynamodb:*:*:table/Connections",
+          "arn:aws:dynamodb:*:*:table/GlobalState"
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:GetRecords",
+          "dynamodb:GetShardIterator",
+          "dynamodb:DescribeStream",
+          "dynamodb:ListStreams"
+        ]
+        Resource = "arn:aws:dynamodb:*:*:table/Connections/stream/*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "lambda:InvokeFunction"
+        ]
+        Resource = "arn:aws:lambda:*:*:function:*"
       }
     ]
   })

@@ -1,0 +1,875 @@
+{
+  "version": 4,
+  "terraform_version": "1.13.5",
+  "serial": 27,
+  "lineage": "05e0980d-fbcf-d7af-521c-b48e3d425835",
+  "outputs": {
+    "ws_url": {
+      "value": "wss://i2axgim3s9.execute-api.eu-central-1.amazonaws.com/dev",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "aws_apigatewayv2_api",
+      "name": "ws_api",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_endpoint": "wss://i2axgim3s9.execute-api.eu-central-1.amazonaws.com",
+            "api_key_selection_expression": "$request.header.x-api-key",
+            "arn": "arn:aws:apigateway:eu-central-1::/apis/i2axgim3s9",
+            "body": null,
+            "cors_configuration": [],
+            "credentials_arn": null,
+            "description": "",
+            "disable_execute_api_endpoint": false,
+            "execution_arn": "arn:aws:execute-api:eu-central-1:906348407674:i2axgim3s9",
+            "fail_on_warnings": null,
+            "id": "i2axgim3s9",
+            "ip_address_type": "ipv4",
+            "name": "flights-ws-api",
+            "protocol_type": "WEBSOCKET",
+            "region": "eu-central-1",
+            "route_key": null,
+            "route_selection_expression": "$request.body.action",
+            "tags": {},
+            "tags_all": {},
+            "target": null,
+            "version": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_apigatewayv2_integration",
+      "name": "connect",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_id": "i2axgim3s9",
+            "connection_id": "",
+            "connection_type": "INTERNET",
+            "content_handling_strategy": "",
+            "credentials_arn": "",
+            "description": "",
+            "id": "x3s1566",
+            "integration_method": "POST",
+            "integration_response_selection_expression": "",
+            "integration_subtype": "",
+            "integration_type": "AWS_PROXY",
+            "integration_uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:906348407674:function:ws-connect/invocations",
+            "passthrough_behavior": "WHEN_NO_MATCH",
+            "payload_format_version": "1.0",
+            "region": "eu-central-1",
+            "request_parameters": {},
+            "request_templates": {},
+            "response_parameters": [],
+            "template_selection_expression": "",
+            "timeout_milliseconds": 29000,
+            "tls_config": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_apigatewayv2_api.ws_api",
+            "aws_iam_role.lambda_role",
+            "aws_lambda_function.ws_connect"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_apigatewayv2_integration",
+      "name": "disconnect",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_id": "i2axgim3s9",
+            "connection_id": "",
+            "connection_type": "INTERNET",
+            "content_handling_strategy": "",
+            "credentials_arn": "",
+            "description": "",
+            "id": "r56av5s",
+            "integration_method": "POST",
+            "integration_response_selection_expression": "",
+            "integration_subtype": "",
+            "integration_type": "AWS_PROXY",
+            "integration_uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:906348407674:function:ws-disconnect/invocations",
+            "passthrough_behavior": "WHEN_NO_MATCH",
+            "payload_format_version": "1.0",
+            "region": "eu-central-1",
+            "request_parameters": {},
+            "request_templates": {},
+            "response_parameters": [],
+            "template_selection_expression": "",
+            "timeout_milliseconds": 29000,
+            "tls_config": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_apigatewayv2_api.ws_api",
+            "aws_iam_role.lambda_role",
+            "aws_lambda_function.ws_disconnect"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_apigatewayv2_route",
+      "name": "connect",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_id": "i2axgim3s9",
+            "api_key_required": false,
+            "authorization_scopes": [],
+            "authorization_type": "NONE",
+            "authorizer_id": "",
+            "id": "ajud75p",
+            "model_selection_expression": "",
+            "operation_name": "",
+            "region": "eu-central-1",
+            "request_models": {},
+            "request_parameter": [],
+            "route_key": "$connect",
+            "route_response_selection_expression": "",
+            "target": "integrations/x3s1566"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_apigatewayv2_api.ws_api",
+            "aws_apigatewayv2_integration.connect",
+            "aws_iam_role.lambda_role",
+            "aws_lambda_function.ws_connect"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_apigatewayv2_route",
+      "name": "disconnect",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_id": "i2axgim3s9",
+            "api_key_required": false,
+            "authorization_scopes": [],
+            "authorization_type": "NONE",
+            "authorizer_id": "",
+            "id": "kmhh70h",
+            "model_selection_expression": "",
+            "operation_name": "",
+            "region": "eu-central-1",
+            "request_models": {},
+            "request_parameter": [],
+            "route_key": "$disconnect",
+            "route_response_selection_expression": "",
+            "target": "integrations/r56av5s"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_apigatewayv2_api.ws_api",
+            "aws_apigatewayv2_integration.disconnect",
+            "aws_iam_role.lambda_role",
+            "aws_lambda_function.ws_disconnect"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_apigatewayv2_stage",
+      "name": "ws_stage",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "access_log_settings": [],
+            "api_id": "i2axgim3s9",
+            "arn": "arn:aws:apigateway:eu-central-1::/apis/i2axgim3s9/stages/dev",
+            "auto_deploy": true,
+            "client_certificate_id": "",
+            "default_route_settings": [
+              {
+                "data_trace_enabled": false,
+                "detailed_metrics_enabled": false,
+                "logging_level": "OFF",
+                "throttling_burst_limit": 0,
+                "throttling_rate_limit": 0
+              }
+            ],
+            "deployment_id": "ly2khh",
+            "description": "",
+            "execution_arn": "arn:aws:execute-api:eu-central-1:906348407674:i2axgim3s9/dev",
+            "id": "dev",
+            "invoke_url": "wss://i2axgim3s9.execute-api.eu-central-1.amazonaws.com/dev",
+            "name": "dev",
+            "region": "eu-central-1",
+            "route_settings": [],
+            "stage_variables": {},
+            "tags": {},
+            "tags_all": {}
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_apigatewayv2_api.ws_api"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_dynamodb_table",
+      "name": "connections",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:dynamodb:eu-central-1:906348407674:table/Connections",
+            "attribute": [
+              {
+                "name": "connectionId",
+                "type": "S"
+              }
+            ],
+            "billing_mode": "PAY_PER_REQUEST",
+            "deletion_protection_enabled": false,
+            "global_secondary_index": [],
+            "global_table_witness": [],
+            "hash_key": "connectionId",
+            "id": "Connections",
+            "import_table": [],
+            "local_secondary_index": [],
+            "name": "Connections",
+            "on_demand_throughput": [],
+            "point_in_time_recovery": [
+              {
+                "enabled": false,
+                "recovery_period_in_days": 0
+              }
+            ],
+            "range_key": null,
+            "read_capacity": 0,
+            "region": "eu-central-1",
+            "replica": [],
+            "restore_date_time": null,
+            "restore_source_name": null,
+            "restore_source_table_arn": null,
+            "restore_to_latest_time": null,
+            "server_side_encryption": [],
+            "stream_arn": "arn:aws:dynamodb:eu-central-1:906348407674:table/Connections/stream/2025-12-26T17:25:55.290",
+            "stream_enabled": true,
+            "stream_label": "2025-12-26T17:25:55.290",
+            "stream_view_type": "NEW_AND_OLD_IMAGES",
+            "table_class": "STANDARD",
+            "tags": {
+              "Environment": "dev",
+              "Project": "aurora_th"
+            },
+            "tags_all": {
+              "Environment": "dev",
+              "Project": "aurora_th"
+            },
+            "timeouts": null,
+            "ttl": [
+              {
+                "attribute_name": "",
+                "enabled": false
+              }
+            ],
+            "warm_throughput": [],
+            "write_capacity": 0
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjYwMDAwMDAwMDAwMCwidXBkYXRlIjozNjAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_dynamodb_table",
+      "name": "global_state",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:dynamodb:eu-central-1:906348407674:table/GlobalState",
+            "attribute": [
+              {
+                "name": "pk",
+                "type": "S"
+              }
+            ],
+            "billing_mode": "PAY_PER_REQUEST",
+            "deletion_protection_enabled": false,
+            "global_secondary_index": [],
+            "global_table_witness": [],
+            "hash_key": "pk",
+            "id": "GlobalState",
+            "import_table": [],
+            "local_secondary_index": [],
+            "name": "GlobalState",
+            "on_demand_throughput": [],
+            "point_in_time_recovery": [
+              {
+                "enabled": false,
+                "recovery_period_in_days": 0
+              }
+            ],
+            "range_key": null,
+            "read_capacity": 0,
+            "region": "eu-central-1",
+            "replica": [],
+            "restore_date_time": null,
+            "restore_source_name": null,
+            "restore_source_table_arn": null,
+            "restore_to_latest_time": null,
+            "server_side_encryption": [],
+            "stream_arn": "",
+            "stream_enabled": false,
+            "stream_label": "",
+            "stream_view_type": "",
+            "table_class": "STANDARD",
+            "tags": {
+              "Environment": "dev",
+              "Project": "aurora_th"
+            },
+            "tags_all": {
+              "Environment": "dev",
+              "Project": "aurora_th"
+            },
+            "timeouts": null,
+            "ttl": [
+              {
+                "attribute_name": "",
+                "enabled": false
+              }
+            ],
+            "warm_throughput": [],
+            "write_capacity": 0
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjYwMDAwMDAwMDAwMCwidXBkYXRlIjozNjAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "lambda_role",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::906348407674:role/lambda-websocket-role",
+            "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+            "create_date": "2025-12-25T14:17:40Z",
+            "description": "",
+            "force_detach_policies": false,
+            "id": "lambda-websocket-role",
+            "inline_policy": [
+              {
+                "name": "lambda-apigateway-policy",
+                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"execute-api:ManageConnections\",\"execute-api:Invoke\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:execute-api:*:*:*\"}]}"
+              },
+              {
+                "name": "lambda-dynamodb-policy",
+                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"dynamodb:PutItem\",\"dynamodb:GetItem\",\"dynamodb:DeleteItem\",\"dynamodb:Query\",\"dynamodb:Scan\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:dynamodb:*:*:table/Connections\"}]}"
+              }
+            ],
+            "managed_policy_arns": [
+              "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+            ],
+            "max_session_duration": 3600,
+            "name": "lambda-websocket-role",
+            "name_prefix": "",
+            "path": "/",
+            "permissions_boundary": "",
+            "tags": {},
+            "tags_all": {},
+            "unique_id": "AROA5GBUTFN5D72LNEMUA"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "906348407674",
+            "name": "lambda-websocket-role"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjAifQ=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role_policy",
+      "name": "lambda_apigateway",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "lambda-websocket-role:lambda-apigateway-policy",
+            "name": "lambda-apigateway-policy",
+            "name_prefix": "",
+            "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"execute-api:ManageConnections\",\"execute-api:Invoke\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:execute-api:*:*:*\"}]}",
+            "role": "lambda-websocket-role"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "906348407674",
+            "name": "lambda-apigateway-policy",
+            "role": "lambda-websocket-role"
+          },
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_role.lambda_role"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role_policy",
+      "name": "lambda_dynamodb",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "lambda-websocket-role:lambda-dynamodb-policy",
+            "name": "lambda-dynamodb-policy",
+            "name_prefix": "",
+            "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"dynamodb:PutItem\",\"dynamodb:GetItem\",\"dynamodb:DeleteItem\",\"dynamodb:Query\",\"dynamodb:Scan\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:dynamodb:*:*:table/Connections\"}]}",
+            "role": "lambda-websocket-role"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "906348407674",
+            "name": "lambda-dynamodb-policy",
+            "role": "lambda-websocket-role"
+          },
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_role.lambda_role"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role_policy_attachment",
+      "name": "lambda_basic",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "lambda-websocket-role/arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+            "policy_arn": "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+            "role": "lambda-websocket-role"
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "906348407674",
+            "policy_arn": "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+            "role": "lambda-websocket-role"
+          },
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_role.lambda_role"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lambda_function",
+      "name": "state_observer",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "architectures": [
+              "x86_64"
+            ],
+            "arn": "arn:aws:lambda:eu-central-1:906348407674:function:observe_state",
+            "capacity_provider_config": [],
+            "code_sha256": "IyXO3HM0O5XiCa85pbYzhNvikWEJV7ofGkibf9Qpq9A=",
+            "code_signing_config_arn": "",
+            "dead_letter_config": [],
+            "description": "",
+            "durable_config": [],
+            "environment": [],
+            "ephemeral_storage": [
+              {
+                "size": 512
+              }
+            ],
+            "file_system_config": [],
+            "filename": "./../lambda/observeState.zip",
+            "function_name": "observe_state",
+            "handler": "observeState.handler",
+            "id": "observe_state",
+            "image_config": [],
+            "image_uri": "",
+            "invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:906348407674:function:observe_state/invocations",
+            "kms_key_arn": "",
+            "last_modified": "2025-12-26T18:49:15.000+0000",
+            "layers": [],
+            "logging_config": [
+              {
+                "application_log_level": "",
+                "log_format": "Text",
+                "log_group": "/aws/lambda/observe_state",
+                "system_log_level": ""
+              }
+            ],
+            "memory_size": 128,
+            "package_type": "Zip",
+            "publish": false,
+            "publish_to": null,
+            "qualified_arn": "arn:aws:lambda:eu-central-1:906348407674:function:observe_state:$LATEST",
+            "qualified_invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:906348407674:function:observe_state:$LATEST/invocations",
+            "region": "eu-central-1",
+            "replace_security_groups_on_destroy": null,
+            "replacement_security_group_ids": null,
+            "reserved_concurrent_executions": -1,
+            "role": "arn:aws:iam::906348407674:role/lambda-websocket-role",
+            "runtime": "nodejs20.x",
+            "s3_bucket": null,
+            "s3_key": null,
+            "s3_object_version": null,
+            "signing_job_arn": "",
+            "signing_profile_version_arn": "",
+            "skip_destroy": false,
+            "snap_start": [],
+            "source_code_hash": "IyXO3HM0O5XiCa85pbYzhNvikWEJV7ofGkibf9Qpq9A=",
+            "source_code_size": 833,
+            "source_kms_key_arn": "",
+            "tags": {},
+            "tags_all": {},
+            "tenancy_config": [],
+            "timeout": 3,
+            "timeouts": null,
+            "tracing_config": [
+              {
+                "mode": "PassThrough"
+              }
+            ],
+            "version": "$LATEST",
+            "vpc_config": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "906348407674",
+            "function_name": "observe_state",
+            "region": "eu-central-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_iam_role.lambda_role"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lambda_function",
+      "name": "ws_connect",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "architectures": [
+              "x86_64"
+            ],
+            "arn": "arn:aws:lambda:eu-central-1:906348407674:function:ws-connect",
+            "capacity_provider_config": [],
+            "code_sha256": "TLnd/ZnP+CFFKHwgIYIDNIUImDIEVknyF5c00jfEnlo=",
+            "code_signing_config_arn": "",
+            "dead_letter_config": [],
+            "description": "",
+            "durable_config": [],
+            "environment": [],
+            "ephemeral_storage": [
+              {
+                "size": 512
+              }
+            ],
+            "file_system_config": [],
+            "filename": "./../lambda/connect.zip",
+            "function_name": "ws-connect",
+            "handler": "connect.handler",
+            "id": "ws-connect",
+            "image_config": [],
+            "image_uri": "",
+            "invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:906348407674:function:ws-connect/invocations",
+            "kms_key_arn": "",
+            "last_modified": "2025-12-26T18:49:09.000+0000",
+            "layers": [],
+            "logging_config": [
+              {
+                "application_log_level": "",
+                "log_format": "Text",
+                "log_group": "/aws/lambda/ws-connect",
+                "system_log_level": ""
+              }
+            ],
+            "memory_size": 128,
+            "package_type": "Zip",
+            "publish": false,
+            "publish_to": null,
+            "qualified_arn": "arn:aws:lambda:eu-central-1:906348407674:function:ws-connect:$LATEST",
+            "qualified_invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:906348407674:function:ws-connect:$LATEST/invocations",
+            "region": "eu-central-1",
+            "replace_security_groups_on_destroy": null,
+            "replacement_security_group_ids": null,
+            "reserved_concurrent_executions": -1,
+            "role": "arn:aws:iam::906348407674:role/lambda-websocket-role",
+            "runtime": "nodejs20.x",
+            "s3_bucket": null,
+            "s3_key": null,
+            "s3_object_version": null,
+            "signing_job_arn": "",
+            "signing_profile_version_arn": "",
+            "skip_destroy": false,
+            "snap_start": [],
+            "source_code_hash": "TLnd/ZnP+CFFKHwgIYIDNIUImDIEVknyF5c00jfEnlo=",
+            "source_code_size": 498,
+            "source_kms_key_arn": "",
+            "tags": {},
+            "tags_all": {},
+            "tenancy_config": [],
+            "timeout": 3,
+            "timeouts": null,
+            "tracing_config": [
+              {
+                "mode": "PassThrough"
+              }
+            ],
+            "version": "$LATEST",
+            "vpc_config": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "906348407674",
+            "function_name": "ws-connect",
+            "region": "eu-central-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_iam_role.lambda_role"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lambda_function",
+      "name": "ws_disconnect",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "architectures": [
+              "x86_64"
+            ],
+            "arn": "arn:aws:lambda:eu-central-1:906348407674:function:ws-disconnect",
+            "capacity_provider_config": [],
+            "code_sha256": "JLgQVRNEPBR17hOXX5uinAERAYGIZdvgMnCRWenV84U=",
+            "code_signing_config_arn": "",
+            "dead_letter_config": [],
+            "description": "",
+            "durable_config": [],
+            "environment": [],
+            "ephemeral_storage": [
+              {
+                "size": 512
+              }
+            ],
+            "file_system_config": [],
+            "filename": "./../lambda/disconnect.zip",
+            "function_name": "ws-disconnect",
+            "handler": "disconnect.handler",
+            "id": "ws-disconnect",
+            "image_config": [],
+            "image_uri": "",
+            "invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:906348407674:function:ws-disconnect/invocations",
+            "kms_key_arn": "",
+            "last_modified": "2025-12-26T18:49:04.000+0000",
+            "layers": [],
+            "logging_config": [
+              {
+                "application_log_level": "",
+                "log_format": "Text",
+                "log_group": "/aws/lambda/ws-disconnect",
+                "system_log_level": ""
+              }
+            ],
+            "memory_size": 128,
+            "package_type": "Zip",
+            "publish": false,
+            "publish_to": null,
+            "qualified_arn": "arn:aws:lambda:eu-central-1:906348407674:function:ws-disconnect:$LATEST",
+            "qualified_invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:906348407674:function:ws-disconnect:$LATEST/invocations",
+            "region": "eu-central-1",
+            "replace_security_groups_on_destroy": null,
+            "replacement_security_group_ids": null,
+            "reserved_concurrent_executions": -1,
+            "role": "arn:aws:iam::906348407674:role/lambda-websocket-role",
+            "runtime": "nodejs20.x",
+            "s3_bucket": null,
+            "s3_key": null,
+            "s3_object_version": null,
+            "signing_job_arn": "",
+            "signing_profile_version_arn": "",
+            "skip_destroy": false,
+            "snap_start": [],
+            "source_code_hash": "JLgQVRNEPBR17hOXX5uinAERAYGIZdvgMnCRWenV84U=",
+            "source_code_size": 469,
+            "source_kms_key_arn": "",
+            "tags": {},
+            "tags_all": {},
+            "tenancy_config": [],
+            "timeout": 3,
+            "timeouts": null,
+            "tracing_config": [
+              {
+                "mode": "PassThrough"
+              }
+            ],
+            "version": "$LATEST",
+            "vpc_config": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "906348407674",
+            "function_name": "ws-disconnect",
+            "region": "eu-central-1"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
+          "dependencies": [
+            "aws_iam_role.lambda_role"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lambda_permission",
+      "name": "ws_connect_permission",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "action": "lambda:InvokeFunction",
+            "event_source_token": null,
+            "function_name": "ws-connect",
+            "function_url_auth_type": null,
+            "id": "AllowAPIGatewayInvoke",
+            "principal": "apigateway.amazonaws.com",
+            "principal_org_id": null,
+            "qualifier": "",
+            "region": "eu-central-1",
+            "source_account": null,
+            "source_arn": "arn:aws:execute-api:eu-central-1:906348407674:eeupz64oh3/*",
+            "statement_id": "AllowAPIGatewayInvoke",
+            "statement_id_prefix": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "906348407674",
+            "function_name": "ws-connect",
+            "qualifier": null,
+            "region": "eu-central-1",
+            "statement_id": "AllowAPIGatewayInvoke"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjAifQ=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lambda_permission",
+      "name": "ws_disconnect_permission",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "action": "lambda:InvokeFunction",
+            "event_source_token": null,
+            "function_name": "ws-disconnect",
+            "function_url_auth_type": null,
+            "id": "AllowAPIGatewayInvokeDisconnect",
+            "principal": "apigateway.amazonaws.com",
+            "principal_org_id": null,
+            "qualifier": "",
+            "region": "eu-central-1",
+            "source_account": null,
+            "source_arn": "arn:aws:execute-api:eu-central-1:906348407674:eeupz64oh3/*",
+            "statement_id": "AllowAPIGatewayInvokeDisconnect",
+            "statement_id_prefix": ""
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "identity": {
+            "account_id": "906348407674",
+            "function_name": "ws-disconnect",
+            "qualifier": null,
+            "region": "eu-central-1",
+            "statement_id": "AllowAPIGatewayInvokeDisconnect"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjAifQ=="
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}

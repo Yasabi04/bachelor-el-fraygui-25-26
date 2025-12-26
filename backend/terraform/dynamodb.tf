@@ -1,9 +1,9 @@
 provider "aws" {
-  region = "eu-central-1"
+  region = var.aws_region
 }
 
 resource "aws_dynamodb_table" "connections" {
-  name           = "Connections"
+  name           = var.connections_table_name
   billing_mode   = "PAY_PER_REQUEST" # On-Demand
   hash_key       = "connectionId"
 
@@ -13,8 +13,8 @@ resource "aws_dynamodb_table" "connections" {
   }
 
   tags = {
-    Environment = "dev"
-    Project     = "aurora_th"
+    Environment = var.environment
+    Project     = var.project_name
   }
 
   stream_enabled = true
