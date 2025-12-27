@@ -7,20 +7,31 @@ const dynamodb = DynamoDBDocumentClient.from(dbClient);
 
 exports.handler = async (event) => {
     try {
-        const endpoint = `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
+        let message;
+        
+        // Fall 1: Von fetchFlights Lambda aufgerufen
+        if (event.type && event.data) {
+            message = event;
+            console.log("Broadcasting from Lambda:", message);
+        } else {
+            throw new Error("Invalid event format");
+        }
+
+        // WebSocket Endpoint konfigurieren
+        const endpoint = event.requestContext 
+            ? `https://${event.requestContext.domainName}/${event.requestContext.stage}`
+            : process.env.WEBSOCKET_ENDPOINT;
+        
         const apiGateway = new ApiGatewayManagementApiClient({ endpoint });
 
-        // Message aus Event Body
-        const body = JSON.parse(event.body || '{}');
-        const message = body.message || { type: "broadcast", data: {} };
-
-        console.log("Broadcasting message:", message);
-
+        // Alle verbundenen Clients abrufen
         const response = await dynamodb.send(
             new ScanCommand({
                 TableName: "Connections",
             })
         );
+
+        console.log(`Broadcasting to ${response.Items.length} connections`);
 
         // An alle Clients senden
         const sendPromises = response.Items.map(async (connection) => {
@@ -35,7 +46,7 @@ exports.handler = async (event) => {
             } catch (err) {
                 if (err.statusCode === 410) {
                     console.log(`Tote connection ${connection.connectionId}`);
-                    // Connection ist tot, sollte gelöscht werden
+                    // TODO: Connection aus DB löschen
                 } else {
                     console.error(`Fehler bei ${connection.connectionId}:`, err);
                 }

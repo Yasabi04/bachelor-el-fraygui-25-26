@@ -2,10 +2,8 @@ const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const {
     DynamoDBDocumentClient,
     GetCommand,
-    ScanCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
-const { ApiGatewayManagementApiClient, PostToConnectionCommand } = require("@aws-sdk/client-apigatewaymanagementapi");
 
 const dbClient = new DynamoDBClient({});
 const dynamodb = DynamoDBDocumentClient.from(dbClient);
@@ -15,6 +13,7 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 exports.handler = async (event) => {
     try {
+        // 1️⃣ GlobalState prüfen
         const stateResponse = await dynamodb.send(
             new GetCommand({
                 TableName: "GlobalState",
@@ -27,52 +26,40 @@ exports.handler = async (event) => {
 
         console.log(`GlobalState: isActive=${isActive}, activeConnections=${activeConnections}`);
 
+        // 2️⃣ Wenn nicht aktiv → Polling stoppen
         if (!isActive) {
             console.log("Keine aktiven Verbindungen → Polling gestoppt");
             return { statusCode: 200, body: "Polling stopped" };
         }
 
+        // 3️⃣ Flugdaten abrufen
         console.log("Fetching flights...");
-
         const flightResponse = await fetch(
             "http://www.randomnumberapi.com/api/v1.0/random?min=100&max=1000"
         );
         const flightData = await flightResponse.json();
+        console.log('--------------------------------');
         console.log("Flight data:", flightData);
+        console.log('--------------------------------');
 
-        const connectionsResponse = await dynamodb.send(
-            new ScanCommand({
-                TableName: "Connections",
+        // 4️⃣ Daten an broadcast Lambda weiterleiten
+        console.log("Sending data to broadcast Lambda...");
+        await lambda.send(
+            new InvokeCommand({
+                FunctionName: "broadcast",
+                InvocationType: "Event", // Asynchron
+                Payload: JSON.stringify({
+                    type: "flight-update",
+                    data: flightData
+                }),
             })
         );
 
-        const apiGateway = new ApiGatewayManagementApiClient({
-            endpoint: process.env.WEBSOCKET_ENDPOINT,
-        });
-
-        const broadcastPromises = connectionsResponse.Items.map(async (connection) => {
-            try {
-                await apiGateway.send(
-                    new PostToConnectionCommand({
-                        ConnectionId: connection.connectionId,
-                        Data: JSON.stringify({ type: "flight-update", data: flightData }),
-                    })
-                );
-                console.log(`Sent to ${connection.connectionId}`);
-            } catch (err) {
-                if (err.statusCode === 410) {
-                    console.log(`Stale connection ${connection.connectionId}, removing...`);
-                    // TODO: Connection aus DB löschen
-                } else {
-                    console.error(`Error sending to ${connection.connectionId}:`, err);
-                }
-            }
-        });
-
-        await Promise.all(broadcastPromises);
+        // 5️⃣ 10 Sekunden warten
         await wait(10000);
-        console.log("Starte nächsten Fetch-Zyklus...");
 
+        // 6️⃣ Sich selbst erneut aufrufen
+        console.log("Starte nächsten Fetch-Zyklus...");
         await lambda.send(
             new InvokeCommand({
                 FunctionName: process.env.AWS_LAMBDA_FUNCTION_NAME,
@@ -83,8 +70,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 200,
             body: JSON.stringify({ 
-                message: "Fetch cycle completed",
-                sentTo: connectionsResponse.Items.length 
+                message: "Fetch cycle completed"
             }),
         };
     } catch (error) {
