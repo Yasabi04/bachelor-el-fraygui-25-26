@@ -14,6 +14,7 @@ exports.handler = async (event) => {
     console.log("Event received:", JSON.stringify(event, null, 2));
 
     // Prüfen ob Records existiert
+    //
     if (!event.Records || !Array.isArray(event.Records)) {
         console.error("No Records found in event");
         return;
@@ -33,8 +34,8 @@ exports.handler = async (event) => {
                 Key: { pk: "FETCH_STATE" },
 
                 UpdateExpression: `
-          SET activeConnections = if_not_exists(activeConnections, :zero) + :delta
-        `,
+                    SET activeConnections = if_not_exists(activeConnections, :zero) + :delta
+                `,
 
                 ExpressionAttributeValues: {
                     ":delta": delta,
@@ -44,8 +45,28 @@ exports.handler = async (event) => {
             })
         );
 
-        const newConnectionCount = result.Attributes.activeConnections;
-        console.log('Connection Count: ', newConnectionCount)
+        let newConnectionCount = result.Attributes.activeConnections;
+
+        // Edge Case: Falls activeConnections negativ wird, auf 0 setzen
+        if (newConnectionCount < 0) {
+            console.log(
+                `activeConnections war negativ (${newConnectionCount}), setze auf 0`
+            );
+            const correctionResult = await dynamodb.send(
+                new UpdateCommand({
+                    TableName: "GlobalState",
+                    Key: { pk: "FETCH_STATE" },
+                    UpdateExpression: "SET activeConnections = :zero",
+                    ExpressionAttributeValues: {
+                        ":zero": 0,
+                    },
+                    ReturnValues: "ALL_NEW",
+                })
+            );
+            newConnectionCount = correctionResult.Attributes.activeConnections;
+        }
+
+        console.log("Connection Count: ", newConnectionCount);
         const isActive = newConnectionCount > 0;
 
         // isActive separat aktualisieren
@@ -60,7 +81,9 @@ exports.handler = async (event) => {
             })
         );
 
-        console.log(`GlobalState updated: activeConnections=${newConnectionCount}, isActive=${isActive}`);
+        console.log(
+            `GlobalState updated: activeConnections=${newConnectionCount}, isActive=${isActive}`
+        );
 
         // 3️⃣ Wenn erste Connection kommt → fetchFlights starten
         if (delta === 1 && newConnectionCount === 1) {

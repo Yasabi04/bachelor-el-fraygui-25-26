@@ -9,11 +9,8 @@ const dbClient = new DynamoDBClient({});
 const dynamodb = DynamoDBDocumentClient.from(dbClient);
 const lambda = new LambdaClient({});
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 exports.handler = async (event) => {
     try {
-        // 1️⃣ GlobalState prüfen
         const stateResponse = await dynamodb.send(
             new GetCommand({
                 TableName: "GlobalState",
@@ -26,13 +23,11 @@ exports.handler = async (event) => {
 
         console.log(`GlobalState: isActive=${isActive}, activeConnections=${activeConnections}`);
 
-        // 2️⃣ Wenn nicht aktiv → Polling stoppen
         if (!isActive) {
             console.log("Keine aktiven Verbindungen → Polling gestoppt");
             return { statusCode: 200, body: "Polling stopped" };
         }
 
-        // 3️⃣ Flugdaten abrufen
         console.log("Fetching flights...");
         const flightResponse = await fetch(
             "http://www.randomnumberapi.com/api/v1.0/random?min=100&max=1000"
@@ -42,7 +37,6 @@ exports.handler = async (event) => {
         console.log("Flight data:", flightData);
         console.log('--------------------------------');
 
-        // 4️⃣ Daten an broadcast Lambda weiterleiten
         console.log("Sending data to broadcast Lambda...");
         await lambda.send(
             new InvokeCommand({
@@ -55,22 +49,10 @@ exports.handler = async (event) => {
             })
         );
 
-        // 5️⃣ 10 Sekunden warten
-        await wait(10000);
-
-        // 6️⃣ Sich selbst erneut aufrufen
-        console.log("Starte nächsten Fetch-Zyklus...");
-        await lambda.send(
-            new InvokeCommand({
-                FunctionName: process.env.AWS_LAMBDA_FUNCTION_NAME,
-                InvocationType: "Event",
-            })
-        );
-
         return {
             statusCode: 200,
             body: JSON.stringify({ 
-                message: "Fetch cycle completed"
+                message: "Fetch completed"
             }),
         };
     } catch (error) {
