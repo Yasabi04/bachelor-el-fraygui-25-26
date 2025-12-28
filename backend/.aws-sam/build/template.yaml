@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: WebSocket und Flight Lambdas
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 10
+    MemorySize: 128
+Resources:
+  ConnectFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: connect.handler
+      CodeUri: ConnectFunction
+    Metadata:
+      SamResourceId: ConnectFunction
+  DisconnectFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: disconnect.handler
+      CodeUri: DisconnectFunction
+    Metadata:
+      SamResourceId: DisconnectFunction
+  BroadcastFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: broadcast.handler
+      CodeUri: BroadcastFunction
+    Metadata:
+      SamResourceId: BroadcastFunction
+  FetchFlightsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: fetchFlights.handler
+      CodeUri: FetchFlightsFunction
+    Metadata:
+      SamResourceId: FetchFlightsFunction
+  ObserveStateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: observeState.handler
+      CodeUri: ObserveStateFunction
+    Metadata:
+      SamResourceId: ObserveStateFunction
