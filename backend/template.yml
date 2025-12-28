@@ -1,45 +1,51 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: WebSocket und Flight Lambdas
 
 Globals:
-  Function:
-    Runtime: nodejs20.x
-    Timeout: 10
-    MemorySize: 128
+    Function:
+        Runtime: nodejs20.x
+        Timeout: 10
+        MemorySize: 128
 
 Resources:
-  # 1. Connect Funktion
-  ConnectFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: connect.handler
-      CodeUri: ./lambda/connect
+    # 1. Connect Funktion
+    ConnectFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: connect.handler
+            CodeUri: ./lambda/connect
 
-  # 2. Disconnect Funktion
-  DisconnectFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: disconnect.handler
-      CodeUri: ./lambda/disconnect
+    # 2. Disconnect Funktion
+    DisconnectFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: disconnect.handler
+            CodeUri: ./lambda/disconnect
 
-  # 3. Broadcast Funktion
-  BroadcastFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: broadcast.handler
-      CodeUri: ./lambda/broadcast
+    # 3. Broadcast Funktion
+    BroadcastFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: broadcast.handler
+            CodeUri: ./lambda/broadcast
 
-  # 4. Fetch Flights Funktion
-  FetchFlightsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: fetchFlights.handler
-      CodeUri: ./lambda/fetchFlights
+    # 4. Fetch Flights Funktion
+    FetchFlightsFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: fetchFlights.handler
+            CodeUri: ./lambda/fetchFlights
+            Events:
+                SQSEvent:
+                    Type: SQS
+                    Properties:
+                        Queue: !ImportValue arn:aws:sqs:eu-central-1:906348407674:flight-data-processing-queue
+                        BatchSize: 1
 
-  # 5. Observe State Funktion
-  ObserveStateFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: observeState.handler
-      CodeUri: ./lambda/observeState
+    # 5. Observe State Funktion
+    ObserveStateFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: observeState.handler
+            CodeUri: ./lambda/observeState

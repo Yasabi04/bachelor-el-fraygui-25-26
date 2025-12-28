@@ -1,0 +1,20 @@
+{
+  "Records": [
+    {
+      "messageId": "19dd0b57-b21e-4ac1-bd88-01bbb068cb78",
+      "receiptHandle": "MessageReceiptHandle",
+      "body": "{\"trigger\": \"manual\", \"timestamp\": 1640000000}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1640000000000",
+        "SenderId": "906348407674",
+        "ApproximateFirstReceiveTimestamp": "1640000000001"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "93f183dc2cd66f1c5757efe8ff9276e8",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:eu-central-1:906348407674:flight-data-processing-queue",
+      "awsRegion": "eu-central-1"
+    }
+  ]
+}

@@ -14,7 +14,6 @@ exports.handler = async (event) => {
     console.log("Event received:", JSON.stringify(event, null, 2));
 
     // Prüfen ob Records existiert
-    //
     if (!event.Records || !Array.isArray(event.Records)) {
         console.error("No Records found in event");
         return;
@@ -22,11 +21,22 @@ exports.handler = async (event) => {
 
     for (const record of event.Records) {
         console.log("Processing record:", record);
+        console.log("Event Name:", record.eventName); // <-- Debug-Log hinzugefügt
 
         let delta = 0;
-        if (record.eventName === "INSERT") delta = 1;
-        if (record.eventName === "REMOVE") delta = -1;
-        if (delta === 0) continue;
+        // Nur INSERT und REMOVE zählen, MODIFY ignorieren
+        if (record.eventName === "INSERT") {
+            delta = 1;
+            console.log("→ INSERT detected, delta = +1");
+        }
+        if (record.eventName === "REMOVE") {
+            delta = -1;
+            console.log("→ REMOVE detected, delta = -1");
+        }
+        if (delta === 0) {
+            console.log("→ Event ignored (not INSERT/REMOVE)");
+            continue;
+        }
 
         const result = await dynamodb.send(
             new UpdateCommand({
@@ -85,13 +95,19 @@ exports.handler = async (event) => {
             `GlobalState updated: activeConnections=${newConnectionCount}, isActive=${isActive}`
         );
 
-        // 3️⃣ Wenn erste Connection kommt → fetchFlights starten
+        // Ersetze den Lambda-Invoke am Ende von observeState.js:
         if (delta === 1 && newConnectionCount === 1) {
-            console.log("Erste Connection → starte fetchFlights");
-            await lambda.send(
-                new InvokeCommand({
-                    FunctionName: "fetchFlights",
-                    InvocationType: "Event", // Asynchron
+            console.log("Erste Connection → Trigger SQS für Fetch-Zyklus");
+            const {
+                SQSClient,
+                SendMessageCommand,
+            } = require("@aws-sdk/client-sqs");
+            const sqs = new SQSClient({});
+
+            await sqs.send(
+                new SendMessageCommand({
+                    QueueUrl: process.env.SQS_QUEUE_URL,
+                    MessageBody: JSON.stringify({ action: "start_fetch" }),
                 })
             );
         }

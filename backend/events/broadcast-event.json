@@ -1,0 +1,19 @@
+{
+  "type": "flight-update",
+  "data": [
+    {
+      "icao24": "abc123",
+      "callsign": "DLH123",
+      "origin_country": "Germany",
+      "time_position": 1640000000,
+      "last_contact": 1640000000,
+      "longitude": 8.5821,
+      "latitude": 50.0379,
+      "baro_altitude": 10000,
+      "on_ground": false,
+      "velocity": 450,
+      "true_track": 90,
+      "vertical_rate": 5
+    }
+  ]
+}

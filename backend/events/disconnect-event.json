@@ -1,0 +1,14 @@
+{
+  "requestContext": {
+    "routeKey": "$disconnect",
+    "eventType": "DISCONNECT",
+    "connectionId": "test-connection-123",
+    "apiId": "test-api-id",
+    "domainName": "test-domain.execute-api.eu-central-1.amazonaws.com",
+    "stage": "dev"
+  },
+  "headers": {
+    "Host": "test-domain.execute-api.eu-central-1.amazonaws.com"
+  },
+  "isBase64Encoded": false
+}

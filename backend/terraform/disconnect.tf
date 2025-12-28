@@ -2,8 +2,8 @@ resource "aws_lambda_function" "ws_disconnect" {
     function_name = "ws-disconnect"
     runtime       = "nodejs20.x"
     handler       = "disconnect.handler"
-    filename      = "${path.module}/../lambda/disconnect.zip"
-    source_code_hash = filebase64sha256("${path.module}/../lambda/disconnect.zip")
+    filename      = "${path.module}/../lambda/disconnect/disconnect.zip"
+    source_code_hash = filebase64sha256("${path.module}/../lambda/disconnect/disconnect.zip")
     role          = aws_iam_role.lambda_role.arn
 }
 

@@ -85,3 +85,19 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
     ]
   })
 }
+
+resource "aws_iam_policy" "lambda_sqs_policy" {
+  name        = "LambdaSQSPolicy"
+  description = "Erlaubt SQS Zugriff für Lambdas"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["sqs:SendMessage", "sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
+        Effect   = "Allow"
+        Resource = aws_sqs_queue.flight_data_queue.arn
+      }
+    ]
+  })
+}

@@ -1,7 +1,9 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient, ScanCommand } = require("@aws-sdk/lib-dynamodb");
 const { ApiGatewayManagementApiClient, PostToConnectionCommand } = require("@aws-sdk/client-apigatewaymanagementapi");
+const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 
+const sqs = new SQSClient({ region: "eu-central-1" });
 const dbClient = new DynamoDBClient({});
 const dynamodb = DynamoDBDocumentClient.from(dbClient);
 
@@ -54,6 +56,20 @@ exports.handler = async (event) => {
         });
 
         await Promise.all(sendPromises);
+
+        console.log('***** Sende 10s an SQS!')
+
+        // Nur SQS aufrufen wenn die Queue URL gesetzt ist (Produktion)
+        if (process.env.AWS_SQS_URL && !process.env.AWS_SAM_LOCAL) {
+            const params = {
+                QueueUrl: process.env.AWS_SQS_URL,
+                MessageBody: JSON.stringify({ action: "fetch10" }),
+                DelaySeconds: 10
+            }
+            await sqs.send(new SendMessageCommand(params))
+        } else {
+            console.log('Lokal: SQS Aufruf übersprungen')
+        }
 
         return {
             statusCode: 200,

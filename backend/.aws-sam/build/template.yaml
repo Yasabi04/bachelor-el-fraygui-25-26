@@ -33,6 +33,13 @@ Resources:
     Properties:
       Handler: fetchFlights.handler
       CodeUri: FetchFlightsFunction
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue:
+              Fn::ImportValue: arn:aws:sqs:eu-central-1:906348407674:flight-data-processing-queue
+            BatchSize: 1
     Metadata:
       SamResourceId: FetchFlightsFunction
   ObserveStateFunction:

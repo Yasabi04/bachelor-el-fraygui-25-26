@@ -1,0 +1,18 @@
+{
+  "requestContext": {
+    "routeKey": "$connect",
+    "eventType": "CONNECT",
+    "connectionId": "test-connection-123",
+    "apiId": "test-api-id",
+    "domainName": "test-domain.execute-api.eu-central-1.amazonaws.com",
+    "stage": "dev"
+  },
+  "queryStringParameters": {
+    "userId": "user-123"
+  },
+  "headers": {
+    "Host": "test-domain.execute-api.eu-central-1.amazonaws.com",
+    "Sec-WebSocket-Version": "13"
+  },
+  "isBase64Encoded": false
+}

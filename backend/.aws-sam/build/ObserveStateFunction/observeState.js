@@ -85,13 +85,20 @@ exports.handler = async (event) => {
             `GlobalState updated: activeConnections=${newConnectionCount}, isActive=${isActive}`
         );
 
-        // 3️⃣ Wenn erste Connection kommt → fetchFlights starten
+        // Ersetze den Lambda-Invoke am Ende von observeState.js:
         if (delta === 1 && newConnectionCount === 1) {
-            console.log("Erste Connection → starte fetchFlights");
-            await lambda.send(
-                new InvokeCommand({
-                    FunctionName: "fetchFlights",
-                    InvocationType: "Event", // Asynchron
+            console.log("Erste Connection → Trigger SQS für Fetch-Zyklus");
+            const {
+                SQSClient,
+                SendMessageCommand,
+            } = require("@aws-sdk/client-sqs");
+            const sqs = new SQSClient({});
+
+            await sqs.send(
+                new SendMessageCommand({
+                    QueueUrl: process.env.SQS_QUEUE_URL,
+                    MessageBody: JSON.stringify({ action: "start_fetch" }),
+                    // DelaySeconds: 0 (sofort starten)
                 })
             );
         }

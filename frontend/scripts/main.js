@@ -72,6 +72,7 @@ ws.onmessage = (async (event) => {
         });
 
         console.log(window.activePlanes)
+        console.log(event.data)
 
         // Custom Event auslösen, damit andere Dateien auf Updates reagieren können
         window.dispatchEvent(new CustomEvent('activePlanesUpdated', {

@@ -24,7 +24,7 @@ exports.handler = async (event) => {
         console.log(`GlobalState: isActive=${isActive}, activeConnections=${activeConnections}`);
 
         if (!isActive) {
-            console.log("Keine aktiven Verbindungen → Polling gestoppt");
+            console.log("Keine aktiven Verbindungen -> Polling gestoppt");
             return { statusCode: 200, body: "Polling stopped" };
         }
 
