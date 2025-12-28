@@ -51,24 +51,10 @@ exports.handler = async (event) => {
                 } else {
                     console.error(`Fehler bei ${connection.connectionId}:`, err);
                 }
-            }
+            } 
         });
 
         await Promise.all(sendPromises);
-
-        console.log('***** Sende 10s an SQS!')
-
-        // Nur SQS aufrufen wenn die Queue URL gesetzt ist (Produktion)
-        if (process.env.AWS_SQS_URL && !process.env.AWS_SAM_LOCAL) {
-            const params = {
-                QueueUrl: process.env.AWS_SQS_URL,
-                MessageBody: JSON.stringify({ action: "fetch10" }),
-                DelaySeconds: 10
-            }
-            await sqs.send(new SendMessageCommand(params))
-        } else {
-            console.log('Lokal: SQS Aufruf übersprungen')
-        }
 
         return {
             statusCode: 200,

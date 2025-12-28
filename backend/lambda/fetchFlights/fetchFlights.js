@@ -3,17 +3,18 @@ const {
     DynamoDBDocumentClient,
     GetCommand,
 } = require("@aws-sdk/lib-dynamodb");
-const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
+const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 
 const dbClient = new DynamoDBClient({});
 const dynamodb = DynamoDBDocumentClient.from(dbClient);
-const lambda = new LambdaClient({});
+const sqs = new SQSClient({});
 
 exports.handler = async (event) => {
     try {
+        // GlobalState checken
         const stateResponse = await dynamodb.send(
             new GetCommand({
-                TableName: "GlobalState",
+                TableName: process.env.GLOBAL_STATE_TABLE || "GlobalState",
                 Key: { pk: "FETCH_STATE" },
             })
         );
@@ -23,43 +24,57 @@ exports.handler = async (event) => {
 
         console.log(`GlobalState: isActive=${isActive}, activeConnections=${activeConnections}`);
 
-        if (!isActive) {
-            console.log("Keine aktiven Verbindungen -> Polling gestoppt");
-            return { statusCode: 200, body: "Polling stopped" };
+        if (!isActive || activeConnections === 0) {
+            console.log("Keine aktiven Connections → Fetch-Zyklus beendet");
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ message: "Fetch stopped - no active connections" })
+            };
         }
 
+        // Flights fetchen
         console.log("Fetching flights...");
         const flightResponse = await fetch(
             "http://www.randomnumberapi.com/api/v1.0/random?min=100&max=1000"
         );
         const flightData = await flightResponse.json();
-        console.log('--------------------------------');
-        console.log("Flight data:", flightData);
-        console.log('--------------------------------');
 
-        console.log("Sending data to broadcast Lambda...");
+        console.log("Flight Data:", flightData);
+
+        // An Broadcast Lambda senden
+        const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
+        const lambda = new LambdaClient({});
+
         await lambda.send(
             new InvokeCommand({
-                FunctionName: "broadcast",
-                InvocationType: "Event", // Asynchron
+                FunctionName: process.env.BROADCAST_FUNCTION_NAME || "broadcast",
+                InvocationType: "Event",
                 Payload: JSON.stringify({
                     type: "flight-update",
-                    data: flightData
+                    data: flightData,
                 }),
+            })
+        );
+
+        console.log("Daten an Broadcast gesendet!");
+
+        console.log("++++++++++++ Sende 10s! +++++++++++++")
+
+        // Nächste Message in Queue senden für kontinuierliches Polling
+        await sqs.send(
+            new SendMessageCommand({
+                QueueUrl: process.env.AWS_SQS_URL,
+                MessageBody: JSON.stringify({ action: "start_fetch" }),
+                DelaySeconds: 10  // 10 Sekunden
             })
         );
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ 
-                message: "Fetch completed"
-            }),
+            body: JSON.stringify({ message: "Flugdaten gefetched und gebroadcasted" }),
         };
     } catch (error) {
-        console.error("Error:", error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: error.message }),
-        };
+        console.error("Error in fetchFlights:", error);
+        throw error;
     }
 };

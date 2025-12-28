@@ -86,24 +86,10 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
   })
 }
 
-resource "aws_iam_policy" "lambda_sqs_policy" {
-  name        = "LambdaSQSPolicy"
-  description = "Erlaubt SQS Zugriff für Lambdas"
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = ["sqs:SendMessage", "sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
-        Effect   = "Allow"
-        Resource = aws_sqs_queue.flight_data_queue.arn
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy" "lambda_sqs_send" {
-  name = "lambda-sqs-send-policy"
+# Entferne die separaten Policies und ersetze mit dieser einen:
+resource "aws_iam_role_policy" "lambda_sqs" {
+  name = "lambda-sqs-policy"
   role = aws_iam_role.lambda_role.id
 
   policy = jsonencode({
@@ -112,7 +98,10 @@ resource "aws_iam_role_policy" "lambda_sqs_send" {
       {
         Effect = "Allow"
         Action = [
-          "sqs:SendMessage"
+          "sqs:SendMessage",
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
         ]
         Resource = aws_sqs_queue.flight_data_queue.arn
       }
