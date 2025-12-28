@@ -9,7 +9,7 @@ resource "aws_lambda_function" "state_observer" {
     environment {
         variables = {
             GLOBAL_STATE_TABLE = var.global_state_table_name
-            SQS_QUEUE_URL = aws_sqs_queue.flight_data_queue.url
+            AWS_SQS_URL = aws_sqs_queue.flight_data_queue.url
         }
         
     }
