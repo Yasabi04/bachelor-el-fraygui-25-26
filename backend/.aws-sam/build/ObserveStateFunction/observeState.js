@@ -2,105 +2,97 @@ const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const {
     DynamoDBDocumentClient,
     UpdateCommand,
-    GetCommand,
+    ScanCommand,
 } = require("@aws-sdk/lib-dynamodb");
-const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
+const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
+const sqs = new SQSClient({});
 
 const client = new DynamoDBClient({});
 const dynamodb = DynamoDBDocumentClient.from(client);
-const lambda = new LambdaClient({});
 
 exports.handler = async (event) => {
     console.log("Event received:", JSON.stringify(event, null, 2));
 
-    // Prüfen ob Records existiert
-    //
     if (!event.Records || !Array.isArray(event.Records)) {
         console.error("No Records found in event");
         return;
     }
 
     for (const record of event.Records) {
+        const eventId = record.eventID;
         console.log("Processing record:", record);
+        console.log("Event Name:", record.eventName);
 
-        let delta = 0;
-        if (record.eventName === "INSERT") delta = 1;
-        if (record.eventName === "REMOVE") delta = -1;
-        if (delta === 0) continue;
+        // Nur INSERT und REMOVE verarbeiten
+        if (record.eventName !== "INSERT" && record.eventName !== "REMOVE") {
+            console.log("→ Event ignored (not INSERT/REMOVE)");
+            continue;
+        }
 
-        const result = await dynamodb.send(
-            new UpdateCommand({
-                TableName: "GlobalState",
-                Key: { pk: "FETCH_STATE" },
+        console.log(`→ ${record.eventName} detected, counting connections...`);
 
-                UpdateExpression: `
-                    SET activeConnections = if_not_exists(activeConnections, :zero) + :delta
-                `,
-
-                ExpressionAttributeValues: {
-                    ":delta": delta,
-                    ":zero": 0,
-                },
-                ReturnValues: "ALL_NEW",
+        // Echte Anzahl der Connections zählen
+        const countResponse = await dynamodb.send(
+            new ScanCommand({
+                TableName: process.env.CONNECTIONS_TABLE || "Connections",
+                Select: "COUNT",
             })
         );
-
-        let newConnectionCount = result.Attributes.activeConnections;
-
-        // Edge Case: Falls activeConnections negativ wird, auf 0 setzen
-        if (newConnectionCount < 0) {
-            console.log(
-                `activeConnections war negativ (${newConnectionCount}), setze auf 0`
-            );
-            const correctionResult = await dynamodb.send(
-                new UpdateCommand({
-                    TableName: "GlobalState",
-                    Key: { pk: "FETCH_STATE" },
-                    UpdateExpression: "SET activeConnections = :zero",
-                    ExpressionAttributeValues: {
-                        ":zero": 0,
-                    },
-                    ReturnValues: "ALL_NEW",
-                })
-            );
-            newConnectionCount = correctionResult.Attributes.activeConnections;
-        }
+        const newConnectionCount = countResponse.Count;
 
         console.log("Connection Count: ", newConnectionCount);
         const isActive = newConnectionCount > 0;
 
-        // isActive separat aktualisieren
-        await dynamodb.send(
-            new UpdateCommand({
-                TableName: "GlobalState",
-                Key: { pk: "FETCH_STATE" },
-                UpdateExpression: "SET isActive = :isActive",
-                ExpressionAttributeValues: {
-                    ":isActive": isActive,
-                },
-            })
-        );
+        // GlobalState mit absolutem Wert aktualisieren (mit Idempotenz)
+        try {
+            await dynamodb.send(
+                new UpdateCommand({
+                    TableName: process.env.GLOBAL_STATE_TABLE || "GlobalState",
+                    Key: { pk: "FETCH_STATE" },
+                    UpdateExpression:
+                        "SET activeConnections = :count, isActive = :isActive, lastProcessedEventId = :eventId",
+                    ConditionExpression:
+                        "attribute_not_exists(lastProcessedEventId) OR lastProcessedEventId <> :eventId",
+                    ExpressionAttributeValues: {
+                        ":count": newConnectionCount,
+                        ":isActive": isActive,
+                        ":eventId": eventId,
+                    },
+                })
+            );
+        } catch (error) {
+            if (error.name === "ConditionalCheckFailedException") {
+                console.log(`Event ${eventId} already processed, skipping`);
+                continue;
+            }
+            throw error;
+        }
 
         console.log(
             `GlobalState updated: activeConnections=${newConnectionCount}, isActive=${isActive}`
         );
 
-        // Ersetze den Lambda-Invoke am Ende von observeState.js:
-        if (delta === 1 && newConnectionCount === 1) {
+        // Nur beim ersten User SQS triggern
+        if (newConnectionCount === 1 && record.eventName === "INSERT") {
             console.log("Erste Connection → Trigger SQS für Fetch-Zyklus");
-            const {
-                SQSClient,
-                SendMessageCommand,
-            } = require("@aws-sdk/client-sqs");
-            const sqs = new SQSClient({});
 
-            await sqs.send(
-                new SendMessageCommand({
-                    QueueUrl: process.env.SQS_QUEUE_URL,
-                    MessageBody: JSON.stringify({ action: "start_fetch" }),
-                    // DelaySeconds: 0 (sofort starten)
-                })
-            );
+            if (!process.env.AWS_SQS_URL) {
+                console.warn("AWS_SQS_URL not set, skipping SQS trigger");
+                continue;
+            }
+
+            try {
+                console.log("Sende an SQS!");
+                await sqs.send(
+                    new SendMessageCommand({
+                        QueueUrl: process.env.AWS_SQS_URL,
+                        MessageBody: JSON.stringify({ action: "start_fetch" }),
+                    })
+                );
+            } catch (sqsError) {
+                console.error("SQS send failed:", sqsError);
+                throw sqsError;
+            }
         }
     }
 };

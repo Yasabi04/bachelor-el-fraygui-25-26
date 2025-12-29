@@ -12,6 +12,7 @@ resource "aws_lambda_function" "fetch_flights" {
       WEBSOCKET_ENDPOINT = "${replace(aws_apigatewayv2_stage.ws_stage.invoke_url, "wss://", "https://")}"
       AWS_SQS_URL = aws_sqs_queue.flight_data_queue.url
       BROADCAST_FUNCTION_NAME = aws_lambda_function.broadcast.function_name
+      AIRLABS_API_KEY = var.airlabs_api_key
     }
   }
 } 

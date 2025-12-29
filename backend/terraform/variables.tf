@@ -87,3 +87,9 @@ variable "sqs_message_retention" {
   type        = number
   default     = 345600
 }
+
+variable "airlabs_api_key" {
+  description = "API Key für AIRLABS"
+  type        = string
+  # sensitive = true
+}

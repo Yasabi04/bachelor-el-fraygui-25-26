@@ -1,16 +1,30 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, ScanCommand } = require("@aws-sdk/lib-dynamodb");
-const { ApiGatewayManagementApiClient, PostToConnectionCommand } = require("@aws-sdk/client-apigatewaymanagementapi");
+const {
+    DynamoDBDocumentClient,
+    ScanCommand,
+} = require("@aws-sdk/lib-dynamodb");
+const {
+    ApiGatewayManagementApiClient,
+    PostToConnectionCommand,
+} = require("@aws-sdk/client-apigatewaymanagementapi");
 const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
 
 const sqs = new SQSClient({ region: "eu-central-1" });
 const dbClient = new DynamoDBClient({});
 const dynamodb = DynamoDBDocumentClient.from(dbClient);
 
+const chunkArray = (array, size) => {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+        chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+};
+
 exports.handler = async (event) => {
     try {
         let message;
-        
+
         // Fall 1: Von fetchFlights Lambda aufgerufen
         if (event.type && event.data) {
             message = event;
@@ -20,11 +34,16 @@ exports.handler = async (event) => {
         }
 
         // WebSocket Endpoint konfigurieren
-        const endpoint = event.requestContext 
+        const endpoint = event.requestContext
             ? `https://${event.requestContext.domainName}/${event.requestContext.stage}`
             : process.env.WEBSOCKET_ENDPOINT;
-        
+
         const apiGateway = new ApiGatewayManagementApiClient({ endpoint });
+
+        const flightChunks = chunkArray(event.data, 10);
+        console.log(
+            `${event.data.length} Flüge auf ${flightChunks.length} aufgeteilt.`
+        );
 
         // Alle verbundenen Clients abrufen
         const response = await dynamodb.send(
@@ -36,46 +55,44 @@ exports.handler = async (event) => {
         console.log(`Broadcasting to ${response.Items.length} connections`);
 
         // An alle Clients senden
-        const sendPromises = response.Items.map(async (connection) => {
-            try {
-                await apiGateway.send(
-                    new PostToConnectionCommand({
-                        ConnectionId: connection.connectionId,
-                        Data: JSON.stringify(message),
-                    })
-                );
-                console.log(`Gesendet an: ${connection.connectionId}`);
-            } catch (err) {
-                if (err.statusCode === 410) {
-                    console.log(`Tote connection ${connection.connectionId}`);
-                    // TODO: Connection aus DB löschen
-                } else {
-                    console.error(`Fehler bei ${connection.connectionId}:`, err);
+        const sendPromises = response.Items.flatMap((connection) => {
+            return flightChunks.map(async (chunk, index) => {
+                try {
+                    await apiGateway.send(
+                        new PostToConnectionCommand({
+                            ConnectionId: connection.connectionId,
+                            Data: JSON.stringify({
+                                type: "flight-update-chunk",
+                                totalChunks: flightChunks.length,
+                                chunkIndex: index,
+                                data: chunk,
+                            }),
+                        })
+                    );
+                    console.log(`Chunk ${index + 1}/${flightChunks.length} gesendet an: ${connection.connectionId}`);
+                } catch (err) {
+                    if (err.statusCode === 410) {
+                        console.log(
+                            `Tote connection ${connection.connectionId}`
+                        );
+                    } else {
+                        console.error(
+                            `Fehler bei ${connection.connectionId}:`,
+                            err
+                        );
+                    }
                 }
-            }
+            });
         });
 
         await Promise.all(sendPromises);
 
-        console.log('***** Sende 10s an SQS!')
-
-        // Nur SQS aufrufen wenn die Queue URL gesetzt ist (Produktion)
-        if (process.env.AWS_SQS_URL && !process.env.AWS_SAM_LOCAL) {
-            const params = {
-                QueueUrl: process.env.AWS_SQS_URL,
-                MessageBody: JSON.stringify({ action: "fetch10" }),
-                DelaySeconds: 10
-            }
-            await sqs.send(new SendMessageCommand(params))
-        } else {
-            console.log('Lokal: SQS Aufruf übersprungen')
-        }
-
         return {
             statusCode: 200,
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 message: "Broadcast erfolgreich",
-                sentTo: response.Items.length 
+                chunks: flightChunks.length,
+                sentTo: response.Items.length,
             }),
         };
     } catch (error) {

@@ -3,6 +3,7 @@ const serverUrl = `ws://localhost:7879?userId=${checkUser()}`;
 const testUrl = 'ws://localhost:5879'
 const wsIntervall = 60 * 1000 // Kickout für die Session:  20s
 window.activePlanes = new Map();
+const chunkBuffer = new Map(); // Chunk Verwaltung
 
 const ws = new WebSocket(awsUrl);
 const timeoutWindow = document.querySelector('.timeout-window')
@@ -24,6 +25,44 @@ const timeout = setTimeout(() => {
     }
 }, wsIntervall)
 
+const processFlightData = (states) => {
+    if (!Array.isArray(states)) return;
+
+    states.forEach((flightArray) => {
+        const icao = flightArray.flight_iata;
+
+        if (window.activePlanes.has(icao)) {
+            const existing = window.activePlanes.get(icao);
+            window.activePlanes.set(icao, {
+                ...existing,
+                lat: flightArray.lat,
+                long: flightArray.lng,
+                deg: flightArray.dir,
+                alt: flightArray.alt,
+                spd: flightArray.speed
+            });
+        } else {
+            window.activePlanes.set(icao, {
+                aircraft_type: flightArray.aircraft_icao,
+                lat: flightArray.lat,
+                long: flightArray.lng,
+                dep: flightArray.dep_iata,
+                arr: flightArray.arr_iata,
+                deg: flightArray.dir,
+                alt: flightArray.alt,
+                spd: flightArray.speed,
+            });
+        }
+    });
+
+    console.log(`${states.length} Flüge verarbeitet. Gesamt: ${window.activePlanes.size}`);
+
+    // Custom Event auslösen
+    window.dispatchEvent(new CustomEvent('activePlanesUpdated', {
+        detail: { activePlanes: window.activePlanes }
+    }));
+};
+
 ws.onopen = () => {
     console.log("Verbunden!");
 };
@@ -38,46 +77,43 @@ ws.onmessage = (async (event) => {
     try {
         const data = JSON.parse(rawData);
 
-        const states = data.states || (Array.isArray(data) ? data : []);
+        // Chunk-Nachricht?
+        if (data.type === "flight-update-chunk") {
+            const { chunkIndex, totalChunks, data: chunkData } = data;
+            
+            console.log(`Chunk ${chunkIndex + 1}/${totalChunks} empfangen`);
 
-        if (!Array.isArray(states)) return;
-
-        states.forEach((flightArray) => {
-            // console.log(flightArray);
-
-            const icao = flightArray.flight_iata;
-
-            if (window.activePlanes.has(icao)) {
-                const existing = window.activePlanes.get(icao);
-                window.activePlanes.set(icao, {
-                    ...existing,
-                    lat: flightArray.lat,
-                    long: flightArray.lng,
-                    deg: flightArray.dir,
-                    alt: flightArray.alt,
-                    spd: flightArray.speed
-                });
-            } else {
-                window.activePlanes.set(icao, {
-                    aircraft_type: flightArray.aircraft_icao,
-                    lat: flightArray.lat,
-                    long: flightArray.lng,
-                    dep: flightArray.dep_iata,
-                    arr: flightArray.arr_iata,
-                    deg: flightArray.dir,
-                    alt: flightArray.alt,
-                    spd: flightArray.speed,
+            // Chunk speichern
+            if (!chunkBuffer.has('current')) {
+                chunkBuffer.set('current', {
+                    chunks: new Array(totalChunks),
+                    received: 0,
+                    totalChunks: totalChunks
                 });
             }
-        });
 
-        console.log(window.activePlanes)
-        console.log(event.data)
+            const buffer = chunkBuffer.get('current');
+            buffer.chunks[chunkIndex] = chunkData;
+            buffer.received++;
 
-        // Custom Event auslösen, damit andere Dateien auf Updates reagieren können
-        window.dispatchEvent(new CustomEvent('activePlanesUpdated', {
-            detail: { activePlanes: window.activePlanes }
-        }));
+            // Sind alle Chunks empfangen?
+            if (buffer.received === totalChunks) {
+                console.log(`Alle ${totalChunks} Chunks empfangen, verarbeite Daten...`);
+                
+                // Alle Chunks zusammenführen
+                const allFlights = buffer.chunks.flat();
+                console.log(`Gesamt ${allFlights.length} Flüge`);
+                
+                processFlightData(allFlights);
+                
+                // Buffer zurücksetzen
+                chunkBuffer.delete('current');
+            }
+        } else {
+            // Legacy: Alte Nachrichtenstruktur (ohne Chunks)
+            const states = data.states || (Array.isArray(data) ? data : []);
+            processFlightData(states);
+        }
         
     } catch (e) {
         console.error("Fehler beim Verarbeiten der WebSocket-Daten:", e);
