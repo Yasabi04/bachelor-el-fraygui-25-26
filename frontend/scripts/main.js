@@ -5,7 +5,7 @@ const wsIntervall = 40 * 1000 // Kickout für die Session:  20s
 // window.activePlanes = new Map();
 const chunkBuffer = new Map(); // Chunk Verwaltung
 
-const ws = new WebSocket(testUrl);
+const ws = new WebSocket(null);
 const timeoutWindow = document.querySelector('.timeout-window')
 
 function checkUser() {

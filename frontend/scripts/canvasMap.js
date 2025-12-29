@@ -12,16 +12,16 @@ if (!window.activePlanes) {
         long: 3.21,
         dep: "FRA",
         arr: "JFK",
-        deg: 45,
+        deg: 300,
     });
 
     window.activePlanes.set("CA7289", {
         aircraft_type: "Boeing 777-200",
-        lat: 52.15,
-        long: -35.2,
+        lat: 57.88,
+        long: -36.04,
         dep: "YVR",
         arr: "FCO",
-        deg: 90,
+        deg: 120,
     });
 }
 
@@ -34,11 +34,11 @@ const tileLayer = L.tileLayer(
     }
 );
 
-const canvasRenderer = L.canvas({ 
+const canvasRenderer = L.canvas({
     padding: 0.5,
     tolerance: 5,
     updateWhenIdle: false,
-    updateWhenZooming: false
+    updateWhenZooming: false,
 });
 
 // Canvas Layer für Flugzeuge - synchronisiert mit Map-Transformationen
@@ -127,7 +127,34 @@ L.CanvasLayer = L.Layer.extend({
         const maxAircraft = this._getMaxAircraftForZoom(zoom);
         let drawnCount = 0;
 
+        if (
+            this.selectedAircraft &&
+            bounds.contains([
+                this.selectedAircraft.lat,
+                this.selectedAircraft.lng,
+            ])
+        ) {
+            const p = this.map.latLngToContainerPoint([
+                this.selectedAircraft.lat,
+                this.selectedAircraft.lng,
+            ]);
+            drawAircraft(
+                ctx,
+                p.x,
+                p.y,
+                this.selectedAircraft.heading || 0,
+                this.selectedAircraft.type,
+                false,
+                true
+            );
+            drawnCount++;
+        }
+
         for (const a of this.aircrafts) {
+            if (a == this.selectedAircraft) {
+                continue;
+            }
+
             if (!bounds.contains([a.lat, a.lng])) {
                 continue;
             }
@@ -139,14 +166,22 @@ L.CanvasLayer = L.Layer.extend({
             const p = this.map.latLngToContainerPoint([a.lat, a.lng]);
             const isHovered = this.hoveredAircraft === a;
             const isSelected = this.selectedAircraft === a;
-            drawAircraft(ctx, p.x, p.y, a.heading || 0, a.type, isHovered, isSelected);
+            drawAircraft(
+                ctx,
+                p.x,
+                p.y,
+                a.heading || 0,
+                a.type,
+                isHovered,
+                isSelected
+            );
             drawnCount++;
         }
     },
 
     _getMaxAircraftForZoom(zoom) {
         if (zoom <= 3) return 100; // Weltkarte: nur 10 Flugzeuge
-        if (zoom <= 5) return 50; // Kontinent: 50 Flugzeuge
+        if (zoom <= 5) return 100; // Kontinent: 50 Flugzeuge
         if (zoom <= 7) return 200; // Land: 200 Flugzeuge
         if (zoom <= 9) return 500; // Region: 500 Flugzeuge
         return Infinity; // Nah rangezoomt: alle Flugzeuge
@@ -212,7 +247,7 @@ function drawAircraft(ctx, x, y, heading, type, isHovered, isSelected) {
     const size = is4Engine ? 40 : 32;
 
     // Wähle das richtige Image basierend auf State
-    const img = (isSelected || isHovered) ? planeImgHighlight : planeImg;
+    const img = isSelected || isHovered ? planeImgHighlight : planeImg;
     ctx.drawImage(img, -size / 2, -size / 2, size, size);
 
     ctx.restore();
@@ -253,7 +288,7 @@ async function getElaboration(abbr) {
     }
 }
 
-async function updateInfo(iata, airplane_type, dep, arr) {
+async function updateInfo(iata, airplane_type, dep, arr, progress) {
     const mobile_icao = document.querySelector(".mobile-flight-icao");
     const mobile_aircraft = document.querySelector(".mobile-flight-aircraft");
     const mobile_dep = document.querySelector(".mobile-flight-dep-iata");
@@ -284,6 +319,7 @@ async function updateInfo(iata, airplane_type, dep, arr) {
     if (mobile_dep_name) mobile_dep_name.innerHTML = depName;
     if (mobile_arr) mobile_arr.innerHTML = arr;
     if (mobile_arr_name) mobile_arr_name.innerHTML = arrName;
+    if (mobile_progress) mobile_progress.style.setProperty("--after-width", `${Math.round(progress * 100)}%`)
 }
 
 function setAirports(dep_lat, dep_lng, arr_lat, arr_lng) {
@@ -328,14 +364,16 @@ function handleRouteProgress(
         color: "orange",
         weight: 2,
         renderer: canvasRenderer,
-        smoothFactor: 1.5
+        smoothFactor: 1.5,
     }).addTo(map);
 
     const polylineEnde = L.polyline(segmentFromPlane, {
-        color: "black",
+        color: "white",
         weight: 2,
+        dashArray: "10, 10",
+        dashOffset: "0",
         renderer: canvasRenderer,
-        smoothFactor: 1.5
+        smoothFactor: 1.5,
     }).addTo(map);
 
     //* 2. Berechnen wo das Flugzeug auf der Route ist
@@ -362,7 +400,12 @@ function handleRouteProgress(
         arr_lng
     );
 
-    activeRoutes.set(routeId, { polylineStart, polylineEnde, depMarker, arrMarker });
+    activeRoutes.set(routeId, {
+        polylineStart,
+        polylineEnde,
+        depMarker,
+        arrMarker,
+    });
     map.flyTo([planePos_lat, planePos_lng], 8);
 
     // Hier die Funktion aufrufen
@@ -525,14 +568,31 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
             aircraftLayer.setSelected(clicked);
             // Route
-            const start = await getAirport(clicked.dep)
-            const end = await getAirport(clicked.arr)
-            handleRouteProgress(start.lat, start.lng, clicked.lat, clicked.lng, end.lat, end.lng)
-            updateInfo(clicked.iata, clicked.type, clicked.dep, clicked.arr);
+            const start = await getAirport(clicked.dep);
+            const end = await getAirport(clicked.arr);
+            const progress = handleRouteProgress(
+                start.lat,
+                start.lng,
+                clicked.lat,
+                clicked.lng,
+                end.lat,
+                end.lng
+            );
+            updateInfo(clicked.iata, clicked.type, clicked.dep, clicked.arr, progress);
             // map.flyTo([clicked.lat, clicked.lng], 8)
         } else {
             // Deselektieren wenn auf leere Fläche geklickt wird
             aircraftLayer.setSelected(null);
+            activeRoutes.forEach((routeData) => {
+                if (routeData.polylineStart) map.removeLayer(routeData.polylineStart);
+                if (routeData.polylineEnde) map.removeLayer(routeData.polylineEnde);
+                if (routeData.depMarker) map.removeLayer(routeData.depMarker);
+                if (routeData.arrMarker) map.removeLayer(routeData.arrMarker);
+            });
+            activeRoutes.clear();
+
+            const flightInfo = document.querySelector('.mobile-flight-menu')
+            flightInfo.style = 'transform: translate(-50%, 100%)'
         }
     });
 
