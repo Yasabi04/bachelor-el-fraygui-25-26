@@ -75,21 +75,21 @@ if (!window.activePlanes) {
 }
 
 //* Dummy Daten
-// window.activePlanes.set("LH810", {
-//     aircraft_type: "AIRBUS A320 - 200",
-//     lat: 51.43,
-//     long: 3.21,
-//     dep: "FRA",
-//     arr: "JFK",
-// });
+window.activePlanes.set("LH810", {
+    aircraft_type: "AIRBUS A340 - 200",
+    lat: 51.43,
+    long: 3.21,
+    dep: "FRA",
+    arr: "JFK",
+});
 
-// window.activePlanes.set("CA7289", {
-//     aircraft_type: "Boeing 777-200",
-//     lat: 52.15,
-//     long: -35.2,
-//     dep: "YVR",
-//     arr: "FCO",
-// });
+window.activePlanes.set("CA7289", {
+    aircraft_type: "Boeing 777-200",
+    lat: 52.15,
+    long: -35.2,
+    dep: "YVR",
+    arr: "FCO",
+});
 
 // Event Listener für automatische Updates von main.js mit Throttling
 window.addEventListener("activePlanesUpdated", (event) => {
@@ -136,8 +136,8 @@ const planeIcon2 = L.icon({
 
 const planeIcon4 = L.icon({
     iconUrl: "./img/flg-vierstrahlig.svg",
-    iconSize: [34, 34],
-    iconAnchor: [17, 17],
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
 });
 
 // Hilfsfunktion zum Erstellen eines rotierten Icons
@@ -186,7 +186,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         flightInfo.style = "transform: translate(-50%, 100%)";
 
         activeRoutes.forEach((routeData) => {
-            map.removeLayer(routeData.polyline);
+            if (routeData.polylineStart) map.removeLayer(routeData.polylineStart);
+            if (routeData.polylineEnde) map.removeLayer(routeData.polylineEnde);
             map.removeLayer(routeData.depMarker);
             map.removeLayer(routeData.arrMarker);
         });
@@ -221,10 +222,18 @@ function handleRouteProgress(
     let arr = [arr_lat, arr_lng];
     let planePos = [planePos_lat, planePos_lng];
 
-    const curvePoints = createCurve(dep, planePos, arr, 200);
+    const segmentToPlane = createGreatCircle(dep, planePos, 100);
+    const segmentFromPlane = createGreatCircle(planePos, arr, 100);
 
-    const polyline = L.polyline(curvePoints, {
+    const polylineStart = L.polyline(segmentToPlane, {
         color: "orange",
+        weight: 2,
+        renderer: canvasRenderer,
+        smoothFactor: 1.5
+    }).addTo(map);
+
+    const polylineEnde = L.polyline(segmentFromPlane, {
+        color: "black",
         weight: 2,
         renderer: canvasRenderer,
         smoothFactor: 1.5
@@ -254,7 +263,7 @@ function handleRouteProgress(
         arr_lng
     );
 
-    activeRoutes.set(routeId, { polyline, depMarker, arrMarker });
+    activeRoutes.set(routeId, { polylineStart, polylineEnde, depMarker, arrMarker });
     map.flyTo([planePos_lat, planePos_lng], 8);
 
     // Hier die Funktion aufrufen
@@ -386,7 +395,6 @@ function displayPlane() {
         const plane = L.marker([p.lat, p.long], { icon: icon }).addTo(map);
 
         plane.addEventListener("click", async (_) => {
-            // Lade Flughafenkoordinaten aus airports-slim.json
             const depAirport = await getAirport(p.dep);
             const arrAirport = await getAirport(p.arr);
 

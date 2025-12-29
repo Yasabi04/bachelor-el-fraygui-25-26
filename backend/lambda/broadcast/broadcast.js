@@ -40,7 +40,7 @@ exports.handler = async (event) => {
 
         const apiGateway = new ApiGatewayManagementApiClient({ endpoint });
 
-        const flightChunks = chunkArray(event.data, 100);
+        const flightChunks = chunkArray(event.data, 450);
         console.log(
             `${event.data.length} Flüge auf ${flightChunks.length} aufgeteilt.`
         );

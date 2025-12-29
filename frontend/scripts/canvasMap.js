@@ -7,7 +7,7 @@ if (!window.activePlanes) {
     window.activePlanes = new Map();
 
     window.activePlanes.set("LH810", {
-        aircraft_type: "AIRBUS A320 - 200",
+        aircraft_type: "AIRBUS A340 - 200",
         lat: 51.43,
         long: 3.21,
         dep: "FRA",
@@ -33,6 +33,13 @@ const tileLayer = L.tileLayer(
         maxZoom: 19,
     }
 );
+
+const canvasRenderer = L.canvas({ 
+    padding: 0.5,
+    tolerance: 5,
+    updateWhenIdle: false,
+    updateWhenZooming: false
+});
 
 // Canvas Layer für Flugzeuge - synchronisiert mit Map-Transformationen
 L.CanvasLayer = L.Layer.extend({
@@ -202,7 +209,7 @@ function drawAircraft(ctx, x, y, heading, type, isHovered, isSelected) {
     const is4Engine =
         type &&
         (type.includes("380") || type.includes("747") || type.includes("340"));
-    const size = is4Engine ? 34 : 32;
+    const size = is4Engine ? 40 : 32;
 
     // Wähle das richtige Image basierend auf State
     const img = (isSelected || isHovered) ? planeImgHighlight : planeImg;
@@ -239,7 +246,7 @@ async function getElaboration(abbr) {
 
         const word = data.airplanes.find((e) => e.abbr == abbr);
 
-        return word.elab;
+        return word;
     } catch (error) {
         console.log(error);
         return "-----";
@@ -277,6 +284,182 @@ async function updateInfo(iata, airplane_type, dep, arr) {
     if (mobile_dep_name) mobile_dep_name.innerHTML = depName;
     if (mobile_arr) mobile_arr.innerHTML = arr;
     if (mobile_arr_name) mobile_arr_name.innerHTML = arrName;
+}
+
+function setAirports(dep_lat, dep_lng, arr_lat, arr_lng) {
+    const depMarker = L.marker([dep_lat, dep_lng])
+        .addTo(map)
+        .bindPopup("Start", { className: "customMarker" });
+    const arrMarker = L.marker([arr_lat, arr_lng])
+        .addTo(map)
+        .bindPopup("Ziel", { className: "customMarker" });
+
+    return { depMarker, arrMarker };
+}
+
+function handleRouteProgress(
+    dep_lat,
+    dep_lng,
+    planePos_lat,
+    planePos_lng,
+    arr_lat,
+    arr_lng,
+    routeId
+) {
+    // Entferne alle vorherigen Routen
+    activeRoutes.forEach((routeData) => {
+        if (routeData.polylineStart) map.removeLayer(routeData.polylineStart);
+        if (routeData.polylineEnde) map.removeLayer(routeData.polylineEnde);
+        map.removeLayer(routeData.depMarker);
+        map.removeLayer(routeData.arrMarker);
+    });
+    activeRoutes.clear();
+
+    //? 1. Great Circle Route zwischen Start und Ziel
+
+    let dep = [dep_lat, dep_lng];
+    let arr = [arr_lat, arr_lng];
+    let planePos = [planePos_lat, planePos_lng];
+
+    const segmentToPlane = createGreatCircle(dep, planePos, 100);
+    const segmentFromPlane = createGreatCircle(planePos, arr, 100);
+
+    const polylineStart = L.polyline(segmentToPlane, {
+        color: "orange",
+        weight: 2,
+        renderer: canvasRenderer,
+        smoothFactor: 1.5
+    }).addTo(map);
+
+    const polylineEnde = L.polyline(segmentFromPlane, {
+        color: "black",
+        weight: 2,
+        renderer: canvasRenderer,
+        smoothFactor: 1.5
+    }).addTo(map);
+
+    //* 2. Berechnen wo das Flugzeug auf der Route ist
+
+    const flown = haversineDistanceKM(
+        dep_lat,
+        dep_lng,
+        planePos_lat,
+        planePos_lng
+    );
+    const toFly = haversineDistanceKM(
+        planePos_lat,
+        planePos_lng,
+        arr_lat,
+        arr_lng
+    );
+    const totalDistance = flown + toFly;
+    const progress = flown / totalDistance;
+
+    const { depMarker, arrMarker } = setAirports(
+        dep_lat,
+        dep_lng,
+        arr_lat,
+        arr_lng
+    );
+
+    activeRoutes.set(routeId, { polylineStart, polylineEnde, depMarker, arrMarker });
+    map.flyTo([planePos_lat, planePos_lng], 8);
+
+    // Hier die Funktion aufrufen
+
+    return progress;
+}
+
+function haversineDistanceKM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
+    function toRad(degree) {
+        return (degree * Math.PI) / 180;
+    }
+
+    const lat1 = toRad(lat1Deg);
+    const lon1 = toRad(lon1Deg);
+    const lat2 = toRad(lat2Deg);
+    const lon2 = toRad(lon2Deg);
+
+    const { sin, cos, sqrt, atan2 } = Math;
+
+    const R = 6371; // earth radius in km
+    const dLat = lat2 - lat1;
+    const dLon = lon2 - lon1;
+    const a =
+        sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
+    const c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    const d = R * c;
+    return d; // distance in km
+}
+
+function createCurve(dep, planePos, arr, steps) {
+    // Berechne die Great Circle Distanzen
+    const dist_dep_plane = haversineDistanceKM(
+        dep[0],
+        dep[1],
+        planePos[0],
+        planePos[1]
+    );
+    const dist_plane_arr = haversineDistanceKM(
+        planePos[0],
+        planePos[1],
+        arr[0],
+        arr[1]
+    );
+    const totalDist = dist_dep_plane + dist_plane_arr;
+
+    // Verhältnis: Wie viele Punkte vor/nach der Flugzeugposition?
+    const stepsToPlane = Math.round(steps * (dist_dep_plane / totalDist));
+    const stepsToArr = steps - stepsToPlane;
+
+    // Erstelle zwei Great Circle Segmente
+    const segment1 = createGreatCircle(dep, planePos, stepsToPlane);
+    const segment2 = createGreatCircle(planePos, arr, stepsToArr);
+
+    // Entferne doppelte Flugzeugposition (segment2[0] == segment1[last])
+    return [...segment1, ...segment2.slice(1)];
+}
+
+function createGreatCircle(p1, p2, steps) {
+    const curve = [];
+
+    const lat1 = (p1[0] * Math.PI) / 180;
+    const lon1 = (p1[1] * Math.PI) / 180;
+    const lat2 = (p2[0] * Math.PI) / 180;
+    const lon2 = (p2[1] * Math.PI) / 180;
+
+    const d = Math.acos(
+        Math.sin(lat1) * Math.sin(lat2) +
+            Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1)
+    );
+
+    // Fallback für sehr kurze Distanzen
+    if (d < 0.0001) {
+        return [p1, p2];
+    }
+
+    for (let i = 0; i <= steps; i++) {
+        const f = i / steps;
+
+        const A = Math.sin((1 - f) * d) / Math.sin(d);
+        const B = Math.sin(f * d) / Math.sin(d);
+
+        const x =
+            A * Math.cos(lat1) * Math.cos(lon1) +
+            B * Math.cos(lat2) * Math.cos(lon2);
+        const y =
+            A * Math.cos(lat1) * Math.sin(lon1) +
+            B * Math.cos(lat2) * Math.sin(lon2);
+        const z = A * Math.sin(lat1) + B * Math.sin(lat2);
+
+        const lat = Math.atan2(z, Math.sqrt(x * x + y * y));
+        const lon = Math.atan2(y, x);
+
+        curve.push([(lat * 180) / Math.PI, (lon * 180) / Math.PI]);
+    }
+
+    return curve;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -326,7 +509,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         map.getContainer().style.cursor = hovered ? "pointer" : "";
     });
 
-    map.on("click", (e) => {
+    map.on("click", async (e) => {
         const p = map.latLngToContainerPoint(e.latlng);
         const clicked = aircraftLayer.pick(p.x, p.y);
 
@@ -341,8 +524,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 arr: clicked.arr,
             });
             aircraftLayer.setSelected(clicked);
+            // Route
+            const start = await getAirport(clicked.dep)
+            const end = await getAirport(clicked.arr)
+            handleRouteProgress(start.lat, start.lng, clicked.lat, clicked.lng, end.lat, end.lng)
             updateInfo(clicked.iata, clicked.type, clicked.dep, clicked.arr);
-            map.flyTo([clicked.lat, clicked.lng], 8)
+            // map.flyTo([clicked.lat, clicked.lng], 8)
         } else {
             // Deselektieren wenn auf leere Fläche geklickt wird
             aircraftLayer.setSelected(null);
