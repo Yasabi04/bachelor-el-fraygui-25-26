@@ -7,21 +7,101 @@ if (!window.activePlanes) {
     window.activePlanes = new Map();
 
     window.activePlanes.set("LH810", {
-        aircraft_type: "AIRBUS A340 - 200",
+        aircraft_type: "AIRBUS A320 - 200",
         lat: 51.43,
         long: 3.21,
         dep: "FRA",
         arr: "JFK",
-        deg: 300,
+        deg: 300
     });
 
     window.activePlanes.set("CA7289", {
         aircraft_type: "Boeing 777-200",
-        lat: 57.88,
-        long: -36.04,
+        lat: 52.15,
+        long: -35.2,
         dep: "YVR",
         arr: "FCO",
-        deg: 120,
+        deg: 120
+    });
+    
+    // Transatlantik: London → New York (über Atlantik)
+    window.activePlanes.set("BA177", {
+        aircraft_type: "Boeing 777-300",
+        lat: 52.5,
+        long: -25.3,
+        dep: "LHR",
+        arr: "JFK",
+        deg: 280
+    });
+
+    // Europa: Frankfurt → Barcelona
+    window.activePlanes.set("LH1130", {
+        aircraft_type: "AIRBUS A320",
+        lat: 45.2,
+        long: 5.8,
+        dep: "FRA",
+        arr: "BCN",
+        deg: 210
+    });
+
+    // Langstrecke: Dubai → München (über Türkei)
+    window.activePlanes.set("EK053", {
+        aircraft_type: "AIRBUS A380",
+        lat: 38.5,
+        long: 32.8,
+        dep: "DXB",
+        arr: "MUC",
+        deg: 320
+    });
+
+    // Nordatlantik: New York → Frankfurt
+    window.activePlanes.set("LH400", {
+        aircraft_type: "Boeing 747-8",
+        lat: 48.2,
+        long: -38.5,
+        dep: "EWR",
+        arr: "FRA",
+        deg: 65
+    });
+
+    // Asien-Europa: Singapur → London (über Indien)
+    window.activePlanes.set("SQ317", {
+        aircraft_type: "AIRBUS A350-900",
+        lat: 22.5,
+        long: 78.3,
+        dep: "SIN",
+        arr: "LHR",
+        deg: 315
+    });
+
+    // Pazifik: Los Angeles → Tokio
+    window.activePlanes.set("JL061", {
+        aircraft_type: "Boeing 787-9 Dreamliner",
+        lat: 42.5,
+        long: -165.2,
+        dep: "LAX",
+        arr: "NRT",
+        deg: 305
+    });
+
+    // Kurzstrecke: Paris → Amsterdam
+    window.activePlanes.set("AF1240", {
+        aircraft_type: "AIRBUS A321neo",
+        lat: 50.1,
+        long: 3.5,
+        dep: "CDG",
+        arr: "AMS",
+        deg: 25
+    });
+
+    // Naher Osten: Doha → Rom
+    window.activePlanes.set("QR115", {
+        aircraft_type: "AIRBUS A330-900",
+        lat: 35.8,
+        long: 23.4,
+        dep: "DOH",
+        arr: "FCO",
+        deg: 295
     });
 }
 
@@ -225,11 +305,17 @@ L.CanvasLayer = L.Layer.extend({
     },
 });
 
-const planeImg = new Image();
-planeImg.src = "./img/flg-zweistrahlig.svg";
+const planeImg2 = new Image();
+planeImg2.src = "./img/flg-zweistrahlig.svg";
 
-const planeImgHighlight = new Image();
-planeImgHighlight.src = "./img/flg-zweistrahlig-highlight.svg"; // Oder ein anderer Pfad
+const planeImg2Highlight = new Image();
+planeImg2Highlight.src = "./img/flg-zweistrahlig-highlight.svg";
+
+const planeImg4 = new Image();
+planeImg4.src = "./img/flg-vierstrahlig.svg";
+
+const planeImg4Highlight = new Image();
+planeImg4Highlight.src = "./img/flg-vierstrahlig-highlight.svg";
 
 function drawAircraft(ctx, x, y, heading, type, isHovered, isSelected) {
     ctx.save();
@@ -246,8 +332,15 @@ function drawAircraft(ctx, x, y, heading, type, isHovered, isSelected) {
         (type.includes("380") || type.includes("747") || type.includes("340"));
     const size = is4Engine ? 40 : 32;
 
+
     // Wähle das richtige Image basierend auf State
-    const img = isSelected || isHovered ? planeImgHighlight : planeImg;
+    let img 
+    if(is4Engine) {
+        img = (isSelected || isHovered) ? planeImg4Highlight : planeImg4;
+    }
+    else {
+        img = (isSelected || isHovered) ? planeImg2Highlight : planeImg2;
+    }
     ctx.drawImage(img, -size / 2, -size / 2, size, size);
 
     ctx.restore();
@@ -260,7 +353,6 @@ async function getAirport(short) {
         const airport = data.airports.find((a) => a.iata === short);
 
         if (airport) {
-            console.log(airport.name);
             return {
                 name: airport.name,
                 lat: airport.lat,
@@ -406,9 +498,7 @@ function handleRouteProgress(
         depMarker,
         arrMarker,
     });
-    map.flyTo([planePos_lat, planePos_lng], 8);
-
-    // Hier die Funktion aufrufen
+    // map.flyTo([planePos_lat, planePos_lng], 19);
 
     return progress;
 }

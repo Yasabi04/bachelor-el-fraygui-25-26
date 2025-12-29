@@ -24,53 +24,85 @@ if (!window.activePlanes) {
         dep: "YVR",
         arr: "FCO",
     });
-
-    window.activePlanes.set("RYR5880", {
-        aircraft_type: "Boeing 737-8",
-        lat: 50.43,
-        long: 3.21,
-        dep: "CGN",
-        arr: "STN",
-    });
-
-    window.activePlanes.set("BA456", {
-        aircraft_type: "AIRBUS A380",
-        lat: 48.85,
-        long: 2.35,
-        dep: "LHR",
-        arr: "SIN",
-    });
-
-    window.activePlanes.set("AF1234", {
+    
+    // Transatlantik: London → New York (über Atlantik)
+    window.activePlanes.set("BA177", {
         aircraft_type: "Boeing 777-300",
-        lat: 52.52,
-        long: 13.4,
-        dep: "CDG",
-        arr: "LAX",
+        lat: 52.5,
+        long: -25.3,
+        dep: "LHR",
+        arr: "JFK",
+        deg: 280
     });
 
-    window.activePlanes.set("EK789", {
-        aircraft_type: "AIRBUS A330-900",
-        lat: 45.76,
-        long: 4.84,
+    // Europa: Frankfurt → Barcelona
+    window.activePlanes.set("LH1130", {
+        aircraft_type: "AIRBUS A320",
+        lat: 45.2,
+        long: 5.8,
+        dep: "FRA",
+        arr: "BCN",
+        deg: 210
+    });
+
+    // Langstrecke: Dubai → München (über Türkei)
+    window.activePlanes.set("EK053", {
+        aircraft_type: "AIRBUS A380",
+        lat: 38.5,
+        long: 32.8,
         dep: "DXB",
         arr: "MUC",
+        deg: 320
     });
 
-    window.activePlanes.set("UA9021", {
-        aircraft_type: "Boeing 787-9 Dreamliner",
-        lat: 53.55,
-        long: 9.99,
+    // Nordatlantik: New York → Frankfurt
+    window.activePlanes.set("LH400", {
+        aircraft_type: "Boeing 747-8",
+        lat: 48.2,
+        long: -38.5,
         dep: "EWR",
         arr: "FRA",
+        deg: 65
     });
 
-    window.activePlanes.set("QR456", {
+    // Asien-Europa: Singapur → London (über Indien)
+    window.activePlanes.set("SQ317", {
+        aircraft_type: "AIRBUS A350-900",
+        lat: 22.5,
+        long: 78.3,
+        dep: "SIN",
+        arr: "LHR",
+        deg: 315
+    });
+
+    // Pazifik: Los Angeles → Tokio
+    window.activePlanes.set("JL061", {
+        aircraft_type: "Boeing 787-9 Dreamliner",
+        lat: 42.5,
+        long: -165.2,
+        dep: "LAX",
+        arr: "NRT",
+        deg: 305
+    });
+
+    // Kurzstrecke: Paris → Amsterdam
+    window.activePlanes.set("AF1240", {
         aircraft_type: "AIRBUS A321neo",
-        lat: 50.03,
-        long: 8.57,
+        lat: 50.1,
+        long: 3.5,
+        dep: "CDG",
+        arr: "AMS",
+        deg: 25
+    });
+
+    // Naher Osten: Doha → Rom
+    window.activePlanes.set("QR115", {
+        aircraft_type: "AIRBUS A330-900",
+        lat: 35.8,
+        long: 23.4,
         dep: "DOH",
-        arr: "BCN",
+        arr: "FCO",
+        deg: 295
     });
 }
 
