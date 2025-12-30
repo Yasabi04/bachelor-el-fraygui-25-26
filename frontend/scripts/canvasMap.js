@@ -348,15 +348,17 @@ function drawAircraft(ctx, x, y, heading, type, isHovered, isSelected) {
 
 async function getAirport(short) {
     try {
-        const response = await fetch("./json/airports-slim.json");
+        const response = await fetch("./json/airports-collection.json");
         const data = await response.json();
-        const airport = data.airports.find((a) => a.iata === short);
+        // Suche zuerst nach IATA, dann nach ICAO als Fallback
+        const airport = data.find((a) => a.iata_code === short || a.icao_code === short);
 
         if (airport) {
+            console.log(airport.name)
             return {
                 name: airport.name,
-                lat: airport.lat,
-                lng: airport.lng,
+                lat: airport.coordinates.lat,
+                lng: airport.coordinates.lng,
             };
         }
         return "Kein Eintrag vorhanden";
