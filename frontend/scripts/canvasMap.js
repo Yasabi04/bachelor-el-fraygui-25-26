@@ -111,6 +111,7 @@ const tileLayer = L.tileLayer(
         attribution:
             '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
         maxZoom: 19,
+        minZoom: 2,
     }
 );
 
@@ -356,7 +357,7 @@ async function getAirport(short) {
         if (airport) {
             console.log(airport.name)
             return {
-                name: airport.name,
+                name: airport.municipality, // Oder airport.name für Flughafennamen
                 lat: airport.coordinates.lat,
                 lng: airport.coordinates.lng,
             };

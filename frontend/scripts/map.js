@@ -141,6 +141,7 @@ const tileLayer = L.tileLayer(
         attribution:
             '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
         maxZoom: 19,
+        minZoom: 2
     }
 );
 
@@ -249,6 +250,16 @@ function handleRouteProgress(
     activeRoutes.clear();
 
     //? 1. Great Circle Route zwischen Start und Ziel
+    if(typeof(dep_lat) != Number || typeof(dep_lng) != Number) {
+        dep_lat = planePos_lat
+        dep_lng = planePos_lng
+    }
+
+    if(typeof(arr_lat) != Number || typeof(arr_lng) != Number) {
+        arr_lat = planePos_lat
+        arr_lng = planePos_lng
+    }
+
 
     let dep = [dep_lat, dep_lng];
     let arr = [arr_lat, arr_lng];
