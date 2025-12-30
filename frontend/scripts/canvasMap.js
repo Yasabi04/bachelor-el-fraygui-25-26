@@ -3,107 +3,7 @@ let aircraftLayer = null;
 let activeRoutes = new Map();
 
 // Fallback Test-Daten
-if (!window.activePlanes) {
-    window.activePlanes = new Map();
 
-    window.activePlanes.set("LH810", {
-        aircraft_type: "AIRBUS A320 - 200",
-        lat: 51.43,
-        long: 3.21,
-        dep: "FRA",
-        arr: "JFK",
-        deg: 300
-    });
-
-    window.activePlanes.set("CA7289", {
-        aircraft_type: "Boeing 777-200",
-        lat: 52.15,
-        long: -35.2,
-        dep: "YVR",
-        arr: "FCO",
-        deg: 120
-    });
-    
-    // Transatlantik: London → New York (über Atlantik)
-    window.activePlanes.set("BA177", {
-        aircraft_type: "Boeing 777-300",
-        lat: 52.5,
-        long: -25.3,
-        dep: "LHR",
-        arr: "JFK",
-        deg: 280
-    });
-
-    // Europa: Frankfurt → Barcelona
-    window.activePlanes.set("LH1130", {
-        aircraft_type: "AIRBUS A320",
-        lat: 45.2,
-        long: 5.8,
-        dep: "FRA",
-        arr: "BCN",
-        deg: 210
-    });
-
-    // Langstrecke: Dubai → München (über Türkei)
-    window.activePlanes.set("EK053", {
-        aircraft_type: "AIRBUS A380",
-        lat: 38.5,
-        long: 32.8,
-        dep: "DXB",
-        arr: "MUC",
-        deg: 320
-    });
-
-    // Nordatlantik: New York → Frankfurt
-    window.activePlanes.set("LH400", {
-        aircraft_type: "Boeing 747-8",
-        lat: 48.2,
-        long: -38.5,
-        dep: "EWR",
-        arr: "FRA",
-        deg: 65
-    });
-
-    // Asien-Europa: Singapur → London (über Indien)
-    window.activePlanes.set("SQ317", {
-        aircraft_type: "AIRBUS A350-900",
-        lat: 22.5,
-        long: 78.3,
-        dep: "SIN",
-        arr: "LHR",
-        deg: 315
-    });
-
-    // Pazifik: Los Angeles → Tokio
-    window.activePlanes.set("JL061", {
-        aircraft_type: "Boeing 787-9 Dreamliner",
-        lat: 42.5,
-        long: -165.2,
-        dep: "LAX",
-        arr: "NRT",
-        deg: 305
-    });
-
-    // Kurzstrecke: Paris → Amsterdam
-    window.activePlanes.set("AF1240", {
-        aircraft_type: "AIRBUS A321neo",
-        lat: 50.1,
-        long: 3.5,
-        dep: "CDG",
-        arr: "AMS",
-        deg: 25
-    });
-
-    // Naher Osten: Doha → Rom
-    window.activePlanes.set("QR115", {
-        aircraft_type: "AIRBUS A330-900",
-        lat: 35.8,
-        long: 23.4,
-        dep: "DOH",
-        arr: "FCO",
-        deg: 295
-    });
-}
 
 const tileLayer = L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -352,10 +252,9 @@ async function getAirport(short) {
         const response = await fetch("./json/airports-collection.json");
         const data = await response.json();
         // Suche zuerst nach IATA, dann nach ICAO als Fallback
-        const airport = data.find((a) => a.iata_code === short || a.icao_code === short);
+        const airport = data.find((a) => a.iata_code === short /*|| a.icao_code === short*/);
 
         if (airport) {
-            console.log(airport.name)
             return {
                 name: airport.municipality, // Oder airport.name für Flughafennamen
                 lat: airport.coordinates.lat,
