@@ -419,10 +419,8 @@ async function updateInfo(iata, airplane_type, dep, arr, progress) {
 function setAirports(dep_lat, dep_lng, arr_lat, arr_lng) {
     const depMarker = L.marker([dep_lat, dep_lng])
         .addTo(map)
-        .bindPopup("Start", { className: "customMarker" });
     const arrMarker = L.marker([arr_lat, arr_lng])
         .addTo(map)
-        .bindPopup("Ziel", { className: "customMarker" });
 
     return { depMarker, arrMarker };
 }
@@ -462,7 +460,7 @@ function handleRouteProgress(
     }).addTo(map);
 
     const polylineEnde = L.polyline(segmentFromPlane, {
-        color: "white",
+        color: "grey",
         weight: 2,
         dashArray: "10, 10",
         dashOffset: "0",
@@ -500,7 +498,7 @@ function handleRouteProgress(
         depMarker,
         arrMarker,
     });
-    // map.flyTo([planePos_lat, planePos_lng], 19);
+    map.flyTo([planePos_lat, planePos_lng], 5);
 
     return progress;
 }

@@ -542,10 +542,10 @@ function updatePlaneMarkers() {
 function setAirports(dep_lat, dep_lng, arr_lat, arr_lng) {
     const depMarker = L.marker([dep_lat, dep_lng])
         .addTo(map)
-        .bindPopup("Start", { className: "customMarker" });
+        .bindPopup();
     const arrMarker = L.marker([arr_lat, arr_lng])
         .addTo(map)
-        .bindPopup("Ziel", { className: "customMarker" });
+        .bindPopup();
 
     return { depMarker, arrMarker };
 }
