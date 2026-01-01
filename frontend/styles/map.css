@@ -166,7 +166,7 @@
         gap: var(--size-xl);
         list-style-type: none;
 
-        .nav-element {
+        .nav-element-1, .nav-element-2 {
             width: var(--size-xl);
             height: var(--size-xl);
             backdrop-filter: blur(10px);
@@ -179,11 +179,37 @@
                 height: 100%;
                 object-fit: contain;
             }
+
+            .searchField {
+                display: none;
+            }
         }
 
         #center {
             img{
                 transform: rotate(30deg);
+            }
+        }
+
+        .nav-element-2.mag-glass {
+            width: auto !important;
+            border-radius: 0 !important;
+            
+            img {
+                display: none !important;
+            }
+
+            .searchField {
+                display: flex !important;
+                width: calc(5*var(--size-xl));
+                margin: 0;
+                padding: 0;
+                font-size: var(--size-s);
+                border: none;
+                background: transparent;
+                color: white;
+                outline: none;
+                border-bottom: 2px solid white;
             }
         }
     }

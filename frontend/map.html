@@ -26,19 +26,25 @@
         <div id="map"></div>
         <aside class="controls">
             <ul class="nav-elements">
-                <li class="nav-element" id="center">
+                <li class="nav-element-1" id="center">
                     <img src="./img/center-symbol.svg" alt="Zentrieren" />
                 </li>
-                <li class="nav-element" id="search">
+                <li class="nav-element-2" id="search">
                     <img
                         src="./img/search-symbol.svg"
                         alt="Suche"
                         class="search-symbol"
                     />
+                    <input
+                        id="input"
+                        type="text"
+                        placeholder="Suchen"
+                        class="searchField"
+                    />
                 </li>
             </ul>
         </aside>
-        
+
         <aside class="mobile-flight-menu">
             <div class="mobile-flight-name-wrapper">
                 <span class="mobile-flight-icao">DLH810</span>
@@ -79,4 +85,5 @@
     <script src="./scripts/main.js"></script>
     <script src="./scripts/canvasMap.js"></script>
     <script src="./scripts/airports-script.js"></script>
+    <script src="scripts/controls.js"></script>
 </html>

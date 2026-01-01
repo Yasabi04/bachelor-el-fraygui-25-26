@@ -548,7 +548,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (clicked) {
             console.log("Angeklicktes Flugzeug:", {
-                iata: clicked.iata,
+                icao: clicked.icao,
                 type: clicked.type,
                 lat: clicked.lat,
                 lng: clicked.lng,
@@ -568,7 +568,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 end.lat,
                 end.lng
             );
-            updateInfo(clicked.iata, clicked.type, clicked.dep, clicked.arr, progress);
+            updateInfo(clicked.icao, clicked.type, clicked.dep, clicked.arr, progress);
             // map.flyTo([clicked.lat, clicked.lng], 8)
         } else {
             // Deselektieren wenn auf leere Fläche geklickt wird
@@ -589,7 +589,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Erstelle Aircraft Layer
     const aircrafts = Array.from(window.activePlanes.entries()).map(
         ([key, p]) => ({
-            iata: key,
+            icao: key,
             lat: p.lat,
             lng: p.long,
             heading: p.deg || 0,
@@ -606,7 +606,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.addEventListener("activePlanesUpdated", () => {
         const updatedAircrafts = Array.from(window.activePlanes.entries()).map(
             ([key, p]) => ({
-                iata: key,
+                icao: key,
                 lat: p.lat,
                 lng: p.long,
                 heading: p.deg || 0,
