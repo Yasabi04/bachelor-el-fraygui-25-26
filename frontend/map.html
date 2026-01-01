@@ -24,25 +24,21 @@
     </head>
     <body>
         <div id="map"></div>
-        <!-- <aside class="flight-menu-container">
-            <section class="flight-menu">
-                <h1 class="flight-icao">LH810</h1>
-                <span class="flight-aircraft">AIRBUS A320 - 200</span>
-                <div class="flight-route">
-                    <div class="flight-start">
-                        <p class="flight-dep-iata">FRA</p>
-                        <p class="flight-dep-name">Frankfurt Intern. Airport</p>
-                    </div>
-                    <div class="flight-end">
-                        <p class="flight-arr-iata">JFK</p>
-                        <p class="flight-arr-name">
-                            New York International Airport
-                        </p>
-                    </div>
-                </div>
-                <div class="progress-max"></div>
-            </section>
-        </aside> -->
+        <aside class="controls">
+            <ul class="nav-elements">
+                <li class="nav-element" id="center">
+                    <img src="./img/center-symbol.svg" alt="Zentrieren" />
+                </li>
+                <li class="nav-element" id="search">
+                    <img
+                        src="./img/search-symbol.svg"
+                        alt="Suche"
+                        class="search-symbol"
+                    />
+                </li>
+            </ul>
+        </aside>
+        
         <aside class="mobile-flight-menu">
             <div class="mobile-flight-name-wrapper">
                 <span class="mobile-flight-icao">DLH810</span>
@@ -70,15 +66,17 @@
                 <h1 class="timeout-heading">Deine Session ist abgelaufen</h1>
                 <p class="timeout-text">
                     Um Daten zu sparen und eine gute Übertragungsrate zu
-                    erhalten, werden alle Nutzer nach zwei Minuten automatisch vom
-                    Server getrennt. Wenn Sie sich wieder verbinden wollen,
+                    erhalten, werden alle Nutzer nach zwei Minuten automatisch
+                    vom Server getrennt. Wenn Sie sich wieder verbinden wollen,
                     laden Sie diese Seite neu oder klicken sie untern!
                 </p>
-                <a href="javascript:location.reload()" class="timeout-reload">Jetzt neu verbinden!</a>
+                <a href="javascript:location.reload()" class="timeout-reload"
+                    >Jetzt neu verbinden!</a
+                >
             </section>
         </aside>
     </body>
     <script src="./scripts/main.js"></script>
     <script src="./scripts/canvasMap.js"></script>
-    <script src = "./scripts/airports-script.js"></script>
+    <script src="./scripts/airports-script.js"></script>
 </html>

@@ -139,7 +139,7 @@ if (!window.activePlanes) {
         deg: 65
     });
 
-    // Moskau → Peking
+    // Berlin → Peking
     window.activePlanes.set("SU574", {
         aircraft_type: "AIRBUS A330-300",
         lat: 48.5,

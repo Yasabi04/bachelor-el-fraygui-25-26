@@ -1,26 +1,3 @@
-.customMarker .leaflet-popup-content-wrapper {
-    background-color: white;
-    border: 5px solid var(--color-compl);
-    color: black;
-}
-
-.customMarker .leaflet-popup-tip {
-    background-color: var(--color-compl);
-}
-
-.customMarker .leaflet-popup-content {
-    margin: 4px var(--size-s) 8px var(--size-s);
-    font-size: var(--size-xs);
-    font-weight: 700;
-    font-family: "Figtree";
-    text-transform: uppercase;
-    text-align: center;
-}
-
-.customMarker .leaflet-popup-close-button {
-    display: none;
-}
-
 #map {
     position: relative;
 }
@@ -167,6 +144,48 @@
         width: var(--after-width, 50%);
         height: 100%;
         background-color: var(--color-compl);
+    }
+}
+
+.controls {
+    z-index: 10000;
+    position: fixed;
+    right: var(--size-s);
+    bottom: 50%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: fill;
+
+    .nav-elements {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--size-xl);
+        list-style-type: none;
+
+        .nav-element {
+            width: var(--size-xl);
+            height: var(--size-xl);
+            backdrop-filter: blur(10px);
+            padding: 5px;
+            border-radius: 50%;
+            cursor: pointer;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
+        #center {
+            img{
+                transform: rotate(30deg);
+            }
+        }
     }
 }
 
