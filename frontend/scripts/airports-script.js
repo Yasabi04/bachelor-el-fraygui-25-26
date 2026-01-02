@@ -12,8 +12,8 @@ if (!window.activePlanes) {
 
     window.activePlanes.set("CA7289", {
         aircraft_type: "Boeing 777-200",
-        lat: 52.15,
-        long: -35.2,
+        lat: 54.15,
+        long: -3.2,
         dep: "YVR",
         arr: "FCO",
         deg: 120

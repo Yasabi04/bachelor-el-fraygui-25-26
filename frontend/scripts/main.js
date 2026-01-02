@@ -1,7 +1,7 @@
 const awsUrl = `wss://i2axgim3s9.execute-api.eu-central-1.amazonaws.com/dev?userId=${checkUser()}`;
 const serverUrl = `ws://localhost:7879?userId=${checkUser()}`;
 const testUrl = 'ws://localhost:5879'
-const wsIntervall = 40 * 1000 // Kickout für die Session:  20s
+const wsIntervall = 40 * 1000 // Kickout für die Session:  40s
 // window.activePlanes = new Map();
 const chunkBuffer = new Map(); // Chunk Verwaltung
 
