@@ -9,6 +9,8 @@ const userIcon = L.icon({
 });
 
 function getUserPermission() {
+
+    
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
             const { latitude, longitude } = position.coords;

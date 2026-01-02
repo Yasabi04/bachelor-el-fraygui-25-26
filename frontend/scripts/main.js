@@ -77,7 +77,6 @@ ws.onmessage = (async (event) => {
     try {
         const data = JSON.parse(rawData);
 
-        // Chunk-Nachricht?
         if (data.type === "flight-update-chunk") {
             const { chunkIndex, totalChunks, data: chunkData } = data;
             
