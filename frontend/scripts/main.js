@@ -51,6 +51,7 @@ const processFlightData = (states) => {
                 deg: flightArray.dir,
                 alt: flightArray.alt,
                 spd: flightArray.speed,
+                isSelected: false
             });
         }
     });

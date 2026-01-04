@@ -7,7 +7,8 @@ if (!window.activePlanes) {
         long: 3.21,
         dep: "FRA",
         arr: "JFK",
-        deg: 300
+        deg: 300,
+        isSelected: false
     });
 
     window.activePlanes.set("CA7289", {
@@ -16,7 +17,8 @@ if (!window.activePlanes) {
         long: -3.2,
         dep: "YVR",
         arr: "FCO",
-        deg: 120
+        deg: 120,
+        isSelected: false
     });
     
     // Transatlantik: London → New York (über Atlantik)
@@ -26,17 +28,19 @@ if (!window.activePlanes) {
         long: -25.3,
         dep: "LHR",
         arr: "JFK",
-        deg: 280
+        deg: 280,
+        isSelected: false
     });
 
     // Europa: Frankfurt → Barcelona
     window.activePlanes.set("LH1130", {
         aircraft_type: "AIRBUS A320",
-        lat: 45.2,
-        long: 5.8,
+        lat: 41.562,
+        long: 2.802,
         dep: "FRA",
         arr: "BCN",
-        deg: 210
+        deg: 230,
+        isSelected: false
     });
 
     // Langstrecke: Dubai → München (über Türkei)
@@ -46,7 +50,8 @@ if (!window.activePlanes) {
         long: 32.8,
         dep: "DXB",
         arr: "MUC",
-        deg: 320
+        deg: 320,
+        isSelected: false
     });
 
     // Nordatlantik: New York → Frankfurt
@@ -56,7 +61,8 @@ if (!window.activePlanes) {
         long: -38.5,
         dep: "EWR",
         arr: "FRA",
-        deg: 65
+        deg: 65,
+        isSelected: false
     });
 
     // Asien-Europa: Singapur → London (über Indien)
@@ -66,7 +72,8 @@ if (!window.activePlanes) {
         long: 78.3,
         dep: "SIN",
         arr: "LHR",
-        deg: 315
+        deg: 315,
+        isSelected: false
     });
 
     // Pazifik: Los Angeles → Tokio
@@ -76,7 +83,8 @@ if (!window.activePlanes) {
         long: -165.2,
         dep: "LAX",
         arr: "NRT",
-        deg: 305
+        deg: 305,
+        isSelected: false
     });
 
     // Kurzstrecke: Paris → Amsterdam
@@ -86,7 +94,8 @@ if (!window.activePlanes) {
         long: 3.5,
         dep: "CDG",
         arr: "AMS",
-        deg: 25
+        deg: 25,
+        isSelected: false
     });
 
     // Naher Osten: Doha → Rom
@@ -96,7 +105,8 @@ if (!window.activePlanes) {
         long: 23.4,
         dep: "DOH",
         arr: "FCO",
-        deg: 295
+        deg: 295,
+        isSelected: false
     });
 
     // Australien → Singapur
@@ -106,7 +116,8 @@ if (!window.activePlanes) {
         long: 125.8,
         dep: "SYD",
         arr: "SIN",
-        deg: 315
+        deg: 315,
+        isSelected: false
     });
 
     // Madrid → Buenos Aires (Südatlantik)
@@ -116,7 +127,8 @@ if (!window.activePlanes) {
         long: -28.5,
         dep: "MAD",
         arr: "EZE",
-        deg: 225
+        deg: 225,
+        isSelected: false
     });
 
     // Dubai → New York (über Atlantik)
@@ -126,7 +138,8 @@ if (!window.activePlanes) {
         long: -45.2,
         dep: "DXB",
         arr: "JFK",
-        deg: 285
+        deg: 285,
+        isSelected: false
     });
 
     // Hong Kong → San Francisco (Transpazifik)
@@ -136,7 +149,8 @@ if (!window.activePlanes) {
         long: -155.3,
         dep: "HKG",
         arr: "SFO",
-        deg: 65
+        deg: 65,
+        isSelected: false
     });
 
     // Berlin → Peking
@@ -146,7 +160,8 @@ if (!window.activePlanes) {
         long: 95.2,
         dep: "BER",
         arr: "PEK",
-        deg: 115
+        deg: 115,
+        isSelected: false
     });
 
     // Johannesburg → London (über Afrika)
@@ -156,7 +171,8 @@ if (!window.activePlanes) {
         long: 28.3,
         dep: "JNB",
         arr: "LHR",
-        deg: 355
+        deg: 355,
+        isSelected: false
     });
 
     // Istanbul → Bangkok
@@ -166,7 +182,8 @@ if (!window.activePlanes) {
         long: 68.5,
         dep: "IST",
         arr: "BKK",
-        deg: 95
+        deg: 95,
+        isSelected: false
     });
 
     // Toronto → London
@@ -176,7 +193,8 @@ if (!window.activePlanes) {
         long: -42.8,
         dep: "YYZ",
         arr: "LHR",
-        deg: 75
+        deg: 75,
+        isSelected: false
     });
 
     // Seoul → Los Angeles (Nordpazifik)
@@ -186,7 +204,8 @@ if (!window.activePlanes) {
         long: -168.5,
         dep: "ICN",
         arr: "LAX",
-        deg: 85
+        deg: 85,
+        isSelected: false
     });
 
     // São Paulo → Frankfurt
@@ -196,7 +215,8 @@ if (!window.activePlanes) {
         long: -18.3,
         dep: "GRU",
         arr: "FRA",
-        deg: 45
+        deg: 45,
+        isSelected: false
     });
 
     window.activePlanes.set("QTS1", {
@@ -205,6 +225,7 @@ if (!window.activePlanes) {
         long: 95.712,
         dep: "LHR",
         arr: "SYD",
-        deg: 320
+        deg: 320,
+        isSelected: false
     })
 }

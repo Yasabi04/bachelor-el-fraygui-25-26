@@ -2,9 +2,6 @@ let map = null;
 let aircraftLayer = null;
 let activeRoutes = new Map();
 
-// Fallback Test-Daten
-
-
 const tileLayer = L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     {
@@ -146,7 +143,11 @@ L.CanvasLayer = L.Layer.extend({
 
             const p = this.map.latLngToContainerPoint([a.lat, a.lng]);
             const isHovered = this.hoveredAircraft === a;
-            const isSelected = this.selectedAircraft === a;
+            
+            // Lese isSelected aus window.activePlanes
+            const planeData = window.activePlanes.get(a.icao);
+            const isSelected = planeData ? planeData.isSelected : false;
+            
             drawAircraft(
                 ctx,
                 p.x,
@@ -165,7 +166,7 @@ L.CanvasLayer = L.Layer.extend({
         if (zoom <= 5) return 100; // Kontinent: 50 Flugzeuge
         if (zoom <= 7) return 200; // Land: 200 Flugzeuge
         if (zoom <= 9) return 500; // Region: 500 Flugzeuge
-        return Infinity; // Nah rangezoomt: alle Flugzeuge
+        return Infinity; 
     },
 
     updateAircrafts(aircrafts) {
@@ -199,10 +200,25 @@ L.CanvasLayer = L.Layer.extend({
     },
 
     setSelected(aircraft) {
-        if (this.selectedAircraft !== aircraft) {
-            this.selectedAircraft = aircraft;
-            this._redraw();
+        // Setze false für letztes vorheriges Flugzeug
+        if (this.selectedAircraft) {
+            const prevPlane = window.activePlanes.get(this.selectedAircraft.icao);
+            if (prevPlane) {
+                prevPlane.isSelected = false;
+            }
         }
+
+        // Selektiere neues Flugzeug
+        if (aircraft) {
+            const plane = window.activePlanes.get(aircraft.icao);
+            if (plane) {
+                plane.isSelected = true;
+                console.log("Flugzeug selektiert:", plane);
+            }
+        }
+
+        this.selectedAircraft = aircraft;
+        this._redraw();
     },
 });
 
@@ -270,19 +286,21 @@ async function getAirport(short) {
 
 async function getElaboration(abbr) {
     try {
+        console.log(abbr)
         const req = await fetch("./json/airplane-abbr.json");
         const data = await req.json();
 
         const word = data.airplanes.find((e) => e.abbr == abbr);
 
-        return word;
+        console.log(word.elab)
+        return word.elab;
     } catch (error) {
         console.log(error);
         return "-----";
     }
 }
 
-async function updateInfo(iata, airplane_type, dep, arr, progress) {
+async function updateInfo(icao, airplane_type, dep, arr, progress) {
     const mobile_icao = document.querySelector(".mobile-flight-icao");
     const mobile_aircraft = document.querySelector(".mobile-flight-aircraft");
     const mobile_dep = document.querySelector(".mobile-flight-dep-iata");
@@ -307,7 +325,7 @@ async function updateInfo(iata, airplane_type, dep, arr, progress) {
         arrAirport !== "Kein Eintrag vorhanden" ? arrAirport.name : arr;
 
     // Mobile
-    if (mobile_icao) mobile_icao.innerHTML = iata;
+    if (mobile_icao) mobile_icao.innerHTML = icao;
     if (mobile_aircraft) mobile_aircraft.innerHTML = longType;
     if (mobile_dep) mobile_dep.innerHTML = dep;
     if (mobile_dep_name) mobile_dep_name.innerHTML = depName;
@@ -557,6 +575,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 arr: clicked.arr,
             });
             aircraftLayer.setSelected(clicked);
+
             // Route
             const start = await getAirport(clicked.dep);
             const end = await getAirport(clicked.arr);
@@ -571,7 +590,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateInfo(clicked.icao, clicked.type, clicked.dep, clicked.arr, progress);
             // map.flyTo([clicked.lat, clicked.lng], 8)
         } else {
-            // Deselektieren wenn auf leere Fläche geklickt wird
+            window.activePlanes.forEach((plane) => {
+                plane.isSelected = false;
+            });
+            
             aircraftLayer.setSelected(null);
             activeRoutes.forEach((routeData) => {
                 if (routeData.polylineStart) map.removeLayer(routeData.polylineStart);

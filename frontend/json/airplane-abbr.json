@@ -73,8 +73,12 @@
             "elab": "Airbus A220-100"
         },
         {
-            "abbr": "A221",
+            "abbr": "BCS3",
             "elab": "Airbus A220-300"
+        },
+        {
+            "abbr": "A221",
+            "elab": "Airbus A220-500"
         },
         {
             "abbr": "B703",
