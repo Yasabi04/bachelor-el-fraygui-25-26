@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="map-provider" content="Leaflet" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -32,7 +33,7 @@
                 <li class="nav-element-2" id="search">
                     <img
                         src="./img/search-symbol.svg"
-                        alt="Suche"
+                        alt="ICAO Code eingeben"
                         class="search-symbol"
                     />
                     <input
@@ -41,6 +42,24 @@
                         placeholder="Suchen"
                         class="searchField"
                     />
+                </li>
+                <li class="nav-element-3" id="route">
+                    <img src="./img/route.svg" alt="Route" />
+                    <div class="route">
+                        <input
+                            id="start-user"
+                            type="text"
+                            placeholder="Startflughafen eingeben"
+                            class="searchField"
+                        />
+                        <input
+                            id="end-user"
+                            type="text"
+                            placeholder="Endflughafen eingeben"
+                            class="searchField"
+                        />
+                        <button id="routeButton">Suchen</button>
+                    </div>
                 </li>
             </ul>
         </aside>

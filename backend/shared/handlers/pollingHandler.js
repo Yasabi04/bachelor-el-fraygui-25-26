@@ -40,6 +40,7 @@ class PollingHandler {
                     //     "http://www.randomnumberapi.com/api/v1.0/random?min=100&max=1000"
                     // );
                     const apiKey = process.env.AIRLABS_KEY;
+                    const startTime = Date.now()
                     const req = await fetch(
                       `https://airlabs.co/api/v9/flights?status=en_route&bbox=34,-25,72,45&_fields=flight_iata,lat,lng,dir,speed,dep_iata,arr_iata,aircraft_icao,status&api_key=${apiKey}`
                     )

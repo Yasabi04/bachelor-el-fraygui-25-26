@@ -163,12 +163,14 @@
     .nav-elements {
         display: flex;
         flex-direction: column;
-        justify-content: end;
-        align-items: center;
+        justify-content: start;
+        align-items: flex-end;
         gap: var(--size-xl);
         list-style-type: none;
 
-        .nav-element-1, .nav-element-2 {
+        .nav-element-1,
+        .nav-element-2,
+        .nav-element-3 {
             width: var(--size-xl);
             height: var(--size-xl);
             backdrop-filter: blur(10px);
@@ -185,10 +187,14 @@
             .searchField {
                 display: none;
             }
+
+            .route {
+                display: none;
+            }
         }
 
         #center {
-            img{
+            img {
                 transform: rotate(30deg);
             }
         }
@@ -196,14 +202,14 @@
         .nav-element-2.mag-glass {
             width: auto !important;
             border-radius: 0 !important;
-            
+
             img {
                 display: none !important;
             }
 
             .searchField {
                 display: flex !important;
-                width: calc(5*var(--size-xl));
+                width: 20vw;
                 margin: 0;
                 padding: 0;
                 font-size: var(--size-s);
@@ -212,6 +218,37 @@
                 color: white;
                 outline: none;
                 border-bottom: 2px solid white;
+            }
+        }
+
+        .nav-element-3.visible-route {
+            width: auto !important;
+            border-radius: 0 !important;
+
+            img {
+                display: none;
+            }
+
+            .route {
+                display: flex;
+                flex-direction: column;
+                gap: var(--size-m);
+                font-size: var(--size-s);
+                color: white;
+                width: 20vw;
+
+                .searchField {
+                    display: flex !important;
+                    width: auto;
+                    margin: 0;
+                    padding: 0;
+                    font-size: var(--size-s);
+                    border: none;
+                    background: transparent;
+                    color: white;
+                    outline: none;
+                    border-bottom: 1px solid white;
+                }
             }
         }
     }

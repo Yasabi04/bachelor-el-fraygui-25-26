@@ -33,6 +33,9 @@ exports.handler = async (event) => {
             throw new Error("Invalid event format");
         }
 
+        const actualTimeStamp = event.timestamp;
+        const flights = event.data;
+        
         // WebSocket Endpoint konfigurieren
         const endpoint = event.requestContext
             ? `https://${event.requestContext.domainName}/${event.requestContext.stage}`
@@ -40,9 +43,9 @@ exports.handler = async (event) => {
 
         const apiGateway = new ApiGatewayManagementApiClient({ endpoint });
 
-        const flightChunks = chunkArray(event.data, 450);
+        const flightChunks = chunkArray(flights, 450);
         console.log(
-            `${event.data.length} Flüge auf ${flightChunks.length} aufgeteilt.`
+            `${flights.length} Flüge auf ${flightChunks.length} aufgeteilt.`
         );
 
         // Alle verbundenen Clients abrufen
@@ -66,6 +69,7 @@ exports.handler = async (event) => {
                                 totalChunks: flightChunks.length,
                                 chunkIndex: index,
                                 data: chunk,
+                                timestamp: actualTimeStamp
                             }),
                         })
                     );

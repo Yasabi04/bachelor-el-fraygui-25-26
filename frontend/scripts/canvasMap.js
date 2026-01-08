@@ -6,7 +6,7 @@ const tileLayer = L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     {
         attribution:
-            '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+            '&copy; contributors',
         maxZoom: 19,
         minZoom: 2,
     }
@@ -416,7 +416,7 @@ function handleRouteProgress(
         depMarker,
         arrMarker,
     });
-    map.flyTo([planePos_lat, planePos_lng], 5);
+    map.flyTo([planePos_lat, planePos_lng], 7);
 
     return progress;
 }

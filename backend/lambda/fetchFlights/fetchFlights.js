@@ -36,13 +36,15 @@ exports.handler = async (event) => {
         // Flights fetchen
         console.log("Fetching flights...");
 
-        const apiKey = process.env.AIRLABS_API_KEY
+        const timeStamp = Date.now();
+
+        const apiKey = process.env.AIRLABS_API_KEY;
         const flightResponse = await fetch(
             // "http://www.randomnumberapi.com/api/v1.0/random?min=100&max=1000"
             apiKey
         );
         const flightData = await flightResponse.json();
-        const flights = flightData.response
+        const flights = flightData.response;
 
         console.log("Flight Data:", flights);
 
@@ -60,7 +62,8 @@ exports.handler = async (event) => {
                 InvocationType: "Event",
                 Payload: JSON.stringify({
                     type: "flight-update",
-                    data: flights,
+                    data: flights, // Das reine Array bleibt hier
+                    timestamp: timeStamp, // Wir fügen den Timestamp HIER hinzu
                 }),
             })
         );

@@ -1,6 +1,8 @@
 const centerSymbol = document.getElementById("center");
 const searchSymbol = document.getElementById("search");
 const userInput = document.getElementById("input");
+const userRoute = document.getElementById("route")
+const routeDiv = document.querySelector('.route')
 
 const userIcon = L.icon({
     iconUrl: "./img/user-position.svg",
@@ -29,6 +31,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
 
     searchSymbol.addEventListener("click", (_) => {
         searchSymbol.classList.add("mag-glass");
+        userRoute.classList.remove("visible-route")
         userInput.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
                 const icaoCode = userInput.value.trim();
@@ -83,4 +86,14 @@ document.addEventListener("DOMContentLoaded", (_) => {
             }
         });
     });
+
+    map.on("click", (_) => {
+        searchSymbol.classList.remove("mag-glass");
+        userRoute.classList.remove("visible-route")
+    });
+
+    userRoute.addEventListener('click', _ => {
+        userRoute.classList.add("visible-route")
+        searchSymbol.classList.remove("mag-glass")
+    })
 });
