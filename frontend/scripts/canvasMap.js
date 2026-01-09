@@ -416,7 +416,8 @@ function handleRouteProgress(
         depMarker,
         arrMarker,
     });
-    map.flyTo([planePos_lat, planePos_lng], 7);
+    
+    map.flyTo([planePos_lat, planePos_lng], 4);
 
     return progress;
 }

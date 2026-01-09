@@ -1,6 +1,7 @@
 #map {
     position: relative;
     height: 100dvh;
+    width: 100dvw;
 }
 
 .flight-menu-container {
@@ -222,7 +223,8 @@
         }
 
         .nav-element-3.visible-route {
-            width: auto !important;
+            height: auto !important;
+            width: 50dvw !important;
             border-radius: 0 !important;
 
             img {
@@ -235,11 +237,10 @@
                 gap: var(--size-m);
                 font-size: var(--size-s);
                 color: white;
-                width: 20vw;
+                width: 100%;
 
                 .searchField {
                     display: flex !important;
-                    width: auto;
                     margin: 0;
                     padding: 0;
                     font-size: var(--size-s);
@@ -248,6 +249,21 @@
                     color: white;
                     outline: none;
                     border-bottom: 1px solid white;
+                }
+
+                #routeButton {
+                    margin-top: var(--size-xs);
+                    padding: var(--size-xs) var(--size-s);
+                    background-color: var(--color-highlight);
+                    color: var(--color-bg);
+                    border: none;
+                    cursor: pointer;
+                    font-size: var(--size-s);
+                    border-radius: 4px;
+
+                    &:hover {
+                        opacity: 0.9;
+                    }
                 }
             }
         }
@@ -264,7 +280,7 @@
     max-width: 100%;
     width: 50%;
     padding: var(--size-m);
-    z-index: 1000;
+    z-index: 10000;
 
     box-sizing: border-box;
     display: flex;
@@ -376,5 +392,15 @@
 
     .controls {
         bottom: var(--size-xl);
+
+
+    }
+
+    .flight-list {
+        width: 100%;
+    }
+
+    .nav-element-3.visible-route {
+        height: 20vh;
     }
 }
