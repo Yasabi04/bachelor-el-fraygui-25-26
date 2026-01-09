@@ -254,6 +254,58 @@
     }
 }
 
+.flight-list {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    background-color: var(--color-bg);
+    margin: 0;
+    max-width: 100%;
+    width: 50%;
+    padding: var(--size-m);
+    z-index: 1000;
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    transition: 0.2s;
+    gap: var(--size-s);
+
+    .flights-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: baseline;
+        gap: var(--size-xs);
+
+        .heading {
+            font-weight: 400;
+        }
+
+        .route {
+            color: grey;
+        }
+    }
+
+    .flights-ul {
+        list-style-type: none;
+        max-height: 20vh;
+        overflow-y: auto;
+        
+        .flight-li {
+            padding: var(--size-xs);
+            border-bottom: 1px solid lightgrey;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--color-highlight);
+                color: var(--color-bg);
+            }
+        }
+    }
+}
+
 @media (max-width: 756px) {
     .flight-menu-container {
         display: none;

@@ -6,6 +6,8 @@ const routeDiv = document.querySelector(".route");
 const startUser = document.getElementById("start-user");
 const endUser = document.getElementById("end-user");
 const routeButton = document.getElementById("routeButton");
+const flight_list = document.querySelector(".flights-ul");
+const flight_list_container = document.querySelector(".flight-list");
 
 const userIcon = L.icon({
     iconUrl: "./img/user-position.svg",
@@ -109,59 +111,125 @@ document.addEventListener("DOMContentLoaded", (_) => {
         const start = startUser.value.trim();
         const end = endUser.value.trim();
         console.log(start, end);
+        let planes;
 
         if (start.length === 3 && end.length === 3) {
-            const plane = Array.from(window.activePlanes.entries()).filter(
+            planes = Array.from(window.activePlanes.entries()).filter(
                 ([key, p]) =>
                     p.dep == start.toUpperCase() && p.arr == end.toUpperCase()
             );
-
-            if (plane.length != 0) {
-                const icao = plane[0][0];
-                const searchPlane = plane[0][1];
-
-                // Setze isSelected im activePlanes Objekt
-                searchPlane.isSelected = true;
-
-                // Erstelle clicked Objekt für setSelected
-                const clicked = {
-                    icao: icao,
-                    lat: searchPlane.lat,
-                    lng: searchPlane.long,
-                    heading: searchPlane.deg || 0,
-                    type: searchPlane.aircraft_type,
-                    dep: searchPlane.dep,
-                    arr: searchPlane.arr,
-                };
-
-                // Setze als ausgewählt im Layer
-                if (aircraftLayer) {
-                    aircraftLayer.setSelected(clicked);
-                }
-
-                // Zeichne Route und berechne Progress (async)
-                (async () => {
-                    const start = await getAirport(searchPlane.dep);
-                    const end = await getAirport(searchPlane.arr);
-                    const progress = handleRouteProgress(
-                        start.lat,
-                        start.lng,
-                        searchPlane.lat,
-                        searchPlane.long,
-                        end.lat,
-                        end.lng
-                    );
-                    updateInfo(
-                        icao,
-                        searchPlane.aircraft_type,
-                        searchPlane.dep,
-                        searchPlane.arr,
-                        progress
-                    );
-                })();
-            } else {
-                alert("Kein Flugzeug mit dieser Registrierung gefunden!");
-            }
         }
+
+        if (planes.length == 1) {
+            const icao = planes[0][0];
+            const searchPlane = planes[0][1];
+
+            // Setze isSelected im activePlanes Objekt
+            searchPlane.isSelected = true;
+
+            // Erstelle clicked Objekt für setSelected
+            const clicked = {
+                icao: icao,
+                lat: searchPlane.lat,
+                lng: searchPlane.long,
+                heading: searchPlane.deg || 0,
+                type: searchPlane.aircraft_type,
+                dep: searchPlane.dep,
+                arr: searchPlane.arr,
+            };
+
+            // Setze als ausgewählt im Layer
+            if (aircraftLayer) {
+                aircraftLayer.setSelected(clicked);
+            }
+
+            // Zeichne Route und berechne Progress (async)
+            (async () => {
+                const start = await getAirport(searchPlane.dep);
+                const end = await getAirport(searchPlane.arr);
+                const progress = handleRouteProgress(
+                    start.lat,
+                    start.lng,
+                    searchPlane.lat,
+                    searchPlane.long,
+                    end.lat,
+                    end.lng
+                );
+                updateInfo(
+                    icao,
+                    searchPlane.aircraft_type,
+                    searchPlane.dep,
+                    searchPlane.arr,
+                    progress
+                );
+            })();
+        } else if (planes.length > 1) {
+            // TODO
+            console.log(planes);
+            flight_list.innerHTML = ""; // Liste leeren
+            planes.forEach((flight) => {
+                console.log(flight[0]);
+                const singleFlight = document.createElement("li");
+                singleFlight.classList.add("flight-li");
+                singleFlight.innerHTML = `
+                    <span class="flight-icao">${flight[0]}</span>
+                `;
+                
+                // Event Listener für jeden Flug
+                singleFlight.addEventListener("click", () => {
+                    const icao = flight[0];
+                    const searchPlane = flight[1];
+
+                    // Setze isSelected im activePlanes Objekt
+                    searchPlane.isSelected = true;
+
+                    // Erstelle clicked Objekt für setSelected
+                    const clicked = {
+                        icao: icao,
+                        lat: searchPlane.lat,
+                        lng: searchPlane.long,
+                        heading: searchPlane.deg || 0,
+                        type: searchPlane.aircraft_type,
+                        dep: searchPlane.dep,
+                        arr: searchPlane.arr,
+                    };
+
+                    // Setze als ausgewählt im Layer
+                    if (aircraftLayer) {
+                        aircraftLayer.setSelected(clicked);
+                    }
+
+                    // Zeichne Route und berechne Progress (async)
+                    (async () => {
+                        const start = await getAirport(searchPlane.dep);
+                        const end = await getAirport(searchPlane.arr);
+                        const progress = handleRouteProgress(
+                            start.lat,
+                            start.lng,
+                            searchPlane.lat,
+                            searchPlane.long,
+                            end.lat,
+                            end.lng
+                        );
+                        updateInfo(
+                            icao,
+                            searchPlane.aircraft_type,
+                            searchPlane.dep,
+                            searchPlane.arr,
+                            progress
+                        );
+                    })();
+
+                    // Schließe die Flugliste
+                    flight_list_container.style.transform = "translate(-50%, 100%)";
+                });
+                
+                flight_list.appendChild(singleFlight);
+            });
+            flight_list_container.style.transform = "translate(-50%, 0%)";
+        } else {
+            alert("Keine Flüge gefunden");
+        }
+        userRoute.classList.remove("visible-route");
     });
 });

@@ -197,6 +197,39 @@ if (!window.activePlanes) {
         isSelected: false
     });
 
+    // Toronto → London
+    window.activePlanes.set("BA092", {
+        aircraft_type: "Boeing 777-200ER",
+        lat: 49.8,
+        long: -35.5,
+        dep: "YYZ",
+        arr: "LHR",
+        deg: 68,
+        isSelected: false
+    });
+
+    // Toronto → London
+    window.activePlanes.set("AC860", {
+        aircraft_type: "AIRBUS A330-300",
+        lat: 54.2,
+        long: -50.2,
+        dep: "YYZ",
+        arr: "LHR",
+        deg: 72,
+        isSelected: false
+    });
+
+    // Toronto → London
+    window.activePlanes.set("VS46", {
+        aircraft_type: "AIRBUS A350-1000",
+        lat: 51.5,
+        long: -28.3,
+        dep: "YYZ",
+        arr: "LHR",
+        deg: 80,
+        isSelected: false
+    });
+
     // Seoul → Los Angeles (Nordpazifik)
     window.activePlanes.set("KE017", {
         aircraft_type: "AIRBUS A380",
