@@ -16,11 +16,21 @@ const userIcon = L.icon({
 });
 
 function getUserPermission() {
+    const savedPosition = JSON.parse(
+        "[" + localStorage.getItem("userPosition") + "]"
+    );
+    if (savedPosition) {
+        map.flyTo(savedPosition, 10);
+        L.marker([latitude, longitude], { icon: userIcon }).addTo(map);
+        return;
+    }
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
             const { latitude, longitude } = position.coords;
             map.flyTo([latitude, longitude], 10);
             L.marker([latitude, longitude], { icon: userIcon }).addTo(map);
+            const userPosition = [latitude, longitude];
+            localStorage.setItem("userPosition", JSON.stringify(userPosition));
         });
     } else {
         alert("Feature ohne Gerätestandort nicht verfügbar!");
@@ -174,7 +184,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 singleFlight.innerHTML = `
                     <span class="flight-icao">${flight[0]}</span>
                 `;
-                
+
                 // Event Listener für jeden Flug
                 singleFlight.addEventListener("click", () => {
                     const icao = flight[0];
@@ -221,9 +231,10 @@ document.addEventListener("DOMContentLoaded", (_) => {
                     })();
 
                     // Schließe die Flugliste
-                    flight_list_container.style.transform = "translate(-50%, 100%)";
+                    flight_list_container.style.transform =
+                        "translate(-50%, 100%)";
                 });
-                
+
                 flight_list.appendChild(singleFlight);
             });
             flight_list_container.style.transform = "translate(-50%, 0%)";
