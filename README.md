@@ -1,4 +1,7 @@
 # Vergleich einer Server-basierten und serverlosen Architektur anhand von Echtzeit-Flugdaten
+
+<img width="1920" height="913" alt="image" src="https://github.com/user-attachments/assets/844b37c4-d8f6-4f58-a8bb-236ba39c8774" />
+
 ## Projektübersicht
 
 Im Rahmen dieser Bachelorarbeit wird ein Backendvergleich mithilfe von Echtzeit-Flugdaten angestrebt. Ziel ist es, ein serverloses Backend (AWS) mit einem lokal betriebenen Node.js-Server hinsichtlich Architektur, Wartbarkeit, Skalierbarkeit, Kosten und technischer Komplexität zu vergleichen.
