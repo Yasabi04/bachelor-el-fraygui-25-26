@@ -224,7 +224,7 @@
 
         .nav-element-3.visible-route {
             height: auto !important;
-            width: 50dvw !important;
+            width: 20dvw !important;
             border-radius: 0 !important;
 
             img {
@@ -401,6 +401,6 @@
     }
 
     .nav-element-3.visible-route {
-        height: 20vh;
+        width: 20dvw;
     }
 }
