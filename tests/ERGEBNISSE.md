@@ -18,7 +18,7 @@ Durchschnittlicher Wert: ~**X.YZms**
 | 4         | 26 545     | **1 327 ms** |            |
 | 5         | 28 037     | **1 402 ms** |            |
 
-Durchschnittlicher Wert: ~**1.5ms**
+Durchschnittlicher Wert: ~**1.5s**
 
 ## Serverless ohne Cold Start
 
@@ -29,4 +29,4 @@ Durchschnittlicher Wert: ~**1.5ms**
 | 3         | 19 955     | **1 247 ms** |
 | 4         | 22 140     | **1 384 ms** |
 
-Durchschnittlicher Wert: ~**1.36ms**
+Durchschnittlicher Wert: ~**1.36s**
