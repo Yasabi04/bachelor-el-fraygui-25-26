@@ -26,7 +26,8 @@ Als Anwendungsfall dient eine Applikation, die in regelmäßigen Intervallen akt
 3. (Wenn anderer DB-Anbieter als Prisma: `cd adapters/database` und `prisma.js` neu konfigurieren)
 4. `cd ./server/`
 5. `node server.js`
-6. Anwendung im Browser öffnen
+6. In main.js `new Websocket(null)` mit `new Websocket(serverUrl)` ersetzen
+7. Anwendung im Browser öffnen
 
 ### Starten der AWS-Anwendung
 
@@ -35,7 +36,7 @@ Als Anwendungsfall dient eine Applikation, die in regelmäßigen Intervallen akt
 3. `terraform apply` (Alle Änderungen hochladen und Websocket-URL aus Konsole kopieren)
 4. AIRLABS_API am besten in der GUI von AWS selbst setzen (`fetchFlights`)
 5. `cd ../frontend/scripts`
-6. In `main.js` `awsUrl` mit WebsocketUrl ersetzen
+6. In `main.js` `new Websocket(null)` mit `new Websocket(awsUrl)` ersetzen
 7. Anwendung im Browser öffnen 
 
 Contributors:
