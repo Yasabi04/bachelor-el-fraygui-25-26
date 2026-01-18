@@ -5,7 +5,7 @@ let activeRoutes = new Map();
 const tileLayer = L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     {
-        attribution: "&copy; contributors",
+        // attribution: "&copy; contributors",
         maxZoom: 19,
         minZoom: 2,
     },
@@ -76,7 +76,6 @@ L.CanvasLayer = L.Layer.extend({
     },
 
     _onViewReset() {
-        // Bei Reset/Ende: Canvas-Größe anpassen und neuzeichnen
         const size = this.map.getSize();
         const targetWidth = size.x * this.dpr;
         const targetHeight = size.y * this.dpr;
@@ -143,7 +142,6 @@ L.CanvasLayer = L.Layer.extend({
             const p = this.map.latLngToContainerPoint([a.lat, a.lng]);
             const isHovered = this.hoveredAircraft === a;
 
-            // Lese isSelected aus window.activePlanes
             const planeData = window.activePlanes.get(a.icao);
             const isSelected = planeData ? planeData.isSelected : false;
 
@@ -161,8 +159,8 @@ L.CanvasLayer = L.Layer.extend({
     },
 
     _getMaxAircraftForZoom(zoom) {
-        if (zoom <= 3) return 100; // Weltkarte: nur 10 Flugzeuge
-        if (zoom <= 5) return 100; // Kontinent: 50 Flugzeuge
+        if (zoom <= 3) return 70; // Weltkarte: nur 70 Flugzeuge
+        if (zoom <= 5) return 100; // Kontinent: 100 Flugzeuge
         if (zoom <= 7) return 200; // Land: 200 Flugzeuge
         if (zoom <= 9) return 500; // Region: 500 Flugzeuge
         return Infinity;
@@ -293,11 +291,10 @@ async function getElaboration(abbr) {
 
         const word = data.airplanes.find((e) => e.abbr == abbr);
 
-        console.log(word.elab);
-        return word.elab;
+        return word.elab
     } catch (error) {
         console.log(error);
-        return "-----";
+        return abbr;
     }
 }
 
@@ -530,7 +527,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Erstelle Map
-    map = L.map("map").setView([51.7787, -0.2636], 4);
+    map = L.map("map", { zoomControl: false }).setView([51.7787, -0.2636], 4);
     tileLayer.addTo(map);
 
     if (L.terminator) {
@@ -545,7 +542,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     coordsControl.onAdd = () => {
         const div = L.DomUtil.create("div", "coords");
         div.style.padding = "0.4rem";
-        div.style.background = "rgba(183, 213, 248, 0.74)";
+        div.style.background = "white";
         div.style.fontFamily = "monospace";
         div.innerHTML = "Lat: -, Lng: -";
         return div;

@@ -37,7 +37,10 @@ function getUserPermission() {
             localStorage.setItem("userPosition", JSON.stringify(userPosition));
         });
     } else {
-        alert("Feature ohne Gerätestandort nicht verfügbar!");
+        setError(
+            "Positionsbestimmung fehlgeschlagen",
+            "Dieses Feature ist ohne Gerätestandort nicht verfügbar!"
+        );
     }
 }
 
@@ -48,9 +51,35 @@ function setError(title, message) {
     errorMessage.style = "top: var(--size-s)";
 }
 
+async function shareFlight(icao) {
+    const shareData = {
+        title: 'aurora_',
+        text: `Ich habe folgenden Flug gefunden:
+               ${icao}
+               Schau dir diesen Flug an!`,
+        url: `${window.location.origin}/?icao=${icao}`
+    };
+
+    try {
+        if (navigator.share) {
+            await navigator.share(shareData); // Öffnet das System-Teilen-Menü
+        } else {
+            // Fallback für Browser, die das nicht unterstützen (z.B. Desktop)
+            const fallbackText = `${shareData.text} ${shareData.url}`;
+            navigator.clipboard.writeText(fallbackText);
+            alert("Text kopiert (Browser unterstützt kein direktes Teilen)");
+        }
+    } catch (err) {
+        console.error("Fehler beim Teilen:", err);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", (_) => {
     centerSymbol.addEventListener("click", (_) => {
-        getUserPermission();
+        console.log('Center clicked')
+        const urlParams = new URLSearchParams(window.location.search);
+        const icaoParam = urlParams.get("icao");
+        shareFlight(icaoParam)
     });
 
     searchSymbol.addEventListener("click", (_) => {
@@ -257,7 +286,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
         } else {
             setError(
                 "Keine Flüge gefunden!",
-                "Diese Route wird anscheinend nicht direkt geflogen!",
+                "Diese Route wird anscheinend nicht direkt geflogen.",
             );
         }
         userRoute.classList.remove("visible-route");
@@ -321,7 +350,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
     } else {
         setError(
             `Flugzeug nicht gefunden!`,
-            `Der ICAO Code ${icaoParam} existiert nicht. Oder das Flugzeug ist außerhalb des Erfassungsbereiches.`
+            `Die Flugregistrierung ${icaoParam} existiert nicht oder das Flugzeug ist außerhalb des Erfassungsbereiches.`
         );
     }
 });
