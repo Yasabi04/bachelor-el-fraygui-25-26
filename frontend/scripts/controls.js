@@ -8,6 +8,7 @@ const endUser = document.getElementById("end-user");
 const routeButton = document.getElementById("routeButton");
 const flight_list = document.querySelector(".flights-ul");
 const flight_list_container = document.querySelector(".flight-list");
+const mapButton = document.getElementById('mapButton')
 
 const userIcon = L.icon({
     iconUrl: "./img/user-position.svg",
@@ -243,4 +244,18 @@ document.addEventListener("DOMContentLoaded", (_) => {
         }
         userRoute.classList.remove("visible-route");
     });
+
+    let detail = true
+    mapButton.addEventListener('click', _ => {
+        console.log('Map Button clicked')
+        console.log(detail)
+        if(detail == true) {
+            tileLayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png")
+            detail = false
+        }
+        else {
+            tileLayer.setUrl("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}")
+            detail = true
+        }
+    })
 });

@@ -2,6 +2,7 @@
     position: relative;
     height: 100dvh;
     width: 100dvw;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 1);
 }
 
 .flight-menu-container {
@@ -171,7 +172,8 @@
 
         .nav-element-1,
         .nav-element-2,
-        .nav-element-3 {
+        .nav-element-3,
+        .nav-element-4 {
             width: var(--size-xl);
             height: var(--size-xl);
             backdrop-filter: blur(10px);
