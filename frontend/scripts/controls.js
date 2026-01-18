@@ -108,9 +108,12 @@ document.addEventListener("DOMContentLoaded", (_) => {
         });
     });
 
+    //! Hier wird alles reseted
     map.on("click", (_) => {
         searchSymbol.classList.remove("mag-glass");
         userRoute.classList.remove("visible-route");
+        flight_list_container.style.transform =
+                        "translate(-50%, 100%)";
     });
 
     userRoute.addEventListener("click", (_) => {
@@ -154,7 +157,6 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 aircraftLayer.setSelected(clicked);
             }
 
-            // Zeichne Route und berechne Progress (async)
             (async () => {
                 const start = await getAirport(searchPlane.dep);
                 const end = await getAirport(searchPlane.arr);
@@ -180,6 +182,8 @@ document.addEventListener("DOMContentLoaded", (_) => {
             flight_list.innerHTML = ""; // Liste leeren
             planes.forEach((flight) => {
                 console.log(flight[0]);
+                const route = document.querySelector('.route-found-flights')
+                route.innerHTML = `${start.toUpperCase()} → ${end.toUpperCase()}`
                 const singleFlight = document.createElement("li");
                 singleFlight.classList.add("flight-li");
                 singleFlight.innerHTML = `
@@ -247,8 +251,6 @@ document.addEventListener("DOMContentLoaded", (_) => {
 
     let detail = true
     mapButton.addEventListener('click', _ => {
-        console.log('Map Button clicked')
-        console.log(detail)
         if(detail == true) {
             tileLayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png")
             detail = false
@@ -258,4 +260,49 @@ document.addEventListener("DOMContentLoaded", (_) => {
             detail = true
         }
     })
+
+    const urlParams = new URLSearchParams(window.location.search)
+    const icaoParam = urlParams.get('icao')
+    
+    if (icaoParam && window.activePlanes.has(icaoParam)) {
+        const searchPlane = window.activePlanes.get(icaoParam);
+        searchPlane.isSelected = true;
+
+        const clicked = {
+            icao: icaoParam,
+            lat: searchPlane.lat,
+            lng: searchPlane.long,
+            heading: searchPlane.deg || 0,
+            type: searchPlane.aircraft_type,
+            dep: searchPlane.dep,
+            arr: searchPlane.arr,
+        };
+
+        if (aircraftLayer) {
+            aircraftLayer.setSelected(clicked);
+        }
+
+        (async () => {
+            const start = await getAirport(searchPlane.dep);
+            const end = await getAirport(searchPlane.arr);
+            const progress = handleRouteProgress(
+                start.lat,
+                start.lng,
+                searchPlane.lat,
+                searchPlane.long,
+                end.lat,
+                end.lng
+            );
+            updateInfo(
+                icaoParam,
+                searchPlane.aircraft_type,
+                searchPlane.dep,
+                searchPlane.arr,
+                progress
+            );
+        })();
+    }
+    else {
+        alert('Flugzeug gelandet oder außerhalb des Erfassungsbereichs!')
+    }
 });

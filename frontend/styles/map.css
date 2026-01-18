@@ -155,6 +155,7 @@
     position: fixed;
     right: var(--size-s);
     bottom: 50%;
+    transform: translateY(50%);
     height: auto;
     display: flex;
     flex-direction: column;
@@ -177,7 +178,8 @@
             width: var(--size-xl);
             height: var(--size-xl);
             backdrop-filter: blur(10px);
-            padding: 5px;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: var(--size-xs);
             border-radius: 50%;
             cursor: pointer;
 
@@ -189,6 +191,7 @@
 
             .searchField {
                 display: none;
+                text-transform: uppercase;
             }
 
             .route {
