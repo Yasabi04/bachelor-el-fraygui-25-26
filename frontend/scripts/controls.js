@@ -8,7 +8,10 @@ const endUser = document.getElementById("end-user");
 const routeButton = document.getElementById("routeButton");
 const flight_list = document.querySelector(".flights-ul");
 const flight_list_container = document.querySelector(".flight-list");
-const mapButton = document.getElementById('mapButton')
+const mapButton = document.getElementById("mapButton");
+const errorMessage = document.querySelector(".error-container");
+const error_heading = document.querySelector(".error-heading");
+const error_message = document.querySelector(".error-message");
 
 const userIcon = L.icon({
     iconUrl: "./img/user-position.svg",
@@ -18,7 +21,7 @@ const userIcon = L.icon({
 
 function getUserPermission() {
     const savedPosition = JSON.parse(
-        "[" + localStorage.getItem("userPosition") + "]"
+        "[" + localStorage.getItem("userPosition") + "]",
     );
     if (savedPosition) {
         map.flyTo(savedPosition, 10);
@@ -38,6 +41,13 @@ function getUserPermission() {
     }
 }
 
+function setError(title, message) {
+    error_heading.innerHTML = title;
+    error_message.innerHTML = message;
+
+    errorMessage.style = "top: var(--size-s)";
+}
+
 document.addEventListener("DOMContentLoaded", (_) => {
     centerSymbol.addEventListener("click", (_) => {
         getUserPermission();
@@ -52,7 +62,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 if (icaoCode != "") {
                     searchSymbol.classList.remove("mag-glass");
                     const plane = Array.from(
-                        window.activePlanes.entries()
+                        window.activePlanes.entries(),
                     ).filter(([key, p]) => key == icaoCode);
                     console.log(plane);
                     if (plane.length != 0) {
@@ -88,19 +98,20 @@ document.addEventListener("DOMContentLoaded", (_) => {
                                 searchPlane.lat,
                                 searchPlane.long,
                                 end.lat,
-                                end.lng
+                                end.lng,
                             );
                             updateInfo(
                                 icao,
                                 searchPlane.aircraft_type,
                                 searchPlane.dep,
                                 searchPlane.arr,
-                                progress
+                                progress,
                             );
                         })();
                     } else {
-                        alert(
-                            "Kein Flugzeug mit dieser Registrierung gefunden!"
+                        setError(
+                            "ICAO Code nicht vergeben!",
+                            "Es konnte kein Flugzeug mit dieser Registrierung gefunden werden!",
                         );
                     }
                 }
@@ -112,8 +123,8 @@ document.addEventListener("DOMContentLoaded", (_) => {
     map.on("click", (_) => {
         searchSymbol.classList.remove("mag-glass");
         userRoute.classList.remove("visible-route");
-        flight_list_container.style.transform =
-                        "translate(-50%, 100%)";
+        flight_list_container.style.transform = "translate(-50%, 100%)";
+        errorMessage.style = "top: -100vh";
     });
 
     userRoute.addEventListener("click", (_) => {
@@ -130,7 +141,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
         if (start.length === 3 && end.length === 3) {
             planes = Array.from(window.activePlanes.entries()).filter(
                 ([key, p]) =>
-                    p.dep == start.toUpperCase() && p.arr == end.toUpperCase()
+                    p.dep == start.toUpperCase() && p.arr == end.toUpperCase(),
             );
         }
 
@@ -166,14 +177,14 @@ document.addEventListener("DOMContentLoaded", (_) => {
                     searchPlane.lat,
                     searchPlane.long,
                     end.lat,
-                    end.lng
+                    end.lng,
                 );
                 updateInfo(
                     icao,
                     searchPlane.aircraft_type,
                     searchPlane.dep,
                     searchPlane.arr,
-                    progress
+                    progress,
                 );
             })();
         } else if (planes.length > 1) {
@@ -182,8 +193,8 @@ document.addEventListener("DOMContentLoaded", (_) => {
             flight_list.innerHTML = ""; // Liste leeren
             planes.forEach((flight) => {
                 console.log(flight[0]);
-                const route = document.querySelector('.route-found-flights')
-                route.innerHTML = `${start.toUpperCase()} → ${end.toUpperCase()}`
+                const route = document.querySelector(".route-found-flights");
+                route.innerHTML = `${start.toUpperCase()} → ${end.toUpperCase()}`;
                 const singleFlight = document.createElement("li");
                 singleFlight.classList.add("flight-li");
                 singleFlight.innerHTML = `
@@ -224,14 +235,14 @@ document.addEventListener("DOMContentLoaded", (_) => {
                             searchPlane.lat,
                             searchPlane.long,
                             end.lat,
-                            end.lng
+                            end.lng,
                         );
                         updateInfo(
                             icao,
                             searchPlane.aircraft_type,
                             searchPlane.dep,
                             searchPlane.arr,
-                            progress
+                            progress,
                         );
                     })();
 
@@ -244,26 +255,32 @@ document.addEventListener("DOMContentLoaded", (_) => {
             });
             flight_list_container.style.transform = "translate(-50%, 0%)";
         } else {
-            alert("Keine Flüge gefunden");
+            setError(
+                "Keine Flüge gefunden!",
+                "Diese Route wird anscheinend nicht direkt geflogen!",
+            );
         }
         userRoute.classList.remove("visible-route");
     });
 
-    let detail = true
-    mapButton.addEventListener('click', _ => {
-        if(detail == true) {
-            tileLayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png")
-            detail = false
+    let detail = true;
+    mapButton.addEventListener("click", (_) => {
+        if (detail == true) {
+            tileLayer.setUrl(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+            );
+            detail = false;
+        } else {
+            tileLayer.setUrl(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            );
+            detail = true;
         }
-        else {
-            tileLayer.setUrl("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}")
-            detail = true
-        }
-    })
+    });
 
-    const urlParams = new URLSearchParams(window.location.search)
-    const icaoParam = urlParams.get('icao')
-    
+    const urlParams = new URLSearchParams(window.location.search);
+    const icaoParam = urlParams.get("icao");
+
     if (icaoParam && window.activePlanes.has(icaoParam)) {
         const searchPlane = window.activePlanes.get(icaoParam);
         searchPlane.isSelected = true;
@@ -291,18 +308,20 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 searchPlane.lat,
                 searchPlane.long,
                 end.lat,
-                end.lng
+                end.lng,
             );
             updateInfo(
                 icaoParam,
                 searchPlane.aircraft_type,
                 searchPlane.dep,
                 searchPlane.arr,
-                progress
+                progress,
             );
         })();
-    }
-    else {
-        alert('Flugzeug gelandet oder außerhalb des Erfassungsbereichs!')
+    } else {
+        setError(
+            `Flugzeug nicht gefunden!`,
+            `Der ICAO Code ${icaoParam} existiert nicht. Oder das Flugzeug ist außerhalb des Erfassungsbereiches.`
+        );
     }
 });

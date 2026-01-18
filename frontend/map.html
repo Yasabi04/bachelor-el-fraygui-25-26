@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="./styles/base.css" />
         <link rel="stylesheet" href="./styles/main.css" />
         <link rel="stylesheet" href="./styles/map.css" />
+        <link rel="stylesheet" href="./styles/error.css" />
         <link rel="stylesheet" href="./styles/timeoutWindow.css" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script src="https://unpkg.com/@joergdietrich/leaflet.terminator"></script>
@@ -24,6 +25,17 @@
         <link rel="icon" href="./img/aurora-favicon.png" type="image/png" />
     </head>
     <body>
+        <aside class="error-container">
+            <span class = "error-symbol-container">
+                <p class = "error-symbol">!</p>
+            </span>
+            <div class = "error-text">
+                <h2 class="error-heading">Fehler bei der Flugermittlung</h2>
+                <p class="error-message">
+                    Flugzeug ist gelandet oder befindet sich außerhalb des Erfassungsbereiches!
+                </p>
+            </div>
+        </aside>
         <div id="map"></div>
         <aside class="controls">
             <ul class="nav-elements">
