@@ -6,8 +6,9 @@ exports.handler = async (event) => {
     const dynamodb = DynamoDBDocumentClient.from(client);
     const userId = event.queryStringParameters?.userId;
     const { connectionId } = event.requestContext;
+    const currentTime = Date.now();
 
-    console.log(`Connection ID: ${connectionId}. UserId: ${userId}`);
+    console.log(`Connection ID: ${connectionId}. UserId: ${userId}. Zeitstempel: ${currentTime}`);
 
     
 
@@ -15,8 +16,7 @@ exports.handler = async (event) => {
         await dynamodb.send(
             new PutCommand({
                 TableName: "Connections",
-                Item: { connectionId, userId },
-                ConditionExpression: "attribute_not_exists(userId)",
+                Item: { connectionId, userId, timestamp: currentTime },
             })
         );
 

@@ -2,6 +2,7 @@ const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const {
     DynamoDBDocumentClient,
     ScanCommand,
+    DeleteCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const {
     ApiGatewayManagementApiClient,
@@ -35,7 +36,7 @@ exports.handler = async (event) => {
 
         const actualTimeStamp = event.timestamp;
         const flights = event.data;
-        
+
         // WebSocket Endpoint konfigurieren
         const endpoint = event.requestContext
             ? `https://${event.requestContext.domainName}/${event.requestContext.stage}`
@@ -45,15 +46,35 @@ exports.handler = async (event) => {
 
         const flightChunks = chunkArray(flights, 450);
         console.log(
-            `${flights.length} Flüge auf ${flightChunks.length} aufgeteilt.`
+            `${flights.length} Flüge auf ${flightChunks.length} aufgeteilt.`,
         );
 
         // Alle verbundenen Clients abrufen
         const response = await dynamodb.send(
             new ScanCommand({
                 TableName: "Connections",
-            })
+            }),
         );
+
+        // Alte Verbindungen löschen
+        const currentTime = Date.now();
+        const deletePromises = response.Items
+            .filter((connection) => currentTime - connection.timestamp > 20000)
+            .map(async (connection) => {
+                try {
+                    await dynamodb.send(
+                        new DeleteCommand({
+                            TableName: "Connections",
+                            Key: { connectionId: connection.connectionId },
+                        }),
+                    );
+                    console.log(`Alte Verbindung gelöscht: ${connection.connectionId}`);
+                } catch (error) {
+                    console.error(`Fehler beim Löschen von ${connection.connectionId}:`, error);
+                }
+            });
+
+        await Promise.all(deletePromises);
 
         console.log(`Broadcasting to ${response.Items.length} connections`);
 
@@ -69,20 +90,22 @@ exports.handler = async (event) => {
                                 totalChunks: flightChunks.length,
                                 chunkIndex: index,
                                 data: chunk,
-                                timestamp: actualTimeStamp
+                                timestamp: actualTimeStamp,
                             }),
-                        })
+                        }),
                     );
-                    console.log(`Chunk ${index + 1}/${flightChunks.length} gesendet an: ${connection.connectionId}`);
+                    console.log(
+                        `Chunk ${index + 1}/${flightChunks.length} gesendet an: ${connection.connectionId}`,
+                    );
                 } catch (err) {
                     if (err.statusCode === 410) {
                         console.log(
-                            `Tote connection ${connection.connectionId}`
+                            `Tote connection ${connection.connectionId}`,
                         );
                     } else {
                         console.error(
                             `Fehler bei ${connection.connectionId}:`,
-                            err
+                            err,
                         );
                     }
                 }
