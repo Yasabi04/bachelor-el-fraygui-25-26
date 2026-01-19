@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
         userRoute.classList.remove("visible-route");
         flight_list_container.style.transform = "translate(-50%, 100%)";
         errorMessage.style = "top: -100vh";
-        controls.style = "bottom: var(--size-xs);";
+        controls.style = "transform: translateY(0%);";
     });
 
     userRoute.addEventListener("click", (_) => {

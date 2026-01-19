@@ -351,7 +351,7 @@ function handleRouteProgress(
     arr_lng,
     routeId,
 ) {
-    controls.style = "bottom: -100vh;";
+    controls.style = "top: 0;";
 
     activeRoutes.forEach((routeData) => {
         if (routeData.polylineStart) map.removeLayer(routeData.polylineStart);
