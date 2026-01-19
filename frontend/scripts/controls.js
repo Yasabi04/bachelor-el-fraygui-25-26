@@ -53,24 +53,21 @@ function setError(title, message) {
 
 async function shareFlight(icao) {
     const shareData = {
+        url: `${window.location.href}`,
         title: 'aurora_',
-        text: `Ich habe folgenden Flug gefunden:
-               ${icao}
-               Schau dir diesen Flug an!`,
-        url: `${window.location.origin}/?icao=${icao}`
+        text: `Ich habe folgenden Flug gefunden:\n${icao}\nSchau dir diesen Flug an!\n\n`,
     };
 
     try {
         if (navigator.share) {
-            await navigator.share(shareData); // Öffnet das System-Teilen-Menü
+            await navigator.share(shareData);
         } else {
-            // Fallback für Browser, die das nicht unterstützen (z.B. Desktop)
             const fallbackText = `${shareData.text} ${shareData.url}`;
             navigator.clipboard.writeText(fallbackText);
             alert("Text kopiert (Browser unterstützt kein direktes Teilen)");
         }
     } catch (err) {
-        console.error("Fehler beim Teilen:", err);
+        setError("Fehler beim Teilen.", err);
     }
 }
 
@@ -309,6 +306,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
 
     const urlParams = new URLSearchParams(window.location.search);
     const icaoParam = urlParams.get("icao");
+    console.log(icaoParam)
 
     if (icaoParam && window.activePlanes.has(icaoParam)) {
         const searchPlane = window.activePlanes.get(icaoParam);
@@ -347,7 +345,11 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 progress,
             );
         })();
-    } else {
+    } 
+    else if (icaoParam == null){
+        console.log("Kein ICAO Parameter in der URL.");
+    }
+    else {
         setError(
             `Flugzeug nicht gefunden!`,
             `Die Flugregistrierung ${icaoParam} existiert nicht oder das Flugzeug ist außerhalb des Erfassungsbereiches.`

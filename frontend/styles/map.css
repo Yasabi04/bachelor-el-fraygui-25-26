@@ -229,7 +229,7 @@
 
         .nav-element-3.visible-route {
             height: auto !important;
-            width: 20dvw !important;
+            width: 20vw;
             border-radius: 0 !important;
 
             img {
@@ -313,7 +313,7 @@
         list-style-type: none;
         max-height: 20vh;
         overflow-y: auto;
-        
+
         .flight-li {
             padding: var(--size-xs);
             border-bottom: 1px solid lightgrey;
@@ -396,16 +396,49 @@
     }
 
     .controls {
-        bottom: var(--size-xl);
-
-
+        bottom: var(--size-xs);
+        transform: translateY(00%);
     }
 
     .flight-list {
         width: 100%;
     }
 
+    .nav-elements {
+        gap: var(--size-xs) !important;
+
+        .nav-element-1,
+        .nav-element-2,
+        .nav-element-3,
+        .nav-element-4 {
+            width: var(--size-m) !important;
+            height: var(--size-m) !important;
+            padding: calc(var(--size-xs) / 2) !important;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+    }
+
+    .nav-element-2.mag-glass {
+        padding: 0;
+        .searchField {
+            width: 50vw !important;
+            font-size: var(--size-s) !important;
+        }
+    }
+
     .nav-element-3.visible-route {
-        width: 20dvw;
+        width: 50vw !important;
+
+        .route {
+            .searchField {
+                width: 100%;
+                font-size: var(--size-s) !important;
+            }
+        }
     }
 }
