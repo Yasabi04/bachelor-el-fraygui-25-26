@@ -178,7 +178,7 @@
             width: var(--size-xl);
             height: var(--size-xl);
             backdrop-filter: blur(10px);
-            background-color: rgba(0, 0, 0, 0.2);
+            background-color: rgba(0, 0, 0, 0.5);
             padding: var(--size-xs);
             border-radius: 50%;
             cursor: pointer;
@@ -199,11 +199,7 @@
             }
         }
 
-        #center {
-            img {
-                transform: rotate(30deg);
-            }
-        }
+        
 
         .nav-element-2.mag-glass {
             width: auto !important;
@@ -327,6 +323,10 @@
     }
 }
 
+.leaflet-bottom.leaflet-right {
+    display: none;
+}
+
 @media (max-width: 756px) {
     .flight-menu-container {
         display: none;
@@ -396,6 +396,7 @@
     }
 
     .controls {
+        right: calc(var(--size-xs)/4);
         bottom: var(--size-xs);
         transform: translateY(00%);
     }

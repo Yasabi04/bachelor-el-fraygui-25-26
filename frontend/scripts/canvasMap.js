@@ -18,7 +18,6 @@ const canvasRenderer = L.canvas({
     updateWhenZooming: false,
 });
 
-// Canvas Layer für Flugzeuge - synchronisiert mit Map-Transformationen
 L.CanvasLayer = L.Layer.extend({
     initialize(aircrafts) {
         this.aircrafts = aircrafts;
@@ -354,7 +353,6 @@ function handleRouteProgress(
 ) {
     controls.style = "bottom: -100vh;";
 
-    // Entferne alle vorherigen Routen
     activeRoutes.forEach((routeData) => {
         if (routeData.polylineStart) map.removeLayer(routeData.polylineStart);
         if (routeData.polylineEnde) map.removeLayer(routeData.polylineEnde);
