@@ -12,6 +12,8 @@ const mapButton = document.getElementById("mapButton");
 const errorMessage = document.querySelector(".error-container");
 const error_heading = document.querySelector(".error-heading");
 const error_message = document.querySelector(".error-message");
+const controls = document.querySelector(".controls");
+console.log("---------", controls);
 
 const userIcon = L.icon({
     iconUrl: "./img/user-position.svg",
@@ -39,7 +41,7 @@ function getUserPermission() {
     } else {
         setError(
             "Positionsbestimmung fehlgeschlagen",
-            "Dieses Feature ist ohne Gerätestandort nicht verfügbar!"
+            "Dieses Feature ist ohne Gerätestandort nicht verfügbar!",
         );
     }
 }
@@ -54,7 +56,7 @@ function setError(title, message) {
 async function shareFlight(icao) {
     const shareData = {
         url: `${window.location.href}`,
-        title: 'aurora_',
+        title: "aurora_",
         text: `Ich habe folgenden Flug gefunden:\n${icao}\nSchau dir diesen Flug an!\n\n`,
     };
 
@@ -73,10 +75,10 @@ async function shareFlight(icao) {
 
 document.addEventListener("DOMContentLoaded", (_) => {
     centerSymbol.addEventListener("click", (_) => {
-        console.log('Center clicked')
+        console.log("Center clicked");
         const urlParams = new URLSearchParams(window.location.search);
         const icaoParam = urlParams.get("icao");
-        shareFlight(icaoParam)
+        shareFlight(icaoParam);
     });
 
     searchSymbol.addEventListener("click", (_) => {
@@ -151,6 +153,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
         userRoute.classList.remove("visible-route");
         flight_list_container.style.transform = "translate(-50%, 100%)";
         errorMessage.style = "top: -100vh";
+        controls.style = "bottom: var(--size-xs);";
     });
 
     userRoute.addEventListener("click", (_) => {
@@ -172,6 +175,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
         }
 
         if (planes.length == 1) {
+            controls.style = "bottom: -100vh;";
             const icao = planes[0][0];
             const searchPlane = planes[0][1];
 
@@ -215,7 +219,9 @@ document.addEventListener("DOMContentLoaded", (_) => {
             })();
         } else if (planes.length > 1) {
             // TODO
-            console.log(planes);
+            // console.log(planes);
+            controls.style = "bottom: -100vh;";
+
             flight_list.innerHTML = ""; // Liste leeren
             planes.forEach((flight) => {
                 console.log(flight[0]);
@@ -306,9 +312,10 @@ document.addEventListener("DOMContentLoaded", (_) => {
 
     const urlParams = new URLSearchParams(window.location.search);
     const icaoParam = urlParams.get("icao");
-    console.log(icaoParam)
 
     if (icaoParam && window.activePlanes.has(icaoParam)) {
+        controls.style = "bottom: -100vh;";
+
         const searchPlane = window.activePlanes.get(icaoParam);
         searchPlane.isSelected = true;
 
@@ -345,14 +352,12 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 progress,
             );
         })();
-    } 
-    else if (icaoParam == null){
-        console.log("Kein ICAO Parameter in der URL.");
-    }
-    else {
+    } else if (icaoParam == null) {
+        return;
+    } else {
         setError(
             `Flugzeug nicht gefunden!`,
-            `Die Flugregistrierung ${icaoParam} existiert nicht oder das Flugzeug ist außerhalb des Erfassungsbereiches.`
+            `Die Flugregistrierung ${icaoParam} existiert nicht oder das Flugzeug ist außerhalb des Erfassungsbereiches.`,
         );
     }
 });

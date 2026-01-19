@@ -291,7 +291,7 @@ async function getElaboration(abbr) {
 
         const word = data.airplanes.find((e) => e.abbr == abbr);
 
-        return word.elab
+        return word.elab;
     } catch (error) {
         console.log(error);
         return abbr;
@@ -352,6 +352,8 @@ function handleRouteProgress(
     arr_lng,
     routeId,
 ) {
+    controls.style = "bottom: -100vh;";
+
     // Entferne alle vorherigen Routen
     activeRoutes.forEach((routeData) => {
         if (routeData.polylineStart) map.removeLayer(routeData.polylineStart);
