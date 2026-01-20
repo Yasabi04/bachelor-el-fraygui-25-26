@@ -177,13 +177,13 @@ document.addEventListener("DOMContentLoaded", (_) => {
         );
 
         if (planes.length == 0) {
-            const cityStart = await getAbbriviation(start)
-            const cityEnd = await getAbbriviation(end)
-            
+            const cityStart = await getAbbriviation(start);
+            const cityEnd = await getAbbriviation(end);
 
             planes = Array.from(window.activePlanes.entries()).filter(
                 ([key, p]) =>
-                    p.dep == cityStart.toUpperCase() && p.arr == cityEnd.toUpperCase(),
+                    p.dep == cityStart.toUpperCase() &&
+                    p.arr == cityEnd.toUpperCase(),
             );
         }
         if (planes.length == 1) {
@@ -321,12 +321,32 @@ document.addEventListener("DOMContentLoaded", (_) => {
             detail = true;
         }
     });
+});
 
+let urlFlightHandled = false;
+
+window.addEventListener("firstUpdate", (_) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const icaoParam = urlParams.get("icao");
+    
+    if (!icaoParam || urlFlightHandled) {
+        return;
+    }
+    
+    console.log(`Suche nach Flugzeug: ${icaoParam}`);
+});
+
+window.addEventListener("activePlanesUpdated", (_) => {
     const urlParams = new URLSearchParams(window.location.search);
     const icaoParam = urlParams.get("icao");
 
-    
-    if (icaoParam && window.activePlanes.has(icaoParam)) {
+    if (!icaoParam || urlFlightHandled) {
+        return;
+    }
+
+    if (window.activePlanes.has(icaoParam)) {
+        console.log(`Flugzeug ${icaoParam} gefunden!`);
+        urlFlightHandled = true;
         controls.style = "bottom: -100vh;";
 
         const searchPlane = window.activePlanes.get(icaoParam);
@@ -365,12 +385,5 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 progress,
             );
         })();
-    } else if (icaoParam == null) {
-        return;
-    } else {
-        setError(
-            `Flugzeug nicht gefunden!`,
-            `Die Flugregistrierung ${icaoParam} existiert nicht oder das Flugzeug ist außerhalb des Erfassungsbereiches.`,
-        );
     }
 });

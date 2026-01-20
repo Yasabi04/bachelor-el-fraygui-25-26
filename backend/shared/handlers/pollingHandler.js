@@ -58,7 +58,8 @@ class PollingHandler {
                     if (connections.length > 0) {
                         await this.broadcastToConnections(connections, flights, startTime);
                     } else {
-                        console.log("Keine aktiven Verbindungen gefunden.");
+                        console.log("Keine aktiven Verbindungen gefunden. Polling wird beendet.");
+                        break;
                     }
 
                     // 5. Warten
@@ -80,7 +81,7 @@ class PollingHandler {
 
     async broadcastToConnections(connections, flights, timestamp) {
         try {
-            const payload = JSON.stringify({ states: flights, timestamp })
+            const payload = JSON.stringify({ states: flights, timestamp,  type: "flight-update" })
             console.log('Timestamp:', timestamp)
             console.log(`Broadcasting to ${connections.length} connections`)
             for (const conn of connections) {
