@@ -45,23 +45,19 @@ class PollingHandler {
                       `https://airlabs.co/api/v9/flights?status=en_route&bbox=34,-25,72,45&_fields=flight_iata,lat,lng,dir,speed,dep_iata,arr_iata,aircraft_icao,status&api_key=${apiKey}`
                     )
                     const response = await req.json();
-                    const flights = response.response || [];
-                    // console.log('-----------------------------')
-                    // console.log('API Response:', response)
-                    // console.log('Flights Array:', flights)
-                    // console.log('-----------------------------')
+                    let flights = response.response || [];
+                    // console.log('------', flights, '-------------')
+                    console.log('--------------------------------')
 
                     console.log(`Daten geladen: ${flights.length} Einträge.`);
 
                     // 4. Verbindungen holen und senden
-                    // WICHTIG: Hier müssen wir das Array aus dem Objekt holen!
                     const connResult = await this.db.getAllConnections();
                     const connections = connResult.allConnections || [];
 
                     if (connections.length > 0) {
-                        await this.broadcastToConnections(connections, flights);
+                        await this.broadcastToConnections(connections, flights, startTime);
                     } else {
-                        // Sicherheitsnetz: Wenn keine Verbindungen da sind, aber Status noch true ist
                         console.log("Keine aktiven Verbindungen gefunden.");
                     }
 
@@ -82,9 +78,10 @@ class PollingHandler {
         }
     }
 
-    async broadcastToConnections(connections, flights) {
+    async broadcastToConnections(connections, flights, timestamp) {
         try {
-            const payload = JSON.stringify({ states: flights })
+            const payload = JSON.stringify({ states: flights, timestamp })
+            console.log('Timestamp:', timestamp)
             console.log(`Broadcasting to ${connections.length} connections`)
             for (const conn of connections) {
                 if (conn.connectionId) {

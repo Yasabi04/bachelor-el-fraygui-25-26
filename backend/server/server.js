@@ -28,7 +28,7 @@ server.on("connection", async (socket, req) => {
 
     socket.on("message", async (event) => {
         let rawData = event;
-        console.log("---RAW DATA---:", rawData);
+        // console.log("---RAW DATA---:", rawData);
 
         const a = Buffer.from(rawData)
 
@@ -43,7 +43,7 @@ server.on("connection", async (socket, req) => {
 
             const number = Array.isArray(data) ? data[0] : data;
 
-            console.log("Empfangene Nummer:", number);
+            // console.log("Empfangene Nummer:", number);
         } catch (e) {
             console.log("Empfangener Text:", rawData);
         }

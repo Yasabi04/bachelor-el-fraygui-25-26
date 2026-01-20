@@ -13,6 +13,7 @@ class PrismDBAdapter {
                 data: {
                     connectionId,
                     userId,
+                    createdAt: new Date(),
                 },
             });
             return {
@@ -49,6 +50,14 @@ class PrismDBAdapter {
     async getAllConnections() {
         try {
             const allConnections = await prisma.connections.findMany();
+            const now = Date.now()
+            allConnections.forEach(async con => {
+                const intTime = con.createdAt.getTime()
+                if(now - intTime > 20000) {
+                    await this.deleteConnection(con.connectionId)
+                    console.log('Gelöschte Connection: ', con.connectionId)
+                }
+            })
             console.log('Gefundenen Connections: ', allConnections)
             return {
                 success: true,

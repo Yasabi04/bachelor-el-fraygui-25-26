@@ -59,6 +59,7 @@ class WsAdapter {
     }
 
     async postToConnection(connectionId, data) {
+
         const ws = this.connections.get(connectionId);
 
         if (!ws) {
@@ -74,7 +75,8 @@ class WsAdapter {
         return new Promise((resolve) => {
             try {
                 const message = Buffer.isBuffer(data) ? data : data;
-                console.log('WSADAPTER: ' + message)
+                console.log('Kurz vor ws.send:', message.timestamp)
+                // console.log('WSADAPTER: ' + message)
                 ws.send(message, (error) => {
                     if (error) {
                         console.error(

@@ -297,6 +297,21 @@ async function getElaboration(abbr) {
     }
 }
 
+async function getAbbriviation(elab) {
+    try {
+        console.log(abbr);
+        const req = await fetch("./json/airplane-abbr.json");
+        const data = await req.json();
+
+        const word = data.airplanes.find((e) => e.elab == elab);
+
+        return word.abbr;
+    } catch (error) {
+        console.log(error);
+        return elab;
+    }
+}
+
 async function updateInfo(icao, airplane_type, dep, arr, progress) {
     const mobile_icao = document.querySelector(".mobile-flight-icao");
     const mobile_aircraft = document.querySelector(".mobile-flight-aircraft");

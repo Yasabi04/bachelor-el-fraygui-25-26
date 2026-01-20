@@ -155,8 +155,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
         errorMessage.style = "top: -100vh";
         if (window.innerWidth > 768) {
             controls.style.transform = "translateY(50%) !important";
-        }
-        else {
+        } else {
             controls.style.transform = "translateY(0%) !important";
         }
     });
@@ -166,19 +165,27 @@ document.addEventListener("DOMContentLoaded", (_) => {
         searchSymbol.classList.remove("mag-glass");
     });
 
-    routeButton.addEventListener("click", (_) => {
+    routeButton.addEventListener("click", async (_) => {
         const start = startUser.value.trim();
         const end = endUser.value.trim();
         console.log(start, end);
         let planes;
 
-        if (start.length === 3 && end.length === 3) {
+        planes = Array.from(window.activePlanes.entries()).filter(
+            ([key, p]) =>
+                p.dep == start.toUpperCase() && p.arr == end.toUpperCase(),
+        );
+
+        if (planes.length == 0) {
+            const cityStart = await getAbbriviation(start)
+            const cityEnd = await getAbbriviation(end)
+            
+
             planes = Array.from(window.activePlanes.entries()).filter(
                 ([key, p]) =>
-                    p.dep == start.toUpperCase() && p.arr == end.toUpperCase(),
+                    p.dep == cityStart.toUpperCase() && p.arr == cityEnd.toUpperCase(),
             );
         }
-
         if (planes.length == 1) {
             controls.style = "bottom: -100vh;";
             const icao = planes[0][0];
@@ -318,6 +325,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
     const urlParams = new URLSearchParams(window.location.search);
     const icaoParam = urlParams.get("icao");
 
+    
     if (icaoParam && window.activePlanes.has(icaoParam)) {
         controls.style = "bottom: -100vh;";
 
