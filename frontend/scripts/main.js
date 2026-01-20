@@ -1,11 +1,11 @@
 const awsUrl = `wss://i2axgim3s9.execute-api.eu-central-1.amazonaws.com/dev?userId=${checkUser()}`;
 const serverUrl = `ws://localhost:7879?userId=${checkUser()}`;
 const testUrl = "ws://localhost:5879";
-const wsIntervall = 60 * 1000; // Kickout für die Session
-window.activePlanes = new Map();
-const chunkBuffer = new Map(); // Chunk Verwaltung
+const wsIntervall = 60 * 1000; // Frontend Kickout
+// window.activePlanes = new Map();
+const chunkBuffer = new Map(); 
 
-const ws = new WebSocket(serverUrl);
+const ws = new WebSocket(null);
 const timeoutWindow = document.querySelector(".timeout-window");
 
 function checkUser() {
@@ -60,7 +60,6 @@ const processFlightData = (states) => {
         `${states.length} Flüge verarbeitet. Gesamt: ${window.activePlanes.size}`,
     );
 
-    // Custom Event auslösen
     window.dispatchEvent(
         new CustomEvent("activePlanesUpdated", {
             detail: { activePlanes: window.activePlanes },
