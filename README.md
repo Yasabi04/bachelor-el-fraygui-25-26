@@ -42,3 +42,4 @@ Als Anwendungsfall dient eine Applikation, die in regelmäßigen Intervallen akt
 Contributors:
 * Student: [Yassin El Fraygui](github.com/Yasabi04/)
 * Prüfer: [Prof. Dr. Hoai Viet Nguyen](https://github.com/hvnguyen86)
+* Zweitprüfer: [Prof. Christian Noss](https://github.com/cnoss)
