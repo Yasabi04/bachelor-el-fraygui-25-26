@@ -39,6 +39,12 @@ Als Anwendungsfall dient eine Applikation, die in regelmäßigen Intervallen akt
 6. In `main.js` `new Websocket(null)` mit `new Websocket(awsUrl)` ersetzen
 7. Anwendung im Browser öffnen 
 
-Contributors:
+### Contributors:
 * Student: [Yassin El Fraygui](github.com/Yasabi04/)
 * Prüfer: [Prof. Dr. Hoai Viet Nguyen](https://github.com/hvnguyen86)
+* Zweitprüfer: [Prof. Christian Noss](https://github.com/cnoss)
+
+### Links und Co.
+
+* [Figma Board](https://www.figma.com/board/OkmNPprbgXIAHne42k12TY/Bachelor-FigJam?node-id=0-1&t=BcJIaXT18UYYtVGH-1)
+* [AIRLABS](https://airlabs.co/)
