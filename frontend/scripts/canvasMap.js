@@ -556,7 +556,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const coordsControl = L.control({ position: "bottomleft" });
     coordsControl.onAdd = () => {
         const div = L.DomUtil.create("div", "coords");
-        div.style.padding = "0.4rem";
+        div.style.padding = "0.4rem"; // Entspricht var(--size-xs)/4
         div.style.background = "white";
         div.style.fontFamily = "monospace";
         div.innerHTML = "Lat: -, Lng: -";
@@ -634,13 +634,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             flightInfo.style = "transform: translate(-50%, 100%)";
         }
     });
-
-    // map.on("drag", async (e) => {
-    //     const lat = e.latlng.lat.toFixed(5);
-    //     const lng = e.latlng.lat.toFixed(5);
-    //     const newPositionUrl = `${window.location.pathname}?=${lat}&lng=${lng}`;
-    //     window.history.replaceState(null, "", newPositionUrl);
-    // });
 
     // Erstelle Aircraft Layer
     const aircrafts = Array.from(window.activePlanes.entries()).map(

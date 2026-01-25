@@ -1,6 +1,6 @@
 .main-heading {
     margin-top: var(--size-xl);
-    width: 50%;
+    width: 60%;
     padding-bottom: var(--size-xl);
 }
 
@@ -26,6 +26,11 @@
                 font-size: var(--size-m);
                 margin-bottom: var(--size-xl);
                 position: relative;
+
+                .hightlight-word {
+                    text-decoration: none;
+                    color: var(--color-highlight);
+                }
             }
 
             .heading-marks::before {
@@ -300,9 +305,7 @@
 
                 .server-point {
                     font-style: italic;
-                    font-weight: 700;
                     font-size: var(--size-l);
-                    margin-bottom: var(--size-s);
                     position: relative;
                 }
 

@@ -2,10 +2,15 @@
 
 ## Server
 
-| Durchlauf | Summe (ms) | Ø pro Chunk  |
-| --------- | ---------- | ------------ |
+| Durchlauf | Summe (ms) |
+| --------- | ---------- |
+| 1         | 342        |
+| 2         | 450        |
+| 3         | 412        |
+| 4         | 380        |
+| 5         | 401        |
 
-Durchschnittlicher Wert: ~**X.YZms**
+Durchschnittlicher Wert: ~**0.4ms**
 ***
 
 ## Serverless
@@ -30,3 +35,5 @@ Durchschnittlicher Wert: ~**1.5s**
 | 4         | 22 140     | **1 384 ms** |
 
 Durchschnittlicher Wert: ~**1.36s**
+
+> Es wurden mehrere Messungen durchgeführt; Bei beiden Anwendugnen handelt es sich lediglich um Auszüge. 

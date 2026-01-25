@@ -100,7 +100,7 @@ header {
 
 main:not(footer) {
     margin: 0 auto;
-    width: 90%;
+    width: 85%;
 }
 
 @media (max-width: 768px) {
