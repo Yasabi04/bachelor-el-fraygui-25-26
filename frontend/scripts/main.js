@@ -5,7 +5,7 @@ const wsIntervall = 600 * 1000; // Frontend Kickout
 window.activePlanes = new Map();
 const chunkBuffer = new Map(); 
 
-const ws = new WebSocket(serverUrl);
+const ws = new WebSocket(awsUrl);
 const timeoutWindow = document.querySelector(".timeout-window");
 
 function checkUser() {
