@@ -13,7 +13,6 @@ const errorMessage = document.querySelector(".error-container");
 const error_heading = document.querySelector(".error-heading");
 const error_message = document.querySelector(".error-message");
 const controls = document.querySelector(".controls");
-console.log("---------", controls);
 
 const userIcon = L.icon({
     iconUrl: "./img/user-position.svg",
@@ -178,14 +177,27 @@ document.addEventListener("DOMContentLoaded", (_) => {
         console.log('Anzahl der Flüge: ', planes.length)
 
         if (planes.length == 0) {
-            const cityStart = await getAbbriviation(start);
-            const cityEnd = await getAbbriviation(end);
+            const possibleRoutes = await getCityAbbr(start, end)
+            console.log(possibleRoutes)
+            const possibleCityStart = possibleRoutes.possibleStarts
+            const possibleCityEnd = possibleRoutes.possibleFinishes
+            let variations = []
+            possibleCityStart.forEach(cs => {
+                possibleCityEnd.forEach(ce => {
+                    variations.push({cityStart: cs, cityEnd: ce})
+                })
+            })
+            console.log(variations)
 
-            planes = Array.from(window.activePlanes.entries()).filter(
-                ([key, p]) =>
-                    p.dep == cityStart.toUpperCase() &&
-                    p.arr == cityEnd.toUpperCase(),
-            );
+            planes = []
+            variations.forEach(v => {
+                const found = Array.from(window.activePlanes.entries()).filter(
+                    ([key, p]) =>
+                        p.dep == v.cityStart && p.arr == v.cityEnd,
+                );
+                planes.push(...found);
+            })
+            console.log(planes)
         }
         if (planes.length == 1) {
             controls.style = "bottom: -100vh;";
@@ -231,8 +243,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 );
             })();
         } else if (planes.length > 1) {
-            // TODO
-            await handlePlane(planes)
+            await handlePlane(planes, start, end)
         } else {
             setError(
                 "Keine Flüge gefunden!",

@@ -312,6 +312,39 @@ async function getAbbriviation(elab) {
     }
 }
 
+async function getCityAbbr(start, finish) {
+    try {
+        let startAbbr = []
+        let finishAbbr = []
+        const req = await fetch("./json/airports-collection.json");
+        const airports = await req.json();
+        const startQuery = (start || "").toLowerCase();
+        const finishQuery = (finish || "").toLowerCase();
+
+        for (const airport of airports) {
+            const name = (airport.name || "").toLowerCase();
+            const municipality = (airport.municipality || "").toLowerCase();
+
+            if (startQuery && (name.includes(startQuery) || municipality.includes(startQuery))) {
+                if (airport.iata_code) startAbbr.push(airport.iata_code);
+            }
+            if (finishQuery && (name.includes(finishQuery) || municipality.includes(finishQuery))) {
+                if (airport.iata_code) finishAbbr.push(airport.iata_code);
+            }
+        }
+        
+        return {
+            possibleStarts: startAbbr,
+            possibleFinishes: finishAbbr,
+        }
+    }
+    catch(error) {
+        return {
+            error: error
+        }
+    }
+}
+
 async function updateInfo(icao, airplane_type, dep, arr, progress) {
     const mobile_icao = document.querySelector(".mobile-flight-icao");
     const mobile_aircraft = document.querySelector(".mobile-flight-aircraft");

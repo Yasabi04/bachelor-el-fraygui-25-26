@@ -1,4 +1,4 @@
-async function handlePlane(planes) {
+async function handlePlane(planes, start = '', end = '') {
     if (planes.length == 0) {
     } else if (planes.length == 1) {
         controls.style = "bottom: -100vh;";
