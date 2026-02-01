@@ -326,10 +326,14 @@ async function getCityAbbr(start, finish) {
             const municipality = (airport.municipality || "").toLowerCase();
 
             if (startQuery && (name.includes(startQuery) || municipality.includes(startQuery))) {
-                if (airport.iata_code) startAbbr.push(airport.iata_code);
+                if (airport.iata_code) {
+                    startAbbr.push(airport.iata_code);
+                }
             }
             if (finishQuery && (name.includes(finishQuery) || municipality.includes(finishQuery))) {
-                if (airport.iata_code) finishAbbr.push(airport.iata_code);
+                if (airport.iata_code) {
+                    finishAbbr.push(airport.iata_code);
+                }
             }
         }
         
@@ -494,7 +498,6 @@ function haversineDistanceKM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
 }
 
 function createCurve(dep, planePos, arr, steps) {
-    // Berechne die Great Circle Distanzen
     const dist_dep_plane = haversineDistanceKM(
         dep[0],
         dep[1],
@@ -513,7 +516,6 @@ function createCurve(dep, planePos, arr, steps) {
     const stepsToPlane = Math.round(steps * (dist_dep_plane / totalDist));
     const stepsToArr = steps - stepsToPlane;
 
-    // Erstelle zwei Great Circle Segmente
     const segment1 = createGreatCircle(dep, planePos, stepsToPlane);
     const segment2 = createGreatCircle(planePos, arr, stepsToArr);
 

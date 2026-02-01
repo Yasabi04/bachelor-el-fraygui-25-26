@@ -204,10 +204,8 @@ document.addEventListener("DOMContentLoaded", (_) => {
             const icao = planes[0][0];
             const searchPlane = planes[0][1];
 
-            // Setze isSelected im activePlanes Objekt
             searchPlane.isSelected = true;
 
-            // Erstelle clicked Objekt für setSelected
             const clicked = {
                 icao: icao,
                 lat: searchPlane.lat,
@@ -218,7 +216,6 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 arr: searchPlane.arr,
             };
 
-            // Setze als ausgewählt im Layer
             if (aircraftLayer) {
                 aircraftLayer.setSelected(clicked);
             }
