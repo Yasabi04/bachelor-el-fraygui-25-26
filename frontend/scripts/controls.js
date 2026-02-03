@@ -77,7 +77,7 @@ async function shareFlight(icao) {
 
 document.addEventListener("DOMContentLoaded", (_) => {
     centerSymbol.addEventListener("click", (_) => {
-        console.log("Center clicked");
+        getUserPermission()
     });
 
     searchSymbol.addEventListener("click", (_) => {
