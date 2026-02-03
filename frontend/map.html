@@ -26,13 +26,14 @@
     </head>
     <body>
         <aside class="error-container">
-            <span class = "error-symbol-container">
-                <p class = "error-symbol">!</p>
+            <span class="error-symbol-container">
+                <p class="error-symbol">!</p>
             </span>
-            <div class = "error-text">
+            <div class="error-text">
                 <h2 class="error-heading">Fehler bei der Flugermittlung</h2>
                 <p class="error-message">
-                    Flugzeug ist gelandet oder befindet sich außerhalb des Erfassungsbereiches!
+                    Flugzeug ist gelandet oder befindet sich außerhalb des
+                    Erfassungsbereiches!
                 </p>
             </div>
         </aside>
@@ -40,7 +41,10 @@
         <aside class="controls">
             <ul class="nav-elements">
                 <li class="nav-element-1" id="center">
-                    <img src="./img/controls/center-symbol.svg" alt="Zentrieren" />
+                    <img
+                        src="./img/controls/center-symbol.svg"
+                        alt="Zentrieren"
+                    />
                 </li>
                 <li class="nav-element-2" id="search">
                     <img
@@ -83,6 +87,10 @@
             <div class="mobile-flight-name-wrapper">
                 <span class="mobile-flight-icao">DLH810</span>
                 <span class="mobile-flight-aircraft">(Airbus A320 - 200)</span>
+                <div class="flight-interaction">
+                    <button class="share-flight"><img src="./img/controls/share.svg" alt="Flug teilen"></button>
+                    <button class="close-panel"><img src="./img/controls/close.svg" alt="Panel schließen"></button>
+                </div>
             </div>
 
             <div class="mobile-flight-route">
@@ -130,5 +138,5 @@
     <script src="./scripts/canvasMap.js"></script>
     <script src="./scripts/airports-script.js"></script>
     <script src="./scripts/controls.js"></script>
-    <script src = "./scripts/airplanes.js"></script>
+    <script src="./scripts/airplanes.js"></script>
 </html>

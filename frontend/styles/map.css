@@ -90,16 +90,41 @@
     flex-direction: column;
     transition: 0.2s;
 
-    .mobile-flight-name-wrapper {
+    .mobile-flight-name-wrapper {   
+        width: 100%;     
         padding-bottom: var(--size-xs);
-        gap: var(--size-xl);
-
+        gap: calc(var(--size-xs)/2);
+        display: flex;
+        align-items: last baseline;
         .mobile-flight-icao {
             font-size: var(--size-m);
         }
 
         .mobile-flight-aircraft {
             color: grey;
+        }
+    }
+
+    .mobile-flight-name-wrapper .flight-interaction {
+        margin-left: auto;
+        align-self: first baseline;
+        cursor: pointer;
+
+        .share-flight {
+            margin-right: var(--size-xs);
+        }
+
+        .share-flight, .close-panel {
+            width: var(--size-m);
+            height: var(--size-m);
+            color: green;
+            border: none;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
         }
     }
 
