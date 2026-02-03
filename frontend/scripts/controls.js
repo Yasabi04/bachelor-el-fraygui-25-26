@@ -13,6 +13,9 @@ const errorMessage = document.querySelector(".error-container");
 const error_heading = document.querySelector(".error-heading");
 const error_message = document.querySelector(".error-message");
 const controls = document.querySelector(".controls");
+const flightInfo = document.querySelector(".mobile-flight-menu");
+const share = document.getElementById("share-flight");
+const close = document.getElementById("close-panel");
 
 const userIcon = L.icon({
     iconUrl: "./img/user-position.svg",
@@ -75,9 +78,6 @@ async function shareFlight(icao) {
 document.addEventListener("DOMContentLoaded", (_) => {
     centerSymbol.addEventListener("click", (_) => {
         console.log("Center clicked");
-        const urlParams = new URLSearchParams(window.location.search);
-        const icaoParam = urlParams.get("icao");
-        shareFlight(icaoParam);
     });
 
     searchSymbol.addEventListener("click", (_) => {
@@ -159,6 +159,30 @@ document.addEventListener("DOMContentLoaded", (_) => {
         }
     });
 
+    share.addEventListener("click", (_) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const icaoParam = urlParams.get("icao");
+        shareFlight(icaoParam);
+    });
+
+    close.addEventListener("click", (_) => {
+        flightInfo.style = "transform: translate(-50%, 100%)";
+        window.activePlanes.forEach((plane) => {
+                plane.isSelected = false;
+            });
+
+            aircraftLayer.setSelected(null);
+            activeRoutes.forEach((routeData) => {
+                if (routeData.polylineStart)
+                    map.removeLayer(routeData.polylineStart);
+                if (routeData.polylineEnde)
+                    map.removeLayer(routeData.polylineEnde);
+                if (routeData.depMarker) map.removeLayer(routeData.depMarker);
+                if (routeData.arrMarker) map.removeLayer(routeData.arrMarker);
+            });
+        activeRoutes.clear();
+    });
+
     userRoute.addEventListener("click", (_) => {
         userRoute.classList.add("visible-route");
         searchSymbol.classList.remove("mag-glass");
@@ -174,30 +198,29 @@ document.addEventListener("DOMContentLoaded", (_) => {
             ([key, p]) =>
                 p.dep == start.toUpperCase() && p.arr == end.toUpperCase(),
         );
-        console.log('Anzahl der Flüge: ', planes.length)
+        console.log("Anzahl der Flüge: ", planes.length);
 
         if (planes.length == 0) {
-            const possibleRoutes = await getCityAbbr(start, end)
-            console.log(possibleRoutes)
-            const possibleCityStart = possibleRoutes.possibleStarts
-            const possibleCityEnd = possibleRoutes.possibleFinishes
-            let variations = []
-            possibleCityStart.forEach(cs => {
-                possibleCityEnd.forEach(ce => {
-                    variations.push({cityStart: cs, cityEnd: ce})
-                })
-            })
-            console.log(variations)
+            const possibleRoutes = await getCityAbbr(start, end);
+            console.log(possibleRoutes);
+            const possibleCityStart = possibleRoutes.possibleStarts;
+            const possibleCityEnd = possibleRoutes.possibleFinishes;
+            let variations = [];
+            possibleCityStart.forEach((cs) => {
+                possibleCityEnd.forEach((ce) => {
+                    variations.push({ cityStart: cs, cityEnd: ce });
+                });
+            });
+            console.log(variations);
 
-            planes = []
-            variations.forEach(v => {
+            planes = [];
+            variations.forEach((v) => {
                 const found = Array.from(window.activePlanes.entries()).filter(
-                    ([key, p]) =>
-                        p.dep == v.cityStart && p.arr == v.cityEnd,
+                    ([key, p]) => p.dep == v.cityStart && p.arr == v.cityEnd,
                 );
                 planes.push(...found);
-            })
-            console.log(planes)
+            });
+            console.log(planes);
         }
         if (planes.length == 1) {
             controls.style = "bottom: -100vh;";
@@ -240,7 +263,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 );
             })();
         } else if (planes.length > 1) {
-            await handlePlane(planes, start, end)
+            await handlePlane(planes, start, end);
         } else {
             setError(
                 "Keine Flüge gefunden!",
@@ -271,11 +294,11 @@ let urlFlightHandled = false;
 window.addEventListener("firstUpdate", (_) => {
     const urlParams = new URLSearchParams(window.location.search);
     const icaoParam = urlParams.get("icao");
-    
+
     if (!icaoParam || urlFlightHandled) {
         return;
     }
-    
+
     console.log(`Suche nach Flugzeug: ${icaoParam}`);
 });
 
