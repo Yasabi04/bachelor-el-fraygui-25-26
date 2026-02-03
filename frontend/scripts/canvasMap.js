@@ -244,7 +244,7 @@ function drawAircraft(ctx, x, y, heading, type, isHovered, isSelected) {
 
     const is4Engine =
         type &&
-        (type.includes("380") || type.includes("747") || type.includes("340"));
+        (type.includes("A38") || type.includes("B74") || type.includes("A34"));
     const size = is4Engine ? 30 : 24;
 
     // Wähle das richtige Image basierend auf State
