@@ -469,7 +469,7 @@ function handleRouteProgress(
         arrMarker,
     });
 
-    map.flyTo([planePos_lat, planePos_lng], 4);
+    map.flyTo([planePos_lat, planePos_lng], 6);
 
     return progress;
 }
