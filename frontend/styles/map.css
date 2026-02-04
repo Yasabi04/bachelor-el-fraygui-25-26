@@ -362,7 +362,6 @@
 
         .mobile-flight-name-wrapper {
             padding-bottom: var(--size-xs);
-            gap: var(--size-xl);
 
             .mobile-flight-icao {
                 font-size: var(--size-m);
