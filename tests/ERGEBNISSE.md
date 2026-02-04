@@ -23,7 +23,7 @@ Durchschnittlicher Wert: ~**0.4ms**
 | 4         | 26 545     | **1 327 ms** |            |
 | 5         | 28 037     | **1 402 ms** |            |
 
-Durchschnittlicher Wert: ~**1.5s**
+Bei 20 insgesamt gesendeten Chunks ergibt sich ein durchschnittlicher Wert von ~**1.5s**
 
 ## Serverless ohne Cold Start
 
@@ -34,6 +34,6 @@ Durchschnittlicher Wert: ~**1.5s**
 | 3         | 19 955     | **1 247 ms** |
 | 4         | 22 140     | **1 384 ms** |
 
-Durchschnittlicher Wert: ~**1.36s**
+Bei 20 insgesamt gesendeten Chunks ergibt sich ein durchschnittlicher Wert von ~**1.36s**
 
 > Es wurden mehrere Messungen durchgeführt; Bei beiden Anwendugnen handelt es sich lediglich um Auszüge. 
