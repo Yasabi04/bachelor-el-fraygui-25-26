@@ -196,7 +196,6 @@ L.CanvasLayer = L.Layer.extend({
     },
 
     setSelected(aircraft) {
-        // Setze false für letztes vorheriges Flugzeug
         if (this.selectedAircraft) {
             const prevPlane = window.activePlanes.get(
                 this.selectedAircraft.icao,
@@ -206,12 +205,11 @@ L.CanvasLayer = L.Layer.extend({
             }
         }
 
-        // Selektiere neues Flugzeug
         if (aircraft) {
             const plane = window.activePlanes.get(aircraft.icao);
             if (plane) {
                 plane.isSelected = true;
-                console.log("Flugzeug selektiert:", plane);
+                // console.log("Flugzeug selektiert:", plane);
             }
         }
 
@@ -284,7 +282,6 @@ async function getAirport(short) {
 
 async function getElaboration(abbr) {
     try {
-        console.log(abbr);
         const req = await fetch("./json/airplane-abbr.json");
         const data = await req.json();
 
@@ -299,7 +296,6 @@ async function getElaboration(abbr) {
 
 async function getAbbriviation(elab) {
     try {
-        console.log(abbr);
         const req = await fetch("./json/airplane-abbr.json");
         const data = await req.json();
 
@@ -469,8 +465,6 @@ function handleRouteProgress(
         arrMarker,
     });
 
-    map.flyTo([planePos_lat, planePos_lng], 6);
-
     return progress;
 }
 
@@ -616,21 +610,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const clicked = aircraftLayer.pick(p.x, p.y);
 
         if (clicked) {
-            console.log("Angeklicktes Flugzeug:", {
-                icao: clicked.icao,
-                type: clicked.type,
-                lat: clicked.lat,
-                lng: clicked.lng,
-                heading: clicked.heading,
-                dep: clicked.dep,
-                arr: clicked.arr,
-            });
             aircraftLayer.setSelected(clicked);
 
             const newICAOUrl = `${window.location.pathname}?icao=${clicked.icao}`;
             window.history.replaceState(null, "", newICAOUrl);
 
-            // Route
             const start = await getAirport(clicked.dep);
             const end = await getAirport(clicked.arr);
             const progress = handleRouteProgress(

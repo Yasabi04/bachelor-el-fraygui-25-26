@@ -3,6 +3,10 @@
     padding-bottom: var(--size-xl);
 }
 
+.docu-subheading-no2 {
+    color: var(--color-font);
+}
+
 .how-to-introduction {
     display: flex;
     flex-direction: row;
@@ -12,8 +16,14 @@
 
     p{
         color: var(--color-font);
-        line-height: var(--size-m);
-        font-size: var(--size-xs);
+        line-height: var(--size-l);
+        font-size: var(--size-s);
+
+        a {
+            color: var(--color-highlight);
+            font-weight: 700;
+            font-size: var(--size-s);
+        }
     }
     img {
         width: 50%;
@@ -23,7 +33,7 @@
 .docu-heading-div {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: last baseline;
     gap: var(--size-xs);
     height: calc(2 * var(--size-xl));
 
@@ -34,10 +44,15 @@
     }
 }
 
+.highlight-word {
+    font-weight: 700;
+}
+
 .docu-p-content {
-    width: 60%;
-    line-height: var(--size-m);
+    width: 70%;
+    line-height: var(--size-l);
     color: var(--color-font);
     padding-top: var(--size-xs);
-    padding-bottom: var(--size-xl)
+    padding-bottom: var(--size-xl);
+    font-size: var(--size-s);
 }

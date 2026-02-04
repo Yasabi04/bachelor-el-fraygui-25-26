@@ -353,3 +353,44 @@ window.addEventListener("activePlanesUpdated", (_) => {
         })();
     }
 });
+
+// Stelle Route neu dar, wenn ein Flugzeug ausgewählt ist und Updates ankommen
+window.addEventListener("activePlanesUpdated", async (_) => {
+    // Prüfe, ob ein Flugzeug aktuell ausgewählt ist
+    if (!aircraftLayer || !aircraftLayer.selectedAircraft) {
+        return;
+    }
+
+    const selectedIcao = aircraftLayer.selectedAircraft.icao;
+    const updatedPlane = window.activePlanes.get(selectedIcao);
+
+    // Wenn das Flugzeug aktualisiert wurde
+    if (updatedPlane && updatedPlane.isSelected) {
+        // Aktualisiere die Position im selectedAircraft Objekt
+        aircraftLayer.selectedAircraft.lat = updatedPlane.lat;
+        aircraftLayer.selectedAircraft.lng = updatedPlane.long;
+        aircraftLayer.selectedAircraft.heading = updatedPlane.deg || 0;
+
+        // Redraw das Canvas, um die neue Position zu zeigen
+        aircraftLayer._redraw();
+
+        const start = await getAirport(updatedPlane.dep);
+        const end = await getAirport(updatedPlane.arr);
+        const progress = handleRouteProgress(
+            start.lat,
+            start.lng,
+            updatedPlane.lat,
+            updatedPlane.long,
+            end.lat,
+            end.lng,
+        );
+
+        updateInfo(
+            selectedIcao,
+            updatedPlane.aircraft_type,
+            updatedPlane.dep,
+            updatedPlane.arr,
+            progress,
+        );
+    }
+});

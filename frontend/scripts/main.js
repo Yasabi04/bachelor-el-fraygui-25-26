@@ -2,10 +2,10 @@ const awsUrl = `wss://i2axgim3s9.execute-api.eu-central-1.amazonaws.com/dev?user
 const serverUrl = `ws://localhost:7879?userId=${checkUser()}`;
 const testUrl = "ws://localhost:5879";
 const wsIntervall = 600 * 1000; 
-window.activePlanes = new Map();
+// window.activePlanes = new Map();
 const chunkBuffer = new Map(); 
 
-const ws = new WebSocket(awsUrl);
+const ws = new WebSocket(null);
 const timeoutWindow = document.querySelector(".timeout-window");
 
 function checkUser() {
@@ -86,9 +86,6 @@ ws.onmessage = async (event) => {
         if (data.type === "flight-update-chunk") {
             const { chunkIndex, totalChunks, data: chunkData } = data;
 
-            console.log(`Chunk ${chunkIndex + 1}/${totalChunks} empfangen`);
-
-            // Chunk speichern
             if (!chunkBuffer.has("current")) {
                 chunkBuffer.set("current", {
                     chunks: new Array(totalChunks),
@@ -101,16 +98,13 @@ ws.onmessage = async (event) => {
             buffer.chunks[chunkIndex] = chunkData;
             buffer.received++;
 
-            // Sind alle Chunks empfangen?
             if (buffer.received === totalChunks) {
-                console.log(
-                    `Alle ${totalChunks} Chunks empfangen, verarbeite Daten...`,
-                );
+                // console.log(
+                //     `Alle ${totalChunks} Chunks empfangen, verarbeite Daten...`,
+                // );
 
                 // Alle Chunks zusammenführen
                 const allFlights = buffer.chunks.flat();
-                console.log(`Gesamt ${allFlights.length} Flüge`);
-
                 processFlightData(allFlights);
 
                 // Buffer zurücksetzen
@@ -125,16 +119,14 @@ ws.onmessage = async (event) => {
             window.dispatchEvent(new CustomEvent("firstUpdate"));
             firstMessage = false;
         } else {
-            // Legacy: Alte Nachrichtenstruktur (ohne Chunks)
             const states = data.states || (Array.isArray(data) ? data : []);
             console.log("Timestamp:", data.timestamp);
             const now = Date.now();
             console.log(`Zeit: ${now - data.timestamp}`);
             processFlightData(states);
-            // console.log("Flugdaten: ", data)
         }
     } catch (e) {
-        console.error("Fehler beim Verarbeiten der WebSocket-Daten:", e);
+        console.error("Fehler beim Verarbeiten der Websocket-Daten:", e);
     }
 };
 

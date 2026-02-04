@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
     <head>
         <meta charset="UTF-8" />
@@ -42,8 +42,13 @@
                     Flugzeugen ausgesendet und von Empfängern am Boden oder im
                     Weltraum aufgefangen werden. Durch die Auswertung dieser
                     Signale lassen sich präzise Flugdaten wie Position,
-                    Geschwindigkeit und Höhe bestimmen. Im Folgenden werden die Verfahren <a href = "#adsb">ADS-B</a>, <a href="#mlatTdoa">MLAT und TDOA</a> sowie <a href="#satellit">Satellit</a> vorgestellt, die diese
-                    faszinierende Technologie ermöglichen.
+                    Geschwindigkeit und Höhe bestimmen. Im Folgenden werden die
+                    Verfahren <a class="highlight-word" href="#adsb">ADS-B</a>,
+                    <a class="highlight-word" href="#mlatTdoa">MLAT und TDOA</a>
+                    sowie
+                    <a class="highlight-word" href="#satellit">Satellit</a>
+                    vorgestellt, die diese faszinierende Technologie
+                    ermöglichen.
                 </p>
                 <img
                     src="./img/how-to-flighttracking.png"
@@ -52,14 +57,14 @@
             </section>
             <div class="docu-heading-div">
                 <h2 class="docu-heading-no2" id="adsb">ADS-B</h2>
-                <span class="docu-heading-expl"
-                    >(Automatic Dependent Surveillance-Broadcast)</span
-                >
+                <span class="docu-heading-expl">
+                    (Automatic Dependent Surveillance-Broadcast)
+                </span>
             </div>
             <p class="docu-p-content">
-                ADS-B ist ein offizielles Luftfahrt-Überwachungssystem, das von
+                ADS-B ist ein offizielles <span class="highlight-word">Luftfahrt-Überwachungssystem</span>, das von
                 der EASA und der FAA vorgeschrieben und genutzt wird. Die
-                Flugsicherung soll auch unabhängig vom Radar dazu in der Lage
+                Flugsicherung soll auch <span class="highlight-word">unabhängig vom Radar</span> dazu in der Lage
                 sein, Flugzeuge zu sehen, umso schneller agieren zu können.
                 Darüber hinaus ist es für Piloten durch die hohe Reichweite
                 ermöglicht, sich gegenseitig früher zu erkennen und mögliche
@@ -70,34 +75,35 @@
 
             <p class="docu-p-content">
                 Jedes Flugzeug berechnet zu jedem gegebenen Zeitpunkt seine
-                Position. Diese wird meist über ein GPS-Gerät bestimmt. Nach der
-                Berechnung werden die Positionsdaten mithilfe eines Transponders
-                an Bord in eine standardisiertes Funkpaket übersetzt, welches
+                Position. Diese wird meist über <span class="highlight-word">GPS</span> bestimmt. Nach der
+                Berechnung werden die Positionsdaten mithilfe eines <span class="highlight-word">Transponders</span>
+                an Bord in ein standardisiertes Funkpaket übersetzt, welches
                 dann mehrmals pro Sekunde gesendet wird (→ Broadcast). Die
-                Frequenz beträgt 1090 MHz, die eine Reichweite von 200-400 km
+                Frequenz beträgt 1090 MHz, die eine <span class="highlight-word">Reichweite von 200-400 km</span>
                 ermöglicht (line of sight). Solange es also Empfänger/Geräte in
                 diesem Bereich gibt, die auf dieser Frequenz Daten abfangen
                 können, können Flugdaten problemlos gesammelt und ausgewertet
-                werden. Mögliche Daten in einem ADS-B-Signal sind unter anderem:
+                werden.
             </p>
 
             <div class="docu-heading-div">
-                <h2 class="docu-heading-no2" id="mlatTdoa">MLAT & TDOA</h2>
-                <span class="docu-heading-expl"
-                    >(Multilateration & Time Difference of Arrival)</span
-                >
+                <h2 class="docu-heading-no2" id="mlatTdoa">MLAT und TDOA</h2>
+                <span class="docu-heading-expl">
+                    (Multilateration & Time Difference of Arrival)
+                </span>
             </div>
+
             <p class="docu-p-content">
-                Jedes Flugzeug sendet ein sog. Mode-S-Signal. Mehrere Empfänger
+                Jedes Flugzeug sendet ein sog. <span class="highlight-word">Mode-S-Signal</span>. Mehrere Empfänger
                 erhalten dieses Signal, aber zu minimal unterschiedlichen
-                Zeiten. Diese Zeitunterschiede (TDOA) werden genutzt, um die
+                Zeiten. Diese <span class="highlight-word">Zeitunterschiede</span> (TDOA) werden genutzt, um die
                 Position des Flugzeugs zu ermitteln. Wenn Empfänger A das Signal
                 1 µs vor Empfänger B empfängt, kann aus diesem Zeitunterschied
                 eine Distanz berechnet werden. <br />
                 Da sich Funk mit Lichtgeschwindigkeit ausbreitet entspricht 1 µs
                 umgerechnet etwa 300 m. Um die Position eines Flugzeugs mit
                 hoher Sicherheit zu bestimmen werden im Idealfall 6 - 10
-                Empfänger gebraucht. <br /><br />
+                Empfänger gebraucht. <br />
                 Während TDOA die Messgröße darstellt, bezeichnet MLAT das
                 Verfahren. MLAT sammelt TDOA-Daten und berechnet aus diesen dann
                 die Flugposition. Wichtig zu beachten ist daher, dass
@@ -109,7 +115,7 @@
                 <h2 class="docu-heading-no2" id="satellit">Satellit</h2>
                 <span class="docu-heading-expl"></span>
             </div>
-            <p class="docu-p-content"></p>
+            <p class="docu-p-content">TODO</p>
         </main>
         <footer>
             <ul class="footer-links">
