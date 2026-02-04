@@ -37,3 +37,20 @@ Bei 20 insgesamt gesendeten Chunks ergibt sich ein durchschnittlicher Wert von ~
 Bei 20 insgesamt gesendeten Chunks ergibt sich ein durchschnittlicher Wert von ~**1.36s**
 
 > Es wurden mehrere Messungen durchgeführt; Bei beiden Anwendugnen handelt es sich lediglich um Auszüge. 
+
+
+### Weitere Messungen
+
+| Testlauf | Server (ms) | Serverless (ms) | Serverless ohne Cold Start (ms) |
+| -------- | ------------ | ---------------- | -------------------------------- |
+| 1        | 395          | 28 037           | 22 140                           |
+| 2        | 410          | 26 545           | 21 505                           |
+| 3        | 380          | 29 744           | 19 955                           |
+| 4        | 402          | 26 813           | 23 268                           |
+| 5        | 345          | 37 774           | 24 019                           |
+| 6        | 388          | 27 450           | 20 890                           |
+| 7        | 415          | 31 120           | 22 415                           |
+| 8        | 372          | 25 980           | 21 030                           |
+| 9        | 398          | 28 655           | 19 760                           |
+| 10       | 405          | 33 240           | 24 110                           |
+| Ø        | ~395         | ~28 000          | ~21 500                          |
