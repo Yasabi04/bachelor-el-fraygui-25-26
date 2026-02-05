@@ -99,21 +99,15 @@ ws.onmessage = async (event) => {
             buffer.received++;
 
             if (buffer.received === totalChunks) {
-                // console.log(
-                //     `Alle ${totalChunks} Chunks empfangen, verarbeite Daten...`,
-                // );
-
-                // Alle Chunks zusammenführen
+                
                 const allFlights = buffer.chunks.flat();
                 processFlightData(allFlights);
 
-                // Buffer zurücksetzen
                 chunkBuffer.delete("current");
                 window.dispatchEvent(new CustomEvent("firstUpdate"));
                 firstMessage = false;
             }
         } else if (data.type === "flight-update" && firstMessage == true) {
-            console.log("Erstes Update empfangen!");
             const states = data.states || (Array.isArray(data) ? data : []);
             processFlightData(states);
             window.dispatchEvent(new CustomEvent("firstUpdate"));

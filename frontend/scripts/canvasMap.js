@@ -32,12 +32,11 @@ L.CanvasLayer = L.Layer.extend({
         this.canvas = L.DomUtil.create("canvas", "leaflet-aircraft-layer");
         this.ctx = this.canvas.getContext("2d");
 
-        // Canvas wird fest an die Map gebunden - OHNE Transform
         this.canvas.style.position = "absolute";
         this.canvas.style.top = "0";
         this.canvas.style.left = "0";
         this.canvas.style.pointerEvents = "none";
-        this.canvas.style.zIndex = "400"; // Über overlayPane (400) aber unter popupPane (600)
+        this.canvas.style.zIndex = "400"; 
 
         const size = map.getSize();
         this.canvas.width = size.x * this.dpr;
@@ -46,7 +45,6 @@ L.CanvasLayer = L.Layer.extend({
         this.canvas.style.height = size.y + "px";
         this.ctx.scale(this.dpr, this.dpr);
 
-        // Füge Canvas direkt zum Map-Container hinzu, NICHT zum overlayPane
         map.getContainer().appendChild(this.canvas);
 
         // Kontinuierliche Updates während aller Map-Events
@@ -209,7 +207,6 @@ L.CanvasLayer = L.Layer.extend({
             const plane = window.activePlanes.get(aircraft.icao);
             if (plane) {
                 plane.isSelected = true;
-                // console.log("Flugzeug selektiert:", plane);
             }
         }
 
@@ -233,7 +230,6 @@ planeImg4Highlight.src = "./img/flg-vierstrahlig-highlight.svg";
 function drawAircraft(ctx, x, y, heading, type, isHovered, isSelected) {
     ctx.save();
 
-    // Optimale Rendering-Einstellungen für scharfe SVGs
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
 
@@ -245,7 +241,6 @@ function drawAircraft(ctx, x, y, heading, type, isHovered, isSelected) {
         (type.includes("A38") || type.includes("B74") || type.includes("A34"));
     const size = is4Engine ? 30 : 24;
 
-    // Wähle das richtige Image basierend auf State
     let img;
     if (is4Engine) {
         img = isSelected || isHovered ? planeImg4Highlight : planeImg4;
@@ -261,9 +256,8 @@ async function getAirport(short) {
     try {
         const response = await fetch("./json/airports-collection.json");
         const data = await response.json();
-        // Suche zuerst nach IATA, dann nach ICAO als Fallback
         const airport = data.find(
-            (a) => a.iata_code === short /*|| a.icao_code === short*/,
+            (a) => a.iata_code === short 
         );
 
         if (airport) {
@@ -369,7 +363,6 @@ async function updateInfo(icao, airplane_type, dep, arr, progress) {
     const arrName =
         arrAirport !== "Kein Eintrag vorhanden" ? arrAirport.name : arr;
 
-    // Mobile
     if (mobile_icao) mobile_icao.innerHTML = icao;
     if (mobile_aircraft) mobile_aircraft.innerHTML = longType;
     if (mobile_dep) mobile_dep.innerHTML = dep;
@@ -434,7 +427,7 @@ function handleRouteProgress(
         smoothFactor: 1.5,
     }).addTo(map);
 
-    //* 2. Berechnen wo das Flugzeug auf der Route ist
+    //? 2. Berechnen wo das Flugzeug auf der Route ist
 
     const flown = haversineDistanceKM(
         dep_lat,
@@ -480,7 +473,7 @@ function haversineDistanceKM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
 
     const { sin, cos, sqrt, atan2 } = Math;
 
-    const R = 6371; // earth radius in km
+    const R = 6371; 
     const dLat = lat2 - lat1;
     const dLon = lon2 - lon1;
     const a =
@@ -488,7 +481,7 @@ function haversineDistanceKM(lat1Deg, lon1Deg, lat2Deg, lon2Deg) {
         cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
     const c = 2 * atan2(sqrt(a), sqrt(1 - a));
     const d = R * c;
-    return d; // distance in km
+    return d; 
 }
 
 function createCurve(dep, planePos, arr, steps) {
@@ -506,7 +499,6 @@ function createCurve(dep, planePos, arr, steps) {
     );
     const totalDist = dist_dep_plane + dist_plane_arr;
 
-    // Verhältnis: Wie viele Punkte vor/nach der Flugzeugposition?
     const stepsToPlane = Math.round(steps * (dist_dep_plane / totalDist));
     const stepsToArr = steps - stepsToPlane;
 
@@ -530,7 +522,6 @@ function createGreatCircle(p1, p2, steps) {
             Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1),
     );
 
-    // Fallback für sehr kurze Distanzen
     if (d < 0.0001) {
         return [p1, p2];
     }
@@ -570,7 +561,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         mapEl.style.height = "100vh";
     }
 
-    // Erstelle Map
     map = L.map("map", { zoomControl: false }).setView([51.7787, -0.2636], 4);
     tileLayer.addTo(map);
 
@@ -585,7 +575,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const coordsControl = L.control({ position: "bottomleft" });
     coordsControl.onAdd = () => {
         const div = L.DomUtil.create("div", "coords");
-        div.style.padding = "0.4rem"; // Entspricht var(--size-xs)/4
+        div.style.padding = "0.4rem"; 
         div.style.background = "white";
         div.style.fontFamily = "monospace";
         div.innerHTML = "Lat: -, Lng: -";
@@ -616,24 +606,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             window.history.replaceState(null, "", newICAOUrl);
 
             await handleSelectedPlane(clicked)
-            // const start = await getAirport(clicked.dep);
-            // const end = await getAirport(clicked.arr);
-            // const progress = handleRouteProgress(
-            //     start.lat,
-            //     start.lng,
-            //     clicked.lat,
-            //     clicked.lng,
-            //     end.lat,
-            //     end.lng,
-            // );
-            // updateInfo(
-            //     clicked.icao,
-            //     clicked.type,
-            //     clicked.dep,
-            //     clicked.arr,
-            //     progress,
-            // );
-            // map.flyTo([clicked.lat, clicked.lng], 8)
+            
         } else {
             window.activePlanes.forEach((plane) => {
                 plane.isSelected = false;
@@ -655,7 +628,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // Erstelle Aircraft Layer
     const aircrafts = Array.from(window.activePlanes.entries()).map(
         ([key, p]) => ({
             icao: key,
@@ -671,7 +643,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     aircraftLayer = new L.CanvasLayer(aircrafts);
     aircraftLayer.addTo(map);
 
-    // Update bei neuen Daten
     window.addEventListener("activePlanesUpdated", () => {
         const updatedAircrafts = Array.from(window.activePlanes.entries()).map(
             ([key, p]) => ({

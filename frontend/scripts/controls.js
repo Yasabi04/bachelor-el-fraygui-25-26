@@ -91,15 +91,12 @@ document.addEventListener("DOMContentLoaded", (_) => {
                     const plane = Array.from(
                         window.activePlanes.entries(),
                     ).filter(([key, p]) => key == icaoCode);
-                    console.log(plane);
                     if (plane.length != 0) {
                         const icao = plane[0][0];
                         const searchPlane = plane[0][1];
 
-                        // Setze isSelected im activePlanes Objekt
                         searchPlane.isSelected = true;
 
-                        // Erstelle clicked Objekt für setSelected
                         const clicked = {
                             icao: icao,
                             lat: searchPlane.lat,
@@ -110,12 +107,10 @@ document.addEventListener("DOMContentLoaded", (_) => {
                             arr: searchPlane.arr,
                         };
 
-                        // Setze als ausgewählt im Layer
                         if (aircraftLayer) {
                             aircraftLayer.setSelected(clicked);
                         }
 
-                        // Zeichne Route und berechne Progress (async)
                         (async () => {
                             searchPlane.icao = icao;
                             await handleSelectedPlane(searchPlane)
@@ -176,7 +171,6 @@ document.addEventListener("DOMContentLoaded", (_) => {
     routeButton.addEventListener("click", async (_) => {
         const start = startUser.value.trim();
         const end = endUser.value.trim();
-        console.log(start, end);
         let planes;
 
         planes = Array.from(window.activePlanes.entries()).filter(
@@ -187,7 +181,6 @@ document.addEventListener("DOMContentLoaded", (_) => {
 
         if (planes.length == 0) {
             const possibleRoutes = await getCityAbbr(start, end);
-            console.log(possibleRoutes);
             const possibleCityStart = possibleRoutes.possibleStarts;
             const possibleCityEnd = possibleRoutes.possibleFinishes;
             let variations = [];
@@ -196,7 +189,6 @@ document.addEventListener("DOMContentLoaded", (_) => {
                     variations.push({ cityStart: cs, cityEnd: ce });
                 });
             });
-            console.log(variations);
 
             planes = [];
             variations.forEach((v) => {
@@ -205,7 +197,6 @@ document.addEventListener("DOMContentLoaded", (_) => {
                 );
                 planes.push(...found);
             });
-            console.log(planes);
         }
         if (planes.length == 1) {
             controls.style = "bottom: -100vh;";
@@ -268,8 +259,6 @@ window.addEventListener("firstUpdate", (_) => {
     if (!icaoParam || urlFlightHandled) {
         return;
     }
-
-    console.log(`Suche nach Flugzeug: ${icaoParam}`);
 });
 
 window.addEventListener("activePlanesUpdated", (_) => {
@@ -281,7 +270,6 @@ window.addEventListener("activePlanesUpdated", (_) => {
     }
 
     if (window.activePlanes.has(icaoParam)) {
-        console.log(`Flugzeug ${icaoParam} gefunden!`);
         urlFlightHandled = true;
         controls.style = "bottom: -100vh;";
 
