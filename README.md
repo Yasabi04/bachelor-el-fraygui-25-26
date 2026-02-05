@@ -1,6 +1,6 @@
 # Vergleich einer Server-basierten und serverlosen Architektur anhand von Echtzeit-Flugdaten
 
-<img width="1920" height="914" alt="image" src="https://github.com/user-attachments/assets/be08858c-82fb-4794-bab6-03258abc16e5" />
+<img width="1920" height="906" alt="route" src="https://github.com/user-attachments/assets/ec1b2531-af1c-4f83-ae2e-65bad6230fef" />
 
 ## Projektübersicht
 
