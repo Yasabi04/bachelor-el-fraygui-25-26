@@ -11,6 +11,7 @@ Als Anwendungsfall dient eine Applikation, die in regelmäßigen Intervallen akt
 
 * Live-Flugverkehr mit Fluginformationen (Start, Ziel, Flugzeugtyp, etc...)
 * Filertung nach ICAO-Code und Flugstrecke
+* Weiterleiten des Fluges
 * Europa-weite Abgrenzung
 
 ## Installation
