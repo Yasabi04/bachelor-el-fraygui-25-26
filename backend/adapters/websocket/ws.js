@@ -4,7 +4,6 @@ class WsAdapter {
     }
 
     /**
-     * Register a new WebSocket connection
      * @param {string} connectionId - Unique identifier
      * @param {WebSocket} ws - WebSocket instance
      * @param {Function} onClose - Cleanup callback
@@ -16,7 +15,7 @@ class WsAdapter {
 
         ws.on("error", (error) => {
             console.error(
-                `[WsAdapter] WebSocket error for ${connectionId}:`,
+                `[WsAdapter] Websocket Fehler für ${connectionId}:`,
                 error
             );
             this.cleanup(connectionId);
@@ -27,7 +26,7 @@ class WsAdapter {
 
         ws.on("close", (code, reason) => {
             console.log(
-                `[WsAdapter] Connection closed: ${connectionId}, code: ${code}`
+                `[WsAdapter] Verbindung geschlossen für: ${connectionId}, Grund: ${code}: ${reason}`
             );
             this.cleanup(connectionId);
             if (onClose) {
@@ -66,7 +65,6 @@ class WsAdapter {
             return { success: false, gone: true };
         }
 
-        // WebSocket.OPEN = 1
         if (ws.readyState !== 1) {
             this.cleanup(connectionId);
             return { success: false, gone: true };
@@ -75,12 +73,10 @@ class WsAdapter {
         return new Promise((resolve) => {
             try {
                 const message = Buffer.isBuffer(data) ? data : data;
-                console.log('Kurz vor ws.send:', message.timestamp)
-                // console.log('WSADAPTER: ' + message)
                 ws.send(message, (error) => {
                     if (error) {
                         console.error(
-                            `[WsAdapter] Send error to ${connectionId}:`,
+                            `[WsAdapter] Fehler an ${connectionId} senden: `,
                             error
                         );
                         resolve({ success: false, gone: false });
@@ -90,7 +86,7 @@ class WsAdapter {
                 });
             } catch (error) {
                 console.error(
-                    `[WsAdapter] Exception sending to ${connectionId}:`,
+                    `[WsAdapter] Exception an ${connectionId} senden: `,
                     error
                 );
                 resolve({ success: false, gone: false });

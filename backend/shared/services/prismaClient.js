@@ -29,10 +29,8 @@ try {
         log: ['error', 'warn'],
     });
     
-    console.log('Prisma Client erfolgreich initialisiert');
 } catch (error) {
-    console.error('Prisma Client Initialisierungsfehler:', error);
-    throw error;
+    console.warn(error);
 }
 
 module.exports = prisma;

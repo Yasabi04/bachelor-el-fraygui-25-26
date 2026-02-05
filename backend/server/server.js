@@ -21,11 +21,10 @@ const pollingHandler = new PollingHandler(dbAdapter, wsAdapter)
 const connectionManager = new ConnectionManager(dbAdapter, pollingHandler)
 
 server.on("connection", async (socket, req) => {
-    // Extract IP address
+    // IP-Adresse holen
     const ip = req.socket.remoteAddress || req.headers['x-forwarded-for']?.split(',')[0];
     
     try {
-        // Try to consume 1 point for this IP
         await rateLimiter.consume(ip);
     } catch (error) {
         console.log(`Rate limit exceeded for IP: ${ip}`);
@@ -46,7 +45,6 @@ server.on("connection", async (socket, req) => {
 
     socket.on("message", async (event) => {
         let rawData = event;
-        // console.log("---RAW DATA---:", rawData);
 
         const a = Buffer.from(rawData)
 
@@ -54,16 +52,6 @@ server.on("connection", async (socket, req) => {
 
         if (rawData instanceof Blob) {
             rawData = await rawData.text();
-        }
-
-        try {
-            const data = JSON.parse(rawData);
-
-            const number = Array.isArray(data) ? data[0] : data;
-
-            // console.log("Empfangene Nummer:", number);
-        } catch (e) {
-            console.log("Empfangener Text:", rawData);
         }
     });
 

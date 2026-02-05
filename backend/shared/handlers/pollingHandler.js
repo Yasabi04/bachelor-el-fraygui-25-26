@@ -5,14 +5,12 @@ class PollingHandler {
     constructor(dbAdapter, wsAdapter) {
         this.db = dbAdapter;
         this.ws = wsAdapter;
-        // NEU: Flag um zu verhindern, dass der Loop mehrfach läuft
         this.isPolling = false;
     }
 
     async executeFetch() {
-        // NEU: Wenn bereits gepollt wird, brechen wir hier ab.
         if (this.isPolling) {
-            console.log("Polling läuft bereits. Starte keine neue Instanz.");
+            console.log("Polling läuft bereits. Starte keinen neuen Durchgang.");
             return;
         }
 
@@ -20,7 +18,6 @@ class PollingHandler {
         console.log("Polling-Schleife gestartet.");
 
         try {
-            // Endlosschleife
             while (true) {
                 // 1. Status prüfen
                 var result = await this.db.getPollingStatus();
@@ -36,9 +33,6 @@ class PollingHandler {
                     console.log("Start fetch...");
 
                     // 3. Daten abrufen
-                    // const req = await fetch(
-                    //     "http://www.randomnumberapi.com/api/v1.0/random?min=100&max=1000"
-                    // );
                     const apiKey = process.env.AIRLABS_KEY;
                     const startTime = Date.now()
                     const req = await fetch(
@@ -46,12 +40,9 @@ class PollingHandler {
                     )
                     const response = await req.json();
                     let flights = response.response || [];
-                    // console.log('------', flights, '-------------')
-                    console.log('--------------------------------')
 
                     console.log(`Daten geladen: ${flights.length} Einträge.`);
 
-                    // 4. Verbindungen holen und senden
                     const connResult = await this.db.getAllConnections();
                     const connections = connResult.allConnections || [];
 
@@ -63,7 +54,6 @@ class PollingHandler {
                     }
 
                     // 5. Warten
-                    console.log("Warte 10 Sekunden...");
                     await sleep(10000);
 
                 } catch (innerError) {
@@ -75,7 +65,6 @@ class PollingHandler {
             console.error("Kritischer Fehler im Polling-Handler:", error);
         } finally {
             this.isPolling = false;
-            console.log("Polling-Schleife vollständig beendet.");
         }
     }
 
@@ -83,7 +72,6 @@ class PollingHandler {
         try {
             const payload = JSON.stringify({ states: flights, timestamp,  type: "flight-update" })
             console.log('Timestamp:', timestamp)
-            console.log(`Broadcasting to ${connections.length} connections`)
             for (const conn of connections) {
                 if (conn.connectionId) {
                     this.ws.postToConnection(conn.connectionId, payload);

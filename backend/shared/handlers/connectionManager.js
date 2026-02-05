@@ -5,20 +5,15 @@ class ConnectionManager {
     }
 
     async handleConnection(connectionId, userId) {
-        console.log(`Speichern von ${userId} mit ${connectionId}`);
-
 
         await this.db.saveConnection(connectionId, userId);
  
         const connections = await this.db.getAllConnections();
-        console.log('Verbunden: ', connections.allConnections.length)
 
-        //* eigentlich connections.allConnections.length !!!
         if (connections.allConnections.length >= 1) {
             console.log("Mindestens eine Verbindung! Setze POLLING_STATUS auf true");
             await this.db.setPollingStatus(true);
             
-            // Prüfe ob Polling bereits läuft, bevor es gestartet wird
             if (!this.pollingHandler.isPolling) {
                 console.log("Starte Polling-Cycle...");
                 this.pollingHandler.executeFetch()
