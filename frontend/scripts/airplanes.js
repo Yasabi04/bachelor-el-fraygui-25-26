@@ -111,3 +111,33 @@ async function handlePlane(planes, start = '', end = '') {
             flight_list_container.style.transform = "translate(-50%, 0%)";
     }
 }
+
+async function handleSelectedPlane(plane) {
+    // Panel sofort anzeigen
+    const flightInfo = document.querySelector(".mobile-flight-menu");
+    flightInfo.style = "transform: translate(-50%, 0%)";
+    
+    // Handle both 'lng' and 'long' property names
+    const planeLng = plane.lng || plane.long;
+    
+    const start = await getAirport(plane.dep);
+    const end = await getAirport(plane.arr);
+    
+    const progress = handleRouteProgress(
+        start.lat,
+        start.lng,
+        plane.lat,
+        planeLng,
+        end.lat,
+        end.lng,
+        plane.icao,
+    );
+
+    updateInfo(
+        plane.icao,
+        plane.aircraft_type || plane.type,
+        plane.dep,
+        plane.arr,
+        progress,
+    );
+}

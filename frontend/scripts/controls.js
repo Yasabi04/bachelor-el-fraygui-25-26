@@ -117,23 +117,8 @@ document.addEventListener("DOMContentLoaded", (_) => {
 
                         // Zeichne Route und berechne Progress (async)
                         (async () => {
-                            const start = await getAirport(searchPlane.dep);
-                            const end = await getAirport(searchPlane.arr);
-                            const progress = handleRouteProgress(
-                                start.lat,
-                                start.lng,
-                                searchPlane.lat,
-                                searchPlane.long,
-                                end.lat,
-                                end.lng,
-                            );
-                            updateInfo(
-                                icao,
-                                searchPlane.aircraft_type,
-                                searchPlane.dep,
-                                searchPlane.arr,
-                                progress,
-                            );
+                            searchPlane.icao = icao;
+                            await handleSelectedPlane(searchPlane)
                         })();
                     } else {
                         setError(
@@ -244,23 +229,8 @@ document.addEventListener("DOMContentLoaded", (_) => {
             }
 
             (async () => {
-                const start = await getAirport(searchPlane.dep);
-                const end = await getAirport(searchPlane.arr);
-                const progress = handleRouteProgress(
-                    start.lat,
-                    start.lng,
-                    searchPlane.lat,
-                    searchPlane.long,
-                    end.lat,
-                    end.lng,
-                );
-                updateInfo(
-                    icao,
-                    searchPlane.aircraft_type,
-                    searchPlane.dep,
-                    searchPlane.arr,
-                    progress,
-                );
+                searchPlane.icao = icao;
+                await handleSelectedPlane(searchPlane);
             })();
         } else if (planes.length > 1) {
             await handlePlane(planes, start, end);
@@ -333,7 +303,9 @@ window.addEventListener("activePlanesUpdated", (_) => {
         }
 
         (async () => {
-            const start = await getAirport(searchPlane.dep);
+            searchPlane.icao = icaoParam;
+            await handleSelectedPlane(searchPlane);
+            // const start = await getAirport(searchPlane.dep);
             const end = await getAirport(searchPlane.arr);
             const progress = handleRouteProgress(
                 start.lat,
@@ -364,7 +336,6 @@ window.addEventListener("activePlanesUpdated", async (_) => {
     const selectedIcao = aircraftLayer.selectedAircraft.icao;
     const updatedPlane = window.activePlanes.get(selectedIcao);
 
-    // Wenn das Flugzeug aktualisiert wurde
     if (updatedPlane && updatedPlane.isSelected) {
         // Aktualisiere die Position im selectedAircraft Objekt
         aircraftLayer.selectedAircraft.lat = updatedPlane.lat;
@@ -374,23 +345,9 @@ window.addEventListener("activePlanesUpdated", async (_) => {
         // Redraw das Canvas, um die neue Position zu zeigen
         aircraftLayer._redraw();
 
-        const start = await getAirport(updatedPlane.dep);
-        const end = await getAirport(updatedPlane.arr);
-        const progress = handleRouteProgress(
-            start.lat,
-            start.lng,
-            updatedPlane.lat,
-            updatedPlane.long,
-            end.lat,
-            end.lng,
-        );
-
-        updateInfo(
-            selectedIcao,
-            updatedPlane.aircraft_type,
-            updatedPlane.dep,
-            updatedPlane.arr,
-            progress,
-        );
+        // ICAO zum Objekt hinzufügen bevor es übergeben wird
+        updatedPlane.icao = selectedIcao;
+        
+        await handleSelectedPlane(updatedPlane)
     }
 });

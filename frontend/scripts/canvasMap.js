@@ -615,23 +615,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             const newICAOUrl = `${window.location.pathname}?icao=${clicked.icao}`;
             window.history.replaceState(null, "", newICAOUrl);
 
-            const start = await getAirport(clicked.dep);
-            const end = await getAirport(clicked.arr);
-            const progress = handleRouteProgress(
-                start.lat,
-                start.lng,
-                clicked.lat,
-                clicked.lng,
-                end.lat,
-                end.lng,
-            );
-            updateInfo(
-                clicked.icao,
-                clicked.type,
-                clicked.dep,
-                clicked.arr,
-                progress,
-            );
+            await handleSelectedPlane(clicked)
+            // const start = await getAirport(clicked.dep);
+            // const end = await getAirport(clicked.arr);
+            // const progress = handleRouteProgress(
+            //     start.lat,
+            //     start.lng,
+            //     clicked.lat,
+            //     clicked.lng,
+            //     end.lat,
+            //     end.lng,
+            // );
+            // updateInfo(
+            //     clicked.icao,
+            //     clicked.type,
+            //     clicked.dep,
+            //     clicked.arr,
+            //     progress,
+            // );
             // map.flyTo([clicked.lat, clicked.lng], 8)
         } else {
             window.activePlanes.forEach((plane) => {
