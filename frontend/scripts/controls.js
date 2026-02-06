@@ -26,11 +26,15 @@ const userIcon = L.icon({
 function getUserPermission() {
     const userPositionLS = localStorage.getItem("userPosition");
     if (userPositionLS) {
-        const savedPosition = JSON.parse(userPositionLS);
-        if (savedPosition && Array.isArray(savedPosition) && savedPosition.length === 2) {
-            map.flyTo(savedPosition, 10);
-            L.marker(savedPosition, { icon: userIcon }).addTo(map);
-            return;
+        try {
+            const savedPosition = JSON.parse(userPositionLS);
+            if (savedPosition && Array.isArray(savedPosition) && savedPosition.length === 2) {
+                map.flyTo(savedPosition, 10);
+                L.marker(savedPosition, { icon: userIcon }).addTo(map);
+                return;
+            }
+        } catch (e) {
+            localStorage.removeItem("userPosition");
         }
     }
     if ("geolocation" in navigator) {
@@ -310,31 +314,12 @@ window.addEventListener("activePlanesUpdated", (_) => {
 
         (async () => {
             searchPlane.icao = icaoParam;
-            await handleSelectedPlane(searchPlane);
-            // const start = await getAirport(searchPlane.dep);
-            const end = await getAirport(searchPlane.arr);
-            const progress = handleRouteProgress(
-                start.lat,
-                start.lng,
-                searchPlane.lat,
-                searchPlane.long,
-                end.lat,
-                end.lng,
-            );
-            updateInfo(
-                icaoParam,
-                searchPlane.aircraft_type,
-                searchPlane.dep,
-                searchPlane.arr,
-                progress,
-            );
+            await handleSelectedPlane(searchPlane)
         })();
     }
 });
 
-// Stelle Route neu dar, wenn ein Flugzeug ausgewählt ist und Updates ankommen
 window.addEventListener("activePlanesUpdated", async (_) => {
-    // Prüfe, ob ein Flugzeug aktuell ausgewählt ist
     if (!aircraftLayer || !aircraftLayer.selectedAircraft) {
         return;
     }
@@ -343,15 +328,12 @@ window.addEventListener("activePlanesUpdated", async (_) => {
     const updatedPlane = window.activePlanes.get(selectedIcao);
 
     if (updatedPlane && updatedPlane.isSelected) {
-        // Aktualisiere die Position im selectedAircraft Objekt
         aircraftLayer.selectedAircraft.lat = updatedPlane.lat;
         aircraftLayer.selectedAircraft.lng = updatedPlane.long;
         aircraftLayer.selectedAircraft.heading = updatedPlane.deg || 0;
 
-        // Redraw das Canvas, um die neue Position zu zeigen
         aircraftLayer._redraw();
 
-        // ICAO zum Objekt hinzufügen bevor es übergeben wird
         updatedPlane.icao = selectedIcao;
         
         await handleSelectedPlane(updatedPlane)

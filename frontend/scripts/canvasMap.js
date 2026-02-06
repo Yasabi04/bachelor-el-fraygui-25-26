@@ -519,7 +519,6 @@ function createCurve(dep, planePos, arr, steps) {
     const segment1 = createGreatCircle(dep, planePos, stepsToPlane);
     const segment2 = createGreatCircle(planePos, arr, stepsToArr);
 
-    // Entferne doppelte Flugzeugposition (segment2[0] == segment1[last])
     return [...segment1, ...segment2.slice(1)];
 }
 
@@ -585,7 +584,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }).addTo(map);
     }
 
-    // Koordinaten-Anzeige
     const coordsControl = L.control({ position: "bottomleft" });
     coordsControl.onAdd = () => {
         const div = L.DomUtil.create("div", "coords");
