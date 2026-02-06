@@ -56,3 +56,56 @@
     padding-bottom: var(--size-xl);
     font-size: var(--size-s);
 }
+
+@media (max-width: 768px) {
+    .docu-heading {
+        padding-top: var(--size-m);
+        padding-bottom: var(--size-m);
+        font-size: var(--size-m);
+    }
+
+    .how-to-introduction {
+        flex-direction: column;
+        padding-bottom: var(--size-m);
+        gap: var(--size-m);
+
+        p {
+            font-size: var(--size-xs);
+            line-height: var(--size-m);
+
+            .highlight-word {
+                font-size: var(--size-xs);
+            }
+        }
+
+        img {
+            width: 100%;
+            max-width: 400px;
+        }
+    }
+
+    .docu-heading-div {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--size-xs);
+        height: auto;
+        padding-bottom: var(--size-m);
+
+        .docu-heading-expl {
+            font-size: var(--size-xs);
+        }
+    }
+
+    .docu-p-content {
+        width: 100%;
+        font-size: var(--size-xs);
+        padding-top: var(--size-xs);
+        padding-bottom: var(--size-m);
+        line-height: var(--size-m);
+    }
+
+    .docu-subheading-no2 {
+        font-size: var(--size-s);
+    }
+}
+

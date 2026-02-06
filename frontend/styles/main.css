@@ -372,7 +372,7 @@
             .server-solution {
                 .server-heading-container {
                     .server-heading {
-                        font-size: var(--size-m);
+                        font-size: var(--size-s);
                     }
 
                     .server-subheading {
@@ -383,11 +383,13 @@
                 .server-points {
                     .server-point {
                         font-weight: 100;
-                        font-size: var(--size-s);
+                        font-size: var(--size-xs);
                     }
 
                     .server-point::before {
-                        width: 15px;
+                        left: -6px;
+                        bottom: 4px;
+                        width: 4px;
                     }
                 }
             }
@@ -395,7 +397,7 @@
             .aws-solution {
                 .aws-heading-container {
                     .aws-heading {
-                        font-size: var(--size-m);
+                        font-size: var(--size-s);
                     }
 
                     .aws-subheading {
@@ -406,12 +408,13 @@
                 .aws-points {
                     .aws-point {
                         font-weight: 100;
-                        font-size: var(--size-s);
-                        margin-bottom: var(--size-xs);
+                        font-size: var(--size-xs);
                     }
 
                     .aws-point::before {
-                        width: 15px;
+                        left: -6px;
+                        bottom: 4px;
+                        width: 4px;
                     }
                 }
             }

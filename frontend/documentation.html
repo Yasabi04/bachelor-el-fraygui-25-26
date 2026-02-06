@@ -62,24 +62,29 @@
                 </span>
             </div>
             <p class="docu-p-content">
-                ADS-B ist ein offizielles <span class="highlight-word">Luftfahrt-Überwachungssystem</span>, das von
-                der EASA und der FAA vorgeschrieben und genutzt wird. Die
-                Flugsicherung soll auch <span class="highlight-word">unabhängig vom Radar</span> dazu in der Lage
-                sein, Flugzeuge zu sehen, umso schneller agieren zu können.
-                Darüber hinaus ist es für Piloten durch die hohe Reichweite
-                ermöglicht, sich gegenseitig früher zu erkennen und mögliche
-                Gefahren frühzeitig zu eliminieren.
+                ADS-B ist ein offizielles
+                <span class="highlight-word">Luftfahrt-Überwachungssystem</span
+                >, das von der EASA und der FAA vorgeschrieben und genutzt wird.
+                Die Flugsicherung soll auch
+                <span class="highlight-word">unabhängig vom Radar</span> dazu in
+                der Lage sein, Flugzeuge zu sehen, umso schneller agieren zu
+                können. Darüber hinaus ist es für Piloten durch die hohe
+                Reichweite ermöglicht, sich gegenseitig früher zu erkennen und
+                mögliche Gefahren frühzeitig zu eliminieren.
             </p>
 
             <h3 class="docu-subheading-no2">Funktionsweise</h3>
 
             <p class="docu-p-content">
                 Jedes Flugzeug berechnet zu jedem gegebenen Zeitpunkt seine
-                Position. Diese wird meist über <span class="highlight-word">GPS</span> bestimmt. Nach der
-                Berechnung werden die Positionsdaten mithilfe eines <span class="highlight-word">Transponders</span>
-                an Bord in ein standardisiertes Funkpaket übersetzt, welches
-                dann mehrmals pro Sekunde gesendet wird (→ Broadcast). Die
-                Frequenz beträgt 1090 MHz, die eine <span class="highlight-word">Reichweite von 200-400 km</span>
+                Position. Diese wird meist über
+                <span class="highlight-word">GPS</span> bestimmt. Nach der
+                Berechnung werden die Positionsdaten mithilfe eines
+                <span class="highlight-word">Transponders</span> an Bord in ein
+                standardisiertes Funkpaket übersetzt, welches dann mehrmals pro
+                Sekunde gesendet wird (→ Broadcast). Die Frequenz beträgt 1090
+                MHz, die eine
+                <span class="highlight-word">Reichweite von 200-400 km</span>
                 ermöglicht (line of sight). Solange es also Empfänger/Geräte in
                 diesem Bereich gibt, die auf dieser Frequenz Daten abfangen
                 können, können Flugdaten problemlos gesammelt und ausgewertet
@@ -94,12 +99,14 @@
             </div>
 
             <p class="docu-p-content">
-                Jedes Flugzeug sendet ein sog. <span class="highlight-word">Mode-S-Signal</span>. Mehrere Empfänger
-                erhalten dieses Signal, aber zu minimal unterschiedlichen
-                Zeiten. Diese <span class="highlight-word">Zeitunterschiede</span> (TDOA) werden genutzt, um die
-                Position des Flugzeugs zu ermitteln. Wenn Empfänger A das Signal
-                1 µs vor Empfänger B empfängt, kann aus diesem Zeitunterschied
-                eine Distanz berechnet werden. <br />
+                Jedes Flugzeug sendet ein sog.
+                <span class="highlight-word">Mode-S-Signal</span>. Mehrere
+                Empfänger erhalten dieses Signal, aber zu minimal
+                unterschiedlichen Zeiten. Diese
+                <span class="highlight-word">Zeitunterschiede</span> (TDOA)
+                werden genutzt, um die Position des Flugzeugs zu ermitteln. Wenn
+                Empfänger A das Signal 1 µs vor Empfänger B empfängt, kann aus
+                diesem Zeitunterschied eine Distanz berechnet werden. <br />
                 Da sich Funk mit Lichtgeschwindigkeit ausbreitet entspricht 1 µs
                 umgerechnet etwa 300 m. Um die Position eines Flugzeugs mit
                 hoher Sicherheit zu bestimmen werden im Idealfall 6 - 10
@@ -113,9 +120,19 @@
             </p>
             <div class="docu-heading-div">
                 <h2 class="docu-heading-no2" id="satellit">Satellit</h2>
-                <span class="docu-heading-expl"></span>
             </div>
-            <p class="docu-p-content">TODO</p>
+            <p class="docu-p-content">
+                Beim satellitengestützten Flugtracking empfangen Satelliten im
+                Orbit ADS-B-Signale, die von Flugzeugen ausgesendet werden.
+                Dadurch können Positionen auch <span class = "highlight-word">über Ozeanen</span> oder 
+                <span class="highlight-word">in abgelegenen
+                Regionen</span> erfasst werden, wo es keine Bodenstationen gibt. Die
+                Signale werden an Bodenstationen weitergeleitet und dort
+                ausgewertet. Aufgrund der großen Entfernung und der begrenzten
+                Bandbreite gibt es jedoch eine leicht <span class="highlight-word">erhöhte Latenz</span> und eine
+                geringere Update-Frequenz im Vergleich zu bodenbasierten
+                Empfängern.
+            </p>
         </main>
         <footer>
             <ul class="footer-links">
