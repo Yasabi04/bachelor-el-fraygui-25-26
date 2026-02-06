@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", (_) => {
                     searchSymbol.classList.remove("mag-glass");
                     const plane = Array.from(
                         window.activePlanes.entries(),
-                    ).filter(([key, p]) => key == icaoCode);
+                    ).filter(([key, p]) => key == icaoCode.toUpperCase());
                     if (plane.length != 0) {
                         const icao = plane[0][0];
                         const searchPlane = plane[0][1];
