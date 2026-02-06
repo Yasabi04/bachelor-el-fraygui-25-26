@@ -24,22 +24,40 @@ const userIcon = L.icon({
 });
 
 function getUserPermission() {
-    const savedPosition = JSON.parse(
-        "[" + localStorage.getItem("userPosition") + "]",
-    );
-    if (savedPosition) {
-        map.flyTo(savedPosition, 10);
-        L.marker([latitude, longitude], { icon: userIcon }).addTo(map);
-        return;
+    const userPositionLS = localStorage.getItem("userPosition");
+    if (userPositionLS) {
+        const savedPosition = JSON.parse(userPositionLS);
+        if (savedPosition && Array.isArray(savedPosition) && savedPosition.length === 2) {
+            map.flyTo(savedPosition, 10);
+            L.marker(savedPosition, { icon: userIcon }).addTo(map);
+            return;
+        }
     }
     if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            map.flyTo([latitude, longitude], 10);
-            L.marker([latitude, longitude], { icon: userIcon }).addTo(map);
-            const userPosition = [latitude, longitude];
-            localStorage.setItem("userPosition", JSON.stringify(userPosition));
-        });
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                const userPosition = [latitude, longitude];
+                map.flyTo(userPosition, 10);
+                L.marker(userPosition, { icon: userIcon }).addTo(map);
+                localStorage.setItem("userPosition", JSON.stringify(userPosition));
+            },
+            (error) => {
+                let errorMsg = "Positionsbestimmung fehlgeschlagen";
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMsg = "Standortzugriff wurde verweigert";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMsg = "Standort ist nicht verfügbar";
+                        break;
+                    case error.TIMEOUT:
+                        errorMsg = "Standortsuche hat zu lange gedauert";
+                        break;
+                }
+                setError("Fehler", errorMsg);
+            }
+        );
     } else {
         setError(
             "Positionsbestimmung fehlgeschlagen",

@@ -60,7 +60,7 @@ if (!window.activePlanes) {
         lat: 48.2,
         long: -38.5,
         dep: "EWR",
-        arr: "FRA",
+        arr: "FRAs",
         deg: 65,
         isSelected: false
     });

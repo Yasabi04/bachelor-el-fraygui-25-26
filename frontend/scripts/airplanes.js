@@ -68,9 +68,6 @@ async function handlePlane(planes, start = "", end = "") {
 }
 
 async function handleSelectedPlane(plane) {
-    const flightInfo = document.querySelector(".mobile-flight-menu");
-    flightInfo.style = "transform: translate(-50%, 0%)";
-
     const planeLng = plane.lng || plane.long;
 
     const start = await getAirport(plane.dep);
@@ -87,15 +84,17 @@ async function handleSelectedPlane(plane) {
             plane.icao,
         );
 
-        updateInfo(
-            plane.icao,
-            plane.aircraft_type || plane.type,
-            plane.dep,
-            plane.arr,
-            progress,
-        );
+        if (progress !== false) {
+            updateInfo(
+                plane.icao,
+                plane.aircraft_type || plane.type,
+                plane.dep,
+                plane.arr,
+                progress,
+            );
+        }
     }
     else {
-        setError('Huch!', 'Fluginformationen konnten nicht ausgelesen werden.')
+        setError('Huch!', 'Fluginformationen konnten nicht ausgelesen werden.');
     }
 }

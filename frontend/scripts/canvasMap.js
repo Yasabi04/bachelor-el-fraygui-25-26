@@ -350,13 +350,17 @@ async function updateInfo(icao, airplane_type, dep, arr, progress) {
         ".mobile-flight-menu .progress-max",
     );
 
-    const flightInfo = document.querySelector(".mobile-flight-menu");
-
-    flightInfo.style = "transform: translate(-50%, 0%)";
-
     const depAirport = await getAirport(dep);
     const arrAirport = await getAirport(arr);
     const longType = await getElaboration(airplane_type);
+
+    if(!(depAirport && arrAirport && longType)) {
+        setError('Huch!', 'Fluginformationen konnten nicht ausgelesen werden.');
+        return;
+    }
+
+    const flightInfo = document.querySelector(".mobile-flight-menu");
+    flightInfo.style = "transform: translate(-50%, 0%)";
 
     const depName =
         depAirport !== "Kein Eintrag vorhanden" ? depAirport.name : dep;
@@ -392,6 +396,16 @@ function handleRouteProgress(
     arr_lng,
     routeId,
 ) {
+    // Validiere Koordinaten
+    if (
+        isNaN(dep_lat) || isNaN(dep_lng) ||
+        isNaN(arr_lat) || isNaN(arr_lng) ||
+        isNaN(planePos_lat) || isNaN(planePos_lng)
+    ) {
+        setError('Huch!', 'Flugroute konnte nicht berechnet werden.');
+        return false;
+    }
+
     controls.style = "top: 0;";
 
     activeRoutes.forEach((routeData) => {
