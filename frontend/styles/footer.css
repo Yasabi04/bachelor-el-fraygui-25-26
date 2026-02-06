@@ -3,25 +3,89 @@ footer {
     height: auto;
     background-color: var(--color-highlight);
 
-    .footer-links {
-        padding-top: var(--size-xl);
-        padding-left: 10%;
-        padding-bottom: var(--size-xl);
-        list-style-type: none;
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         gap: var(--size-xl);
+        padding: var(--size-xl) 10%;
+    }
+
+    .footer-links {
+        list-style-type: none;
+        display: flex;
+        flex-direction: column;
+        gap: var(--size-s);
 
         .footer-link {
-            font-size: var(--size-s);
-            padding-bottom: var(--size-xl);
+            font-size: var(--size-m);
+            transition: 0.3s;
+
             a {
                 text-decoration: none;
+                font-weight: 600;
                 color: var(--color-bg);
             }
         }
 
-        .footer-link:last-child {
-            padding-bottom: 0;
+        .footer-link:hover {
+            transform: scale(1.05);
+            transition: 0.3s;
         }
     }
 
+    .footer-logos {
+        display: flex;
+        align-items: center;
+        gap: var(--size-l);
+        height: 100%;
+    }
+
+    .footer-logo-mark {
+        svg {
+            display: block;
+            height: 2vw;
+            width: auto;
+            object-fit: contain;
+        }
+    }
+
+    .footer-logo-th {
+        display: flex;
+        height: 10vw;
+        width: auto;
+        object-fit: contain;
+    }
+}
+
+@media (max-width: 768px) {
+    footer {
+        .footer-links {
+            gap: var(--size-xs);
+            .footer-link {
+                a {
+                    font-size: var(--size-s);
+                }
+            }
+        }
+
+        .footer-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .footer-logos {
+            flex-direction: column;
+            gap: var(--size-xs);
+
+            .footer-logo-mark {
+                svg {
+                    height: 10vw;
+                }
+            }
+            .footer-logo-th {
+                height: 40vw;
+            }
+        }
+    }
 }

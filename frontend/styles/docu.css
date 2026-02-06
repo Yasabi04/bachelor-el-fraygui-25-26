@@ -59,9 +59,9 @@
 
 @media (max-width: 768px) {
     .docu-heading {
-        padding-top: var(--size-m);
+        padding-top: var(--size-xs);
         padding-bottom: var(--size-m);
-        font-size: var(--size-m);
+        font-size: var(--size-l);
     }
 
     .how-to-introduction {
@@ -89,7 +89,8 @@
         align-items: flex-start;
         gap: var(--size-xs);
         height: auto;
-        padding-bottom: var(--size-m);
+        padding-bottom: 0;
+        padding-top: var(--size-xs);
 
         .docu-heading-expl {
             font-size: var(--size-xs);
